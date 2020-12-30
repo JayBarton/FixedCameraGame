@@ -22,18 +22,29 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float turnAmount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float walkSpeed = 125.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float runSpeed = 500.0f;
+
 protected:
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
-	void MoveRight(float Value);
+	void Turn(float Value);
 
+	void Sprint();
+	void StopSprinting();
 
 protected:
-	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
+	
+	virtual void BeginPlay() override;
 
 };
 

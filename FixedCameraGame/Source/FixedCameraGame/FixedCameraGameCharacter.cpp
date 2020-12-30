@@ -14,21 +14,16 @@ AFixedCameraGameCharacter::AFixedCameraGameCharacter()
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	// set our turn rates for input
-	BaseTurnRate = 45.f;
-	BaseLookUpRate = 45.f;
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = true;
+	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
-
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -44,23 +39,49 @@ void AFixedCameraGameCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFixedCameraGameCharacter::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFixedCameraGameCharacter::StopSprinting);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFixedCameraGameCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AFixedCameraGameCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("Turn", this, &AFixedCameraGameCharacter::Turn);
 }
 
-void AFixedCameraGameCharacter::MoveForward(float Value)
+void AFixedCameraGameCharacter::BeginPlay()
 {
-	if (Value != 0.0f)
+	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+	UE_LOG(LogTemp, Warning, TEXT("AAA"));
+}
+
+void AFixedCameraGameCharacter::MoveForward(float value)
+{
+	if (value != 0.0f)
 	{
-		AddMovementInput(GetActorForwardVector(), Value);
+		AddMovementInput(GetActorForwardVector(), value);
 	}
 }
 
-void AFixedCameraGameCharacter::MoveRight(float Value)
+void AFixedCameraGameCharacter::Turn(float value)
 {
-	if (Value != 0.0f)
+	if (value != 0.0f)
 	{
-		FRotator rotation = FRotator(0.0f, Value * 5.0f, 0.0f);
-		AddControllerYawInput(Value);
+		//turnAmount = value;
+		//FRotator rotation = FRotator(0.0f, turnAmount, 0.0f);
+		//FRotator rotation = FRotator(0.0f, value * 5.0f, 0.0f);
+		FRotator rotation = FRotator(0.0f, value, 0.0f);
+		AddActorLocalRotation(rotation);
+
+		//AddControllerYawInput(value);
 	}
+}
+
+void AFixedCameraGameCharacter::Sprint()
+{
+	GetCharacterMovement()->MaxWalkSpeed = runSpeed;
+}
+
+void AFixedCameraGameCharacter::StopSprinting()
+{
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
