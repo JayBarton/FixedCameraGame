@@ -17,9 +17,12 @@ class FIXEDCAMERAGAME_API AFCPlayerCamera : public ACameraActor
 public:
 	AFCPlayerCamera();
 
-	virtual void BeginPlay() override;
+	//virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	bool startingCamera;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+		int startIndex;
+
 };

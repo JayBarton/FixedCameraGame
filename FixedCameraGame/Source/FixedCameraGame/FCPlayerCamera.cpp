@@ -12,7 +12,7 @@ AFCPlayerCamera::AFCPlayerCamera()
 	//GetCameraComponent()->SetFieldOfView(75.0f);
 }
 
-void AFCPlayerCamera::BeginPlay()
+/*void AFCPlayerCamera::BeginPlay()
 {
 	if (startingCamera)
 	{
@@ -23,4 +23,4 @@ void AFCPlayerCamera::BeginPlay()
 			playerController->SetViewTarget(this, transitionParams);
 		}
 	}
-}
+}*/
