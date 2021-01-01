@@ -6,6 +6,10 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "FCInteractableInterface.h"
+
+
+#include "DrawDebugHelpers.h" 
 
 // Sets default values
 AFCPlayer::AFCPlayer()
@@ -33,6 +37,8 @@ void AFCPlayer::BeginPlay()
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
+	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
+
 }
 
 // Called every frame
@@ -40,6 +46,9 @@ void AFCPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (nearestInteractable)
+	{
+	}
 }
 
 // Called to bind functionality to input
@@ -52,6 +61,8 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCPlayer::Interact);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFCPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Turn", this, &AFCPlayer::Turn);
@@ -89,5 +100,52 @@ void AFCPlayer::Sprint()
 void AFCPlayer::StopSprinting()
 {
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+}
+
+void AFCPlayer::Interact()
+{
+	if (nearestInteractable)
+	{
+		IFCInteractableInterface::Execute_Action(nearestInteractable);
+	}
+
+}
+
+void AFCPlayer::LookForInteractable()
+{
+	FHitResult OutHit;
+
+	FVector Start = GetActorLocation();
+
+	FVector ForwardVector = GetActorForwardVector();
+	FVector End = ((ForwardVector * 100.0f) + Start);
+	FCollisionQueryParams CollisionParams;
+
+	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, ECC_WorldStatic, 1.f);
+
+	bool interactable = false;
+
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams))
+	{
+		if (OutHit.GetActor()->GetClass()->ImplementsInterface(UFCInteractableInterface::StaticClass()))
+		{
+			interactable = true;
+			if (!nearestInteractable)
+			{
+				nearestInteractable = OutHit.GetActor();
+				UE_LOG(LogTemp, Warning, TEXT("%s"), *nearestInteractable->GetName());
+
+			}
+		}
+
+	}
+	if (!interactable)
+	{
+		if (nearestInteractable)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("nothin'"));
+			nearestInteractable = nullptr;
+		}
+	}
 }
 

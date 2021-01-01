@@ -34,10 +34,18 @@ public:
 
 	void StopSprinting();
 
+	void Interact();
+
+	void LookForInteractable();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float runSpeed = 500.0f;
+
+	AActor* nearestInteractable;
+
+	FTimerHandle LookTimerHandle;
 
 };
