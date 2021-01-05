@@ -5,6 +5,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/GameplayStatics.h" 
 #include "FCGameInstance.h"
+#include "FCPlayer.h"
+#include "FCInventoryComponent.h"
 #include "FC_PlayerStart.h"
 #include "FCPlayerCamera.h"
 
@@ -24,25 +26,35 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 	if (instance)
 	{
-		TArray<AActor*> FoundActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundActors);
+		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
-
-		for (int i = 0; i < FoundActors.Num(); i++)
+		if (pc)
 		{
+			pc->Inventory->inventory = instance->inventory;
+		}
 
-			auto startCamera = Cast<AFCPlayerCamera>(FoundActors[i]);
-			if (startCamera)
+		FindStart(instance);
+	}
+}
+
+void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundActors);
+
+	for (int i = 0; i < FoundActors.Num(); i++)
+	{
+		auto startCamera = Cast<AFCPlayerCamera>(FoundActors[i]);
+		if (startCamera)
+		{
+			if (startCamera->startIndex == instance->startIndex)
 			{
-				if (startCamera->startIndex == instance->startIndex)
+				APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+				if (playerController)
 				{
-					APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-					if (playerController)
-					{
-						FViewTargetTransitionParams transitionParams;
-						playerController->SetViewTarget(startCamera, transitionParams);
-						break;
-					}
+					FViewTargetTransitionParams transitionParams;
+					playerController->SetViewTarget(startCamera, transitionParams);
+					break;
 				}
 			}
 		}

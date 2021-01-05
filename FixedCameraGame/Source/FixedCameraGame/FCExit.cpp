@@ -2,7 +2,9 @@
 
 
 #include "FCExit.h"
-#include "Kismet/GameplayStatics.h" 
+#include "Kismet/GameplayStatics.h"
+#include "FCPlayer.h"
+#include "FCInventoryComponent.h"
 #include "FCGameInstance.h"
 
 void AFCExit::Action_Implementation()
@@ -12,7 +14,13 @@ void AFCExit::Action_Implementation()
 
 	if (instance)
 	{
-		instance->startIndex = index;
-		UGameplayStatics::OpenLevel(GetWorld(), levelName);
+		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+		if (pc)
+		{
+			instance->startIndex = index;
+			instance->inventory = pc->Inventory->inventory;
+			UGameplayStatics::OpenLevel(GetWorld(), levelName);
+		}
 	}
 }

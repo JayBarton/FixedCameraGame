@@ -7,7 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "FCInteractableInterface.h"
-
+#include "FCInventoryComponent.h"
+#include "FCLockComponent.h"
 
 #include "DrawDebugHelpers.h" 
 
@@ -27,6 +28,9 @@ AFCPlayer::AFCPlayer()
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 
+	Inventory = CreateDefaultSubobject<UFCInventoryComponent>(TEXT("Inventory"));
+	Inventory->capacity = 6;
+
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
@@ -38,7 +42,6 @@ void AFCPlayer::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
 	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
-
 }
 
 // Called every frame
@@ -82,8 +85,8 @@ void AFCPlayer::Turn(float value)
 	if (value != 0.0f)
 	{
 		//turnAmount = value;
-		//FRotator rotation = FRotator(0.0f, turnAmount, 0.0f);
-		//FRotator rotation = FRotator(0.0f, value * 5.0f, 0.0f);
+		//FRotator roton = FRotator(0.0f, turnAmount, 0.0f);
+		//FRotator rotation 
 		FRotator rotation = FRotator(0.0f, value, 0.0f);
 		AddActorLocalRotation(rotation);
 
@@ -106,7 +109,26 @@ void AFCPlayer::Interact()
 {
 	if (nearestInteractable)
 	{
-		IFCInteractableInterface::Execute_Action(nearestInteractable);
+		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
+		{
+			int id = -1;
+			for (int i = 0; i < Inventory->inventory.Num(); i++)
+			{
+				if (Inventory->inventory[i].ID == lock->ID)
+				{
+					id = Inventory->inventory[i].ID;
+					//remove from inventory
+					//Would like to do this without shifting the array down...
+					Inventory->RemoveFromInventory(i);
+					break;
+				}
+			}
+			lock->Open(id);
+		}
+		else
+		{
+			IFCInteractableInterface::Execute_Action(nearestInteractable);
+		}
 	}
 
 }

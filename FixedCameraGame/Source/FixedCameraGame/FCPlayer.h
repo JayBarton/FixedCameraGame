@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "FCPlayer.generated.h"
 
+class UFCInventoryComponent;
 UCLASS()
 class FIXEDCAMERAGAME_API AFCPlayer : public ACharacter
 {
@@ -14,6 +15,7 @@ class FIXEDCAMERAGAME_API AFCPlayer : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AFCPlayer();
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -43,6 +45,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float runSpeed = 500.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+		UFCInventoryComponent* Inventory;
 
 	AActor* nearestInteractable;
 

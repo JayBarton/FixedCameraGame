@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Structs.h"
 #include "FCGameInstance.generated.h"
 
 /**
@@ -18,4 +19,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	int startIndex = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+		TArray<FItemStruct> inventory;
 };
