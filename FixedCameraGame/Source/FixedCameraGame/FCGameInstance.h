@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "Structs.h"
+#include "FCObjectWatcher.h"
 #include "FCGameInstance.generated.h"
 
 /**
@@ -20,5 +21,9 @@ public:
 	int startIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
-		TArray<FItemStruct> inventory;
+	TArray<FItemStruct> inventory;
+
+	//Use this to load objects that have data that can change, such as picked up items and locked doors
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	TMap<FString, FDataArray> savedObjects;
 };
