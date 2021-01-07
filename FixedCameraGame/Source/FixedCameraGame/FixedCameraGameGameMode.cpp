@@ -10,6 +10,7 @@
 #include "FC_PlayerStart.h"
 #include "FCPlayerCamera.h"
 #include "FCObjectWatcher.h"
+#include "FCContainer.h"
 
 #include "FCLockComponent.h"
 
@@ -30,11 +31,27 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 	TArray<AActor*> FoundActors;
 
+	if (objectWatcher == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Objectwatcher null"));
+	}
+
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCObjectWatcher::StaticClass(), FoundActors);
 	if (FoundActors.Num() > 0)
 	{
 		objectWatcher = Cast<AFCObjectWatcher>(FoundActors[0]);
 	}
+
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCContainer::StaticClass(), FoundActors);
+	if (FoundActors.Num() > 0)
+	{
+		container = Cast<AFCContainer>(FoundActors[0]);
+		if (instance->containerInventory.Num() == container->Inventory->inventory.Num())
+		{
+			container->Inventory->inventory = instance->containerInventory;
+		}
+	}
+
 	currentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	if (instance)
 	{
@@ -44,7 +61,7 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 		if (pc)
 		{
-			pc->Inventory->inventory = instance->inventory;
+			pc->Inventory->inventory = instance->playerInventory;
 		}
 
 		FindStart(instance);
@@ -137,7 +154,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 		if (pc)
 		{
 			instance->startIndex = index;
-			instance->inventory = pc->Inventory->inventory;
+			instance->playerInventory = pc->Inventory->inventory;
 			if (objectWatcher)
 			{
 				objectWatcher->UpdateObjects();
@@ -149,6 +166,11 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 				{
 					instance->savedObjects.Add(currentLevel, objectWatcher->objects);
 				}
+			}
+
+			if (container)
+			{
+				instance->containerInventory = container->Inventory->inventory;
 			}
 			UGameplayStatics::OpenLevel(GetWorld(), levelName);
 		}

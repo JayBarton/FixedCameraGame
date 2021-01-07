@@ -8,6 +8,7 @@
 
 class UFCGameInstance;
 class AFCObjectWatcher;
+class AFCContainer;
 UCLASS(minimalapi)
 class AFixedCameraGameGameMode : public AGameModeBase
 {
@@ -27,6 +28,8 @@ public:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	AFCObjectWatcher* objectWatcher;
+	AFCContainer* container;
+
 
 	FString currentLevel;
 };

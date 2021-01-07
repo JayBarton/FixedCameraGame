@@ -21,7 +21,10 @@ public:
 	int startIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
-	TArray<FItemStruct> inventory;
+	TArray<FItemStruct> playerInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	TArray<FItemStruct> containerInventory;
 
 	//Use this to load objects that have data that can change, such as picked up items and locked doors
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
