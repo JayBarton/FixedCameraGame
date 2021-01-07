@@ -38,6 +38,8 @@ public:
 
 	void Interact();
 
+	void OpenInventory();
+
 	void LookForInteractable();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
@@ -52,5 +54,8 @@ public:
 	AActor* nearestInteractable;
 
 	FTimerHandle LookTimerHandle;
+
+	//UPROPERTY(EditDefaultsOnly, Category = "UI")
+//	TSubclassOf<UUserWidget> inventoryUI = nullptr;
 
 };

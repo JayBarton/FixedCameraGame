@@ -10,6 +10,9 @@
 #include "FCInventoryComponent.h"
 #include "FCLockComponent.h"
 
+
+#include "Blueprint/UserWidget.h" 
+
 #include "DrawDebugHelpers.h" 
 
 // Sets default values
@@ -66,6 +69,8 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCPlayer::Interact);
+
+	//PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AFCPlayer::OpenInventory);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFCPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Turn", this, &AFCPlayer::Turn);
@@ -131,6 +136,23 @@ void AFCPlayer::Interact()
 		}
 	}
 
+}
+
+void AFCPlayer::OpenInventory()
+{
+	/*
+	 UserInterface = CreateWidget<UMyUserWidget>(this, UMyUserWidget::StaticClass());
+	 FInputModeGameAndUI Mode;
+	 Mode.SetLockMouseToViewport(true);
+	 Mode.SetHideCursorDuringCapture(false);
+	 SetInputMode(Mode);
+	 UserInterface->AddToViewport(9999); // Z-order, this just makes it render on the very top.
+	*/
+/*	if (inventoryUI)
+	{
+		auto bedroomEyes = CreateWidget<UUserWidget>(GetWorld(), inventoryUI);
+		bedroomEyes->AddToViewport();
+	}*/
 }
 
 void AFCPlayer::LookForInteractable()
