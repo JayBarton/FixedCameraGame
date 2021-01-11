@@ -22,9 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	bool AddToInventory(FItemStruct newItem);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RemoveFromInventory(int index);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
