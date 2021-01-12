@@ -7,7 +7,7 @@
 #include "Structs.h"
 #include "FCInventoryComponent.generated.h"
 
-
+class UUserWidget;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FIXEDCAMERAGAME_API UFCInventoryComponent : public UActorComponent
 {
@@ -23,7 +23,7 @@ protected:
 
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	bool AddToInventory(FItemStruct newItem);
+	int32 AddToInventory(FItemStruct newItem);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RemoveFromInventory(int index);
@@ -32,4 +32,7 @@ public:
 		TArray<FItemStruct> inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		int32 capacity;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+		UUserWidget* inventoryWindow;
+
 };

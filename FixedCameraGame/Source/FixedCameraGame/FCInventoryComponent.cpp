@@ -2,13 +2,15 @@
 
 
 #include "FCInventoryComponent.h"
+#include "Blueprint/UserWidget.h" 
+
 // Sets default values for this component's properties
 UFCInventoryComponent::UFCInventoryComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
+	//inventoryWindow = CreateDefaultSubobject<UUserWidget>(TEXT("InventoryWindow"));
 }
 
 
@@ -23,20 +25,20 @@ void UFCInventoryComponent::BeginPlay()
 	}
 }
 
-bool UFCInventoryComponent::AddToInventory(FItemStruct newItem)
+int32 UFCInventoryComponent::AddToInventory(FItemStruct newItem)
 {	
-	bool added = false;
+	int32 addedIndex = -1;
 	for (int i = 0; i < capacity; i++)
 	{
 		if (inventory[i].ID < 0)
 		{
 			inventory[i] = newItem;
-			added = true;
+			addedIndex = i;
 			break;
 		}
 	}
 
-	return added;
+	return addedIndex;
 }
 
 void UFCInventoryComponent::RemoveFromInventory(int index)

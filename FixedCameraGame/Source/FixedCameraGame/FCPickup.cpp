@@ -11,7 +11,7 @@ void AFCPickup::Action_Implementation()
 {
 	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	
-	if (pc->Inventory->AddToInventory(details))
+	if (pc->Inventory->AddToInventory(details) >= 0)
 	{
 		Destroy();
 	}
