@@ -74,7 +74,6 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFCPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Turn", this, &AFCPlayer::Turn);
-
 }
 
 void AFCPlayer::MoveForward(float value)
@@ -116,19 +115,7 @@ void AFCPlayer::Interact()
 	{
 		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
 		{
-			int id = -1;
-			for (int i = 0; i < Inventory->inventory.Num(); i++)
-			{
-				if (Inventory->inventory[i].ID == lock->ID)
-				{
-					id = Inventory->inventory[i].ID;
-					//remove from inventory
-					//Would like to do this without shifting the array down...
-					Inventory->RemoveFromInventory(i);
-					break;
-				}
-			}
-			lock->Open(id);
+			Toggle(2, lock, nullptr);
 		}
 		else
 		{
@@ -191,5 +178,21 @@ void AFCPlayer::LookForInteractable()
 			nearestInteractable = nullptr;
 		}
 	}
+}
+
+bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
+{
+	int32 ID = Inventory->inventory[index].ID;
+	if (ID == lock->ID)
+	{
+		Inventory->RemoveFromInventory(index);
+		lock->Open(ID);
+		return true;
+	}
+	return false;
+}
+
+void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
+{
 }
 

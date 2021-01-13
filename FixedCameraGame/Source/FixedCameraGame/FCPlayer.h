@@ -42,6 +42,12 @@ public:
 
 	void LookForInteractable();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		bool UseKey(int32 index, UFCLockComponent* lock);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
 
