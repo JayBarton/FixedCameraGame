@@ -30,6 +30,7 @@ AFCPlayer::AFCPlayer()
 	GetCharacterMovement()->bOrientRotationToMovement = false; // Character moves in the direction of input...	
 	GetCharacterMovement()->JumpZVelocity = 600.f;
 	GetCharacterMovement()->AirControl = 0.2f;
+	GetCharacterMovement()->bRunPhysicsWithNoController = true;
 
 	Inventory = CreateDefaultSubobject<UFCInventoryComponent>(TEXT("Inventory"));
 	Inventory->capacity = 6;
