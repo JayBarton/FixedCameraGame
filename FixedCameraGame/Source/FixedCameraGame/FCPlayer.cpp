@@ -9,9 +9,8 @@
 #include "FCInteractableInterface.h"
 #include "FCInventoryComponent.h"
 #include "FCLockComponent.h"
-
-
 #include "Blueprint/UserWidget.h" 
+#include "FCInteractable.h"
 
 #include "DrawDebugHelpers.h" 
 
@@ -116,7 +115,15 @@ void AFCPlayer::Interact()
 	{
 		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
 		{
-			Toggle(2, lock, nullptr);
+			auto interactable = Cast<AFCInteractable>(nearestInteractable);
+			if (interactable->puzzle)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Need to do a thing"));
+			}
+			else
+			{
+				Toggle(2, lock, nullptr);
+			}
 		}
 		else
 		{

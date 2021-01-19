@@ -21,6 +21,10 @@ public:
         bool spawn = true;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
         bool locked = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        bool active = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        bool puzzle = false;
 };
 
 //Have to create an array in this struct to get around ue4 not allowing double nesting

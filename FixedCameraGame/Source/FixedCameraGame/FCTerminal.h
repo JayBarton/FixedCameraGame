@@ -13,6 +13,7 @@
 class UWidgetComponent;
 class UCameraComponent;
 class ACameraActor;
+class UFCLockComponent;
 UCLASS()
 class FIXEDCAMERAGAME_API AFCTerminal : public AFCInteractable
 {
@@ -42,5 +43,14 @@ public:
 	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-		ACameraActor* playerCamera;
+	ACameraActor* playerCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		AFCInteractable* linkedInteractable;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		UFCLockComponent* linkedLock;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 };

@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h" 
 #include "Camera/CameraComponent.h"
 #include "Camera/CameraActor.h" 
+#include "FCLockComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 AFCTerminal::AFCTerminal()
@@ -16,15 +17,32 @@ AFCTerminal::AFCTerminal()
 	Camera->SetupAttachment(RootComponent);
 }
 
+void AFCTerminal::BeginPlay()
+{
+	Super::BeginPlay();
+	if (linkedInteractable)
+	{
+		linkedLock = Cast<UFCLockComponent>(linkedInteractable->FindComponentByClass(UFCLockComponent::StaticClass()));
+	}
+}
+
+
 void AFCTerminal::Action_Implementation()
 {
-	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-	pc->SetInputMode(FInputModeUIOnly());
-	Widget->GetUserWidgetObject()->SetKeyboardFocus();
-	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
-	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->SetActorHiddenInGame(true);
-	SendToWidget();
+	if (active)
+	{
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+		pc->SetInputMode(FInputModeUIOnly());
+		Widget->GetUserWidgetObject()->SetKeyboardFocus();
+		pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->SetActorHiddenInGame(true);
+		SendToWidget();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Already used"));
+	}
 }
 
 
@@ -35,6 +53,12 @@ void AFCTerminal::SendToWidget_Implementation()
 void AFCTerminal::OpenLock()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Open lock once that's implemented"));
+	//Not sure if this is the best way to do this, it should work.
+	if (linkedLock)
+	{
+		linkedLock->Open(linkedLock->ID);
+	}
+	active = false;
 	ExitTerminal();
 }
 
@@ -47,3 +71,4 @@ void AFCTerminal::ExitTerminal()
 
 	//Reset to player control
 }
+

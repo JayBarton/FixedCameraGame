@@ -3,6 +3,7 @@
 
 #include "FCObjectWatcher.h"
 #include "FCLockComponent.h"
+#include "FCInteractable.h"
 
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
@@ -39,7 +40,22 @@ void AFCObjectWatcher::UpdateObjects()
 			{
 				objects.data[i].locked = false;
 			}
-
+		}
+		if (object.active)
+		{
+			auto interactable = Cast<AFCInteractable>(object.actor);
+			if (!interactable->active)
+			{
+				objects.data[i].active = false;
+			}
+		}
+		if (object.puzzle)
+		{
+			auto interactable = Cast<AFCInteractable>(object.actor);
+			if (!interactable->puzzle)
+			{
+				objects.data[i].puzzle = false;
+			}
 		}
 	}
 }
