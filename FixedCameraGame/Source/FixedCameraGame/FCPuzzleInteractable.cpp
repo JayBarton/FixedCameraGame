@@ -18,7 +18,6 @@ AFCPuzzleInteractable::AFCPuzzleInteractable()
 void AFCPuzzleInteractable::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Please"));
 	if (linkedInteractable)
 	{
 		linkedLock = Cast<UFCLockComponent>(linkedInteractable->FindComponentByClass(UFCLockComponent::StaticClass()));
