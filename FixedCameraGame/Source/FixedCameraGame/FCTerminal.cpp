@@ -17,18 +17,11 @@ AFCTerminal::AFCTerminal()
 	Camera->SetupAttachment(RootComponent);
 }
 
-void AFCTerminal::BeginPlay()
-{
-	Super::BeginPlay();
-	if (linkedInteractable)
-	{
-		linkedLock = Cast<UFCLockComponent>(linkedInteractable->FindComponentByClass(UFCLockComponent::StaticClass()));
-	}
-}
 
 
 void AFCTerminal::Action_Implementation()
 {
+	Super::Action_Implementation();
 	if (active)
 	{
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -50,25 +43,13 @@ void AFCTerminal::SendToWidget_Implementation()
 {
 }
 
-void AFCTerminal::OpenLock()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Open lock once that's implemented"));
-	//Not sure if this is the best way to do this, it should work.
-	if (linkedLock)
-	{
-		linkedLock->Open(linkedLock->ID);
-	}
-	active = false;
-	ExitTerminal();
-}
 
-void AFCTerminal::ExitTerminal()
+void AFCTerminal::ExitPuzzle()
 {
+	//Reset to player control
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	pc->SetInputMode(FInputModeGameOnly());
 	pc->SetViewTargetWithBlend(playerCamera, 0.0f, VTBlend_Linear, 0.0f);
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->SetActorHiddenInGame(false);
-
-	//Reset to player control
 }
 

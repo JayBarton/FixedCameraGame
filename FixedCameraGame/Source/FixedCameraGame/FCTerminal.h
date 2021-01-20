@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FCInteractable.h"
+#include "FCPuzzleIneractable.h"
 #include "FCTerminal.generated.h"
 
 /**
@@ -15,7 +15,7 @@ class UCameraComponent;
 class ACameraActor;
 class UFCLockComponent;
 UCLASS()
-class FIXEDCAMERAGAME_API AFCTerminal : public AFCInteractable
+class FIXEDCAMERAGAME_API AFCTerminal : public AFCPuzzleIneractable
 {
 	GENERATED_BODY()
 
@@ -27,11 +27,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void SendToWidget();
 
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void OpenLock();
-
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void ExitTerminal();
+	virtual void ExitPuzzle() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
 	FString password;
@@ -42,15 +38,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
 	UCameraComponent* Camera;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	ACameraActor* playerCamera;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
-		AFCInteractable* linkedInteractable;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
-		UFCLockComponent* linkedLock;
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
 };
