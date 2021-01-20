@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FCPuzzleIneractable.h"
+#include "FCPuzzleInteractable.h"
 #include "FCTerminal.generated.h"
 
 /**
@@ -15,7 +15,7 @@ class UCameraComponent;
 class ACameraActor;
 class UFCLockComponent;
 UCLASS()
-class FIXEDCAMERAGAME_API AFCTerminal : public AFCPuzzleIneractable
+class FIXEDCAMERAGAME_API AFCTerminal : public AFCPuzzleInteractable
 {
 	GENERATED_BODY()
 

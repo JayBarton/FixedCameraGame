@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "FCPuzzleIneractable.h"
+#include "FCPuzzleInteractable.h"
 #include "FCPawnPossessor.generated.h"
 
 /**
@@ -12,7 +12,7 @@
 class ACameraActor;
 class AFCPuzzlePawnBase;
 UCLASS()
-class FIXEDCAMERAGAME_API AFCPawnPossessor : public AFCPuzzleIneractable
+class FIXEDCAMERAGAME_API AFCPawnPossessor : public AFCPuzzleInteractable
 {
 	GENERATED_BODY()
 public:

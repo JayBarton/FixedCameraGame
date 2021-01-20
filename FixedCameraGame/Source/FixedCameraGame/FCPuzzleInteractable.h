@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "FCInteractable.h"
-#include "FCPuzzleIneractable.generated.h"
+#include "FCPuzzleInteractable.generated.h"
 
 class ACameraActor;
 class UFCLockComponent;
 UCLASS()
-class FIXEDCAMERAGAME_API AFCPuzzleIneractable : public AFCInteractable
+class FIXEDCAMERAGAME_API AFCPuzzleInteractable : public AFCInteractable
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AFCPuzzleIneractable();
+	AFCPuzzleInteractable();
 
 protected:
 	// Called when the game starts or when spawned

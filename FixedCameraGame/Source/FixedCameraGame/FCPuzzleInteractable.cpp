@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "FCPuzzleIneractable.h"
+#include "FCPuzzleInteractable.h"
 #include "Camera/CameraActor.h" 
 #include "FCLockComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-AFCPuzzleIneractable::AFCPuzzleIneractable()
+AFCPuzzleInteractable::AFCPuzzleInteractable()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
@@ -15,9 +15,10 @@ AFCPuzzleIneractable::AFCPuzzleIneractable()
 }
 
 // Called when the game starts or when spawned
-void AFCPuzzleIneractable::BeginPlay()
+void AFCPuzzleInteractable::BeginPlay()
 {
 	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Please"));
 	if (linkedInteractable)
 	{
 		linkedLock = Cast<UFCLockComponent>(linkedInteractable->FindComponentByClass(UFCLockComponent::StaticClass()));
@@ -25,7 +26,7 @@ void AFCPuzzleIneractable::BeginPlay()
 }
 
 
-void AFCPuzzleIneractable::Action_Implementation()
+void AFCPuzzleInteractable::Action_Implementation()
 {
 /*	if (active)
 	{
@@ -40,7 +41,7 @@ void AFCPuzzleIneractable::Action_Implementation()
 	}*/
 }
 
-void AFCPuzzleIneractable::OpenLock()
+void AFCPuzzleInteractable::OpenLock()
 {
 	//Not sure if this is the best way to do this, it should work.
 	if (linkedLock)
@@ -51,7 +52,7 @@ void AFCPuzzleIneractable::OpenLock()
 	ExitPuzzle();
 }
 
-void AFCPuzzleIneractable::ExitPuzzle()
+void AFCPuzzleInteractable::ExitPuzzle()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base"));
 
