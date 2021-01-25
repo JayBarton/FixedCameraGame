@@ -20,6 +20,7 @@ void AFCPawnPossessor::Action_Implementation()
 		playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		pc->Possess(puzzlePawn);
 		pc->SetViewTargetWithBlend(newCamera);
+		puzzlePawn->StartPuzzle();
 		puzzlePawn->parent = this;
 	}
 	else

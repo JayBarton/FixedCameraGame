@@ -37,6 +37,10 @@ void AFCPuzzlePawnBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
+void AFCPuzzlePawnBase::StartPuzzle()
+{
+}
+
 void AFCPuzzlePawnBase::ExitPuzzle()
 {
 	parent->ExitPuzzle();

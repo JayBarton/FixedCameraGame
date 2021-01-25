@@ -28,7 +28,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void ExitPuzzle();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	virtual void StartPuzzle();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	virtual void ExitPuzzle();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void SolvePuzzle();
 
