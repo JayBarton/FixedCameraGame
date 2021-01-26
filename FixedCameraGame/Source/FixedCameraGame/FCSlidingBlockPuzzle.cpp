@@ -166,10 +166,7 @@ void AFCSlidingBlockPuzzle::StartPuzzle()
 		{
 			float X = startLocation.X - (i / size) * 100;
 			float Y = startLocation.Y + (i % size) * 100;
-			if (i == 0)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("%f"), Y);
-			}
+
 			FVector location(X, Y, startLocation.Z);
 
 			AActor* box = GetWorld()->SpawnActor<AActor>(prop, location, FRotator::ZeroRotator, SpawnParams);

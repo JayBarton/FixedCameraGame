@@ -24,7 +24,7 @@ public:
 	void MoveDown();
 	void MoveBlock();
 	int32 FindAdjacent();
-	void CheckSolution();
+	virtual void CheckSolution() override;
 	
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;
