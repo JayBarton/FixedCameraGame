@@ -14,5 +14,9 @@ class FIXEDCAMERAGAME_API AFCDescription : public AFCInteractable
 {
 	GENERATED_BODY()
 public:
-	virtual void Action_Implementation() override;
+	AFCDescription();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	FText description;
+	//virtual void Action_Implementation() override;
 };

@@ -5,6 +5,11 @@
 #include "Kismet/GameplayStatics.h"
 #include "FixedCameraGameGameMode.h"
 
+AFCExit::AFCExit()
+{
+	prompt = "Exit";
+}
+
 void AFCExit::Action_Implementation()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>( UGameplayStatics::GetGameMode(GetWorld()));

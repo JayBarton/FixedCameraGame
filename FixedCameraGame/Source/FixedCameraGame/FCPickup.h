@@ -16,6 +16,8 @@ class FIXEDCAMERAGAME_API AFCPickup : public AFCInteractable
 {
 	GENERATED_BODY()
 public:
+	AFCPickup();
+
 	virtual void Action_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Details")

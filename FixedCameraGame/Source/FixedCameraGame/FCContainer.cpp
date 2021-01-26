@@ -10,6 +10,7 @@ AFCContainer::AFCContainer()
 {
 	Inventory = CreateDefaultSubobject<UFCInventoryComponent>(TEXT("Inventory"));
 	Inventory->capacity = 12;
+	prompt = "Open";
 }
 
 /*void AFCContainer::Action_Implementation()

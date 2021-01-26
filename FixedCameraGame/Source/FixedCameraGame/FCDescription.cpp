@@ -3,8 +3,13 @@
 
 #include "FCDescription.h"
 
-void AFCDescription::Action_Implementation()
+AFCDescription::AFCDescription()
+{
+	prompt = "Examine";
+}
+
+/*void AFCDescription::Action_Implementation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("This is a description"));
 
-}
+}*/

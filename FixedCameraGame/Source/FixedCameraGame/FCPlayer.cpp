@@ -45,6 +45,9 @@ void AFCPlayer::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
 	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
+	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
+//	GetWorld()->GetTimerManager().
+	//LookTimerHandle.Invalidate
 }
 
 // Called every frame
@@ -129,6 +132,7 @@ void AFCPlayer::Interact()
 		{
 			IFCInteractableInterface::Execute_Action(nearestInteractable);
 		}
+		Interacted.Broadcast();
 	}
 
 }
@@ -152,6 +156,8 @@ void AFCPlayer::OpenInventory()
 
 void AFCPlayer::LookForInteractable()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ABC"));
+
 	FHitResult OutHit;
 
 	FVector Start = GetActorLocation();
@@ -173,6 +179,7 @@ void AFCPlayer::LookForInteractable()
 			{
 				nearestInteractable = OutHit.GetActor();
 				UE_LOG(LogTemp, Warning, TEXT("%s"), *nearestInteractable->GetName());
+				NewInteractable.Broadcast();
 
 			}
 		}
@@ -184,6 +191,8 @@ void AFCPlayer::LookForInteractable()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("nothin'"));
 			nearestInteractable = nullptr;
+			NewInteractable.Broadcast();
+
 		}
 	}
 }

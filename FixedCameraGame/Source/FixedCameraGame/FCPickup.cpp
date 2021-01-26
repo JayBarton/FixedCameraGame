@@ -7,6 +7,11 @@
 #include "FCInventoryComponent.h"
 #include "Structs.h"
 
+AFCPickup::AFCPickup()
+{
+	prompt = "Examine";
+}
+
 void AFCPickup::Action_Implementation()
 {
 	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));

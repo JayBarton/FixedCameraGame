@@ -7,6 +7,11 @@
 #include "FCPlayer.generated.h"
 
 class UFCInventoryComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
+
+
 UCLASS()
 class FIXEDCAMERAGAME_API AFCPlayer : public ACharacter
 {
@@ -48,6 +53,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		bool UseKey(int32 index, UFCLockComponent* lock);
 
+	//Just using this to test the text display, come up with a better solution later
+	UPROPERTY(BlueprintReadOnly, Category = "Delete Later")
+		bool inControl = true;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
 
@@ -57,9 +66,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		UFCInventoryComponent* Inventory;
 
+	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	AActor* nearestInteractable;
 
 	FTimerHandle LookTimerHandle;
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FInteractableDelegate Interacted;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FNewInteractableDelegate NewInteractable;
 
 	//UPROPERTY(EditDefaultsOnly, Category = "UI")
 //	TSubclassOf<UUserWidget> inventoryUI = nullptr;

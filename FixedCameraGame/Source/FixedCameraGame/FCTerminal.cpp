@@ -8,6 +8,8 @@
 #include "FCLockComponent.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "FCPlayer.h"
+
 AFCTerminal::AFCTerminal()
 {
 	Widget = CreateDefaultSubobject<UWidgetComponent>(TEXT("Widget"));
@@ -29,7 +31,10 @@ void AFCTerminal::Action_Implementation()
 		pc->SetInputMode(FInputModeUIOnly());
 		Widget->GetUserWidgetObject()->SetKeyboardFocus();
 		pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
-		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->SetActorHiddenInGame(true);
+		auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		playerPawn->SetActorHiddenInGame(true);
+		playerPawn->SetActorTickEnabled(false);
+		Cast<AFCPlayer>(playerPawn)->inControl = false;
 		SendToWidget();
 	}
 	else
@@ -50,6 +55,10 @@ void AFCTerminal::ExitPuzzle()
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	pc->SetInputMode(FInputModeGameOnly());
 	pc->SetViewTargetWithBlend(playerCamera, 0.0f, VTBlend_Linear, 0.0f);
-	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->SetActorHiddenInGame(false);
+	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	playerPawn->SetActorHiddenInGame(false);
+	playerPawn->SetActorTickEnabled(true);
+	Cast<AFCPlayer>(playerPawn)->inControl = true;
+
 }
 

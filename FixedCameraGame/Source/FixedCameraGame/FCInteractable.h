@@ -9,6 +9,7 @@
 
 class UStaticMeshComponent;
 class UBoxComponent;
+
 UCLASS()
 class FIXEDCAMERAGAME_API AFCInteractable : public AActor, public IFCInteractableInterface
 {
@@ -30,6 +31,9 @@ public:
 	//Not ideal, but should work for now
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	bool puzzle = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+		FString prompt = "";
 
 protected:
 	// Called when the game starts or when spawned

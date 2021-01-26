@@ -15,6 +15,7 @@ class FIXEDCAMERAGAME_API AFCExit : public AFCInteractable
 	GENERATED_BODY()
 
 public:
+	AFCExit();
 	virtual void Action_Implementation() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
