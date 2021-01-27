@@ -156,8 +156,6 @@ void AFCPlayer::OpenInventory()
 
 void AFCPlayer::LookForInteractable()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ABC"));
-
 	FHitResult OutHit;
 
 	FVector Start = GetActorLocation();

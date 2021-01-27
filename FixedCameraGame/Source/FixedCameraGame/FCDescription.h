@@ -9,6 +9,7 @@
 /**
  * 
  */
+class UFCInfoTextWidget;
 UCLASS()
 class FIXEDCAMERAGAME_API AFCDescription : public AFCInteractable
 {
@@ -16,7 +17,12 @@ class FIXEDCAMERAGAME_API AFCDescription : public AFCInteractable
 public:
 	AFCDescription();
 
+	virtual void Action_Implementation() override;
+
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	FText description;
-	//virtual void Action_Implementation() override;
+	FString description;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+		TSubclassOf<UFCInfoTextWidget> infoWidget;
 };
