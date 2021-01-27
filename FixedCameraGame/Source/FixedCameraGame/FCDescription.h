@@ -19,10 +19,7 @@ public:
 
 	virtual void Action_Implementation() override;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	FString description;
 
-	UPROPERTY(EditAnywhere, Category = "UI")
-		TSubclassOf<UFCInfoTextWidget> infoWidget;
 };

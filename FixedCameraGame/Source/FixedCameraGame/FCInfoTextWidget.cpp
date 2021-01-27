@@ -17,7 +17,6 @@ void UFCInfoTextWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 
 	currentTime += InDeltaTime;
 
-
 	if (currentTime >= delay)
 	{
 		if (index < text.Len())

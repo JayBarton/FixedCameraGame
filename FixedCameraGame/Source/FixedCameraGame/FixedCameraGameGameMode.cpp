@@ -11,7 +11,7 @@
 #include "FCPlayerCamera.h"
 #include "FCObjectWatcher.h"
 #include "FCContainer.h"
-
+#include "FCInfoTextWidget.h"
 #include "FCLockComponent.h"
 
 
@@ -83,7 +83,6 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
 					objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
 					objectWatcher->objects.data[i].puzzle = instance->savedObjects[currentLevel].data[i].puzzle;
-
 				}
 
 				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
@@ -214,4 +213,72 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	}
 
 	return Super::ChoosePlayerStart_Implementation(Player);
+}
+
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock)
+{
+	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
+	display->AddToViewport();
+	display->text = toDisplay;
+	//display->SetKeyboardFocus();
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	pc->SetInputMode(FInputModeGameAndUI());
+	//pc->SetInputMode(FInputModeUIOnly());
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
+
+	inputComponent = UGameplayStatics::GetPlayerController(GetWorld(), 0)->InputComponent;
+	if (lock)
+	{
+		inputComponent->BindAction<InputDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInventory, lock).bExecuteWhenPaused = true;
+	}
+	else
+	{
+		inputComponent->BindAction("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleText).bExecuteWhenPaused = true;
+	}
+	interactKey = inputComponent->GetNumActionBindings() - 1;
+}
+
+bool AFixedCameraGameGameMode::AdvanceText()
+{
+	bool finished = false;
+	if (display->index == display->text.Len())
+	{
+		finished = true;
+	}
+	else
+	{
+		display->delay = display->fastDelay;
+	}
+	return finished;
+}
+
+void AFixedCameraGameGameMode::HandleText()
+{
+	if (AdvanceText())
+	{
+		display->RemoveFromParent();
+		display = nullptr;
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+		inputComponent->RemoveActionBinding(interactKey);
+
+		pc->SetInputMode(FInputModeGameOnly());
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+	}
+}
+
+void AFixedCameraGameGameMode::HandleTextToInventory(UFCLockComponent* lock)
+{
+	if (AdvanceText())
+	{
+		display->RemoveFromParent();
+		display = nullptr;
+		inputComponent->RemoveActionBinding(interactKey);
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
+		auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		player->Toggle(2, lock, nullptr);
+	}
 }

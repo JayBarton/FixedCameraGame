@@ -4,7 +4,7 @@
 #include "FCDescription.h"
 #include "FCInfoTextWidget.h"
 #include "Kismet/GameplayStatics.h" 
-
+#include "FixedCameraGameGameMode.h"
 
 AFCDescription::AFCDescription()
 {
@@ -19,12 +19,15 @@ AFCDescription::AFCDescription()
 
 void AFCDescription::Action_Implementation()
 {
-	auto display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->DisplayText(description);
+	
+	/*auto display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
 	display->text = description;
 	display->SetKeyboardFocus();
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	pc->SetInputMode(FInputModeUIOnly());
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	UGameplayStatics::SetGamePaused(GetWorld(), true);*/
 
 }

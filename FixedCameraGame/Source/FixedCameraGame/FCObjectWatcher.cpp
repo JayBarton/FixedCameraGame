@@ -44,7 +44,7 @@ void AFCObjectWatcher::UpdateObjects()
 		if (object.active)
 		{
 			auto interactable = Cast<AFCInteractable>(object.actor);
-			if (!interactable->active)
+			if (interactable && !interactable->active)
 			{
 				objects.data[i].active = false;
 			}
@@ -52,7 +52,7 @@ void AFCObjectWatcher::UpdateObjects()
 		if (object.puzzle)
 		{
 			auto interactable = Cast<AFCInteractable>(object.actor);
-			if (!interactable->puzzle)
+			if (interactable && !interactable->puzzle)
 			{
 				objects.data[i].puzzle = false;
 			}

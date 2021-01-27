@@ -11,7 +11,8 @@
 #include "FCLockComponent.h"
 #include "Blueprint/UserWidget.h" 
 #include "FCInteractable.h"
-
+#include "Kismet/GameplayStatics.h" 
+#include "FixedCameraGameGameMode.h"
 #include "DrawDebugHelpers.h" 
 
 // Sets default values
@@ -114,18 +115,22 @@ void AFCPlayer::StopSprinting()
 
 void AFCPlayer::Interact()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Now"));
 	if (nearestInteractable)
 	{
 		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
 		{
 			auto interactable = Cast<AFCInteractable>(nearestInteractable);
+			auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 			if (interactable->puzzle)
 			{
+				gameMode->DisplayText("Need to do a thing");
 				UE_LOG(LogTemp, Warning, TEXT("Need to do a thing"));
 			}
 			else
 			{
-				Toggle(2, lock, nullptr);
+				gameMode->DisplayText("Door is locked", lock);
+			//	Toggle(2, lock, nullptr);
 			}
 		}
 		else
