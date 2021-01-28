@@ -17,12 +17,22 @@ class FIXEDCAMERAGAME_API AFCPlayerCamera : public ACameraActor
 public:
 	AFCPlayerCamera();
 
-	//virtual void BeginPlay() override;
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:
+	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	bool startingCamera;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 		int startIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Material")
+		UMaterialInterface* MaterialTest;
+
+	UMaterialInstanceDynamic* dynamicMaterial;
 
 };
