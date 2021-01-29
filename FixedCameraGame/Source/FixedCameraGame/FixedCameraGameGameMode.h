@@ -10,11 +10,13 @@ class UFCGameInstance;
 class AFCObjectWatcher;
 class AFCContainer;
 class UFCInfoTextWidget;
+class AFCPlayerCamera;
 
 //Hopefully this being here is temporary
 class UFCLockComponent;
 
 DECLARE_DELEGATE_OneParam(InputDelegate, UFCLockComponent*);
+
 
 UCLASS(minimalapi)
 class AFixedCameraGameGameMode : public AGameModeBase
@@ -25,12 +27,15 @@ public:
 	AFixedCameraGameGameMode();
 
 	virtual void BeginPlay() override;
+	
+	virtual void Tick(float DeltaTime) override;
 
 	void CheckObjects(UFCGameInstance* instance);
 
 	void FindStart(UFCGameInstance* instance);
 
 	void ChangeLevel(int index, FName levelName);
+	void MoveToLevel(FName levelName);
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
@@ -47,9 +52,19 @@ public:
 
 	UFCInfoTextWidget* display = nullptr;
 
+	AFCPlayerCamera* playerCamera;
+
 	FString currentLevel;
 
 	int32 interactKey;
+
+	float transitionTime = 1.0f;
+	float transitionTimer = 0.0f;
+
+	bool fadeIn = false;
+	bool fadeOut = false;
+
+	FName nextLevel;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 		TSubclassOf<UFCInfoTextWidget> infoWidget;

@@ -23,10 +23,13 @@ AFixedCameraGameGameMode::AFixedCameraGameGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+	PrimaryActorTick.bTickEvenWhenPaused = true;
+
 }
 
 void AFixedCameraGameGameMode::BeginPlay()
 {
+
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	TArray<AActor*> FoundActors;
@@ -65,7 +68,40 @@ void AFixedCameraGameGameMode::BeginPlay()
 		}
 
 		FindStart(instance);
+
+		fadeOut = true;
+		playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
+		//playerCamera->SetDynamicMaterial();
+		playerCamera->SetMaterial(1.0f);
+		//UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
+}
+
+void AFixedCameraGameGameMode::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (fadeIn)
+	{
+		transitionTimer += DeltaTime;
+		//update camera
+		playerCamera->UpdateMaterial(transitionTimer, transitionTime);
+		if (transitionTimer >= transitionTime)
+		{
+			MoveToLevel(nextLevel);
+		}
+	}
+	else if (fadeOut)
+	{
+		transitionTimer += DeltaTime;
+		playerCamera->UpdateMaterial(1.0f - transitionTimer, transitionTime);
+		if (transitionTimer >= transitionTime)
+		{
+			transitionTimer = 0.0f;
+			UGameplayStatics::SetGamePaused(GetWorld(), false);
+			fadeOut = false;
+		}
+	}
+
 }
 
 void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
@@ -188,9 +224,18 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			{
 				instance->containerInventory = container->Inventory->inventory;
 			}
-			UGameplayStatics::OpenLevel(GetWorld(), levelName);
+			fadeIn = true;
+			nextLevel = levelName;
+			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+
 		}
 	}
+}
+
+void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
+{
+	UGameplayStatics::OpenLevel(GetWorld(), levelName);
 }
 
 AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* Player)

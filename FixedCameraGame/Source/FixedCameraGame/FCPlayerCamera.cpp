@@ -9,7 +9,7 @@
 AFCPlayerCamera::AFCPlayerCamera()
 {
 	//tick will probably be false later
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	GetCameraComponent()->bConstrainAspectRatio = false;
 	//GetCameraComponent()->SetAspectRatio(2.35);
 	//GetCameraComponent()->SetFieldOfView(75.0f);
@@ -18,17 +18,31 @@ AFCPlayerCamera::AFCPlayerCamera()
 void AFCPlayerCamera::BeginPlay()
 {
 	Super::BeginPlay();
-	dynamicMaterial = UMaterialInstanceDynamic::Create(MaterialTest, this);
 
-	GetCameraComponent()->AddOrUpdateBlendable(dynamicMaterial);
+	SetDynamicMaterial();
+
 	//dynamicMaterial->SetScalarParameterValue("Alpha", 1.0f);
 }
 
-void AFCPlayerCamera::Tick(float DeltaTime)
+void AFCPlayerCamera::SetDynamicMaterial()
 {
-	Super::Tick(DeltaTime);
-	float alpha = 0.0f;
-	alpha = FMath::Pow(FMath::Sin(UGameplayStatics::GetTimeSeconds(GetWorld()) * 5.0f), 2);
+	if (!materialSetUp)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("hey hey"));
+		dynamicMaterial = UMaterialInstanceDynamic::Create(MaterialTest, this);
+		GetCameraComponent()->AddOrUpdateBlendable(dynamicMaterial);
+		materialSetUp = true;
+	}
+}
+
+void AFCPlayerCamera::UpdateMaterial(float t, float transitionTime)
+{
+	float alpha = t / transitionTime;
+	SetMaterial(alpha);
+}
+
+void AFCPlayerCamera::SetMaterial(float alpha)
+{
 	dynamicMaterial->SetScalarParameterValue("Alpha", alpha);
 
 }

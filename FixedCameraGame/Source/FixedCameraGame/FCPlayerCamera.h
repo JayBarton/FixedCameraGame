@@ -21,11 +21,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+
 public:
-	virtual void Tick(float DeltaTime) override;
+	void SetDynamicMaterial();
+
+	void UpdateMaterial(float t, float transitionTime);
+
+	void SetMaterial(float alpha);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
 	bool startingCamera;
+
+	//using this to allow the first camera to fade in
+	bool materialSetUp = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 		int startIndex;
