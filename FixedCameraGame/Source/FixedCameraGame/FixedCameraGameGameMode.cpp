@@ -263,11 +263,12 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//	pc->SetInputMode(FInputModeGameAndUI());
 		//pc->SetInputMode(FInputModeUIOnly());
-	alreadyPaused = true;
-	if (!UGameplayStatics::IsGamePaused(GetWorld()))
+	auto playerCharacter = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
+	alreadyPaused = playerCharacter->inInventory;
+	if (!alreadyPaused)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Right here"));
-		alreadyPaused = false;
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 	else

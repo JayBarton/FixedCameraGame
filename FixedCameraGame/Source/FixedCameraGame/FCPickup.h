@@ -20,6 +20,9 @@ public:
 
 	virtual void Action_Implementation() override;
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	bool TakeItem();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Details")
 	FItemStruct details;
 };

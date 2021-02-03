@@ -48,6 +48,9 @@ public:
 	void LookForInteractable();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+	void CreatePickUpWidget(AActor* pickup);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
@@ -56,6 +59,9 @@ public:
 	//Just using this to test the text display, come up with a better solution later
 	UPROPERTY(BlueprintReadOnly, Category = "Delete Later")
 		bool inControl = true;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
+		bool inInventory = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
@@ -68,6 +74,13 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	AActor* nearestInteractable;
+
+	//Probably going to rework this later
+	UPROPERTY(EditAnywhere, Category = "UI")
+		TSubclassOf<UUserWidget> pWidget;
+
+	UPROPERTY(EditAnywhere, Category = "UI")
+		UUserWidget* pickupWidget = nullptr;
 
 	FTimerHandle LookTimerHandle;
 

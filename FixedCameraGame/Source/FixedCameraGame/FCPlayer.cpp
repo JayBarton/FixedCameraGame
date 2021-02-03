@@ -199,6 +199,10 @@ void AFCPlayer::LookForInteractable()
 	}
 }
 
+void AFCPlayer::CreatePickUpWidget_Implementation(AActor* pickup)
+{
+}
+
 bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 {
 	int32 ID = Inventory->inventory[index].ID;
