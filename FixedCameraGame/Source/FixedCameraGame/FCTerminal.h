@@ -21,7 +21,8 @@ class FIXEDCAMERAGAME_API AFCTerminal : public AFCPuzzleInteractable
 
 public:
 	AFCTerminal();
-	virtual void Action_Implementation() override;
+
+	virtual void StartPuzzle();
 
 	//Sends the password to the widget
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")

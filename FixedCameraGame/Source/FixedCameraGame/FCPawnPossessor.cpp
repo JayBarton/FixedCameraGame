@@ -10,23 +10,15 @@ AFCPawnPossessor::AFCPawnPossessor()
 {
 }
 
-void AFCPawnPossessor::Action_Implementation()
+void AFCPawnPossessor::StartPuzzle()
 {
-	Super::Action_Implementation();
-	if (active)
-	{
-		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-		playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-		pc->Possess(puzzlePawn);
-		pc->SetViewTargetWithBlend(newCamera);
-		puzzlePawn->StartPuzzle();
-		puzzlePawn->parent = this;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Already used"));
-	}
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+	playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	pc->Possess(puzzlePawn);
+	pc->SetViewTargetWithBlend(newCamera);
+	puzzlePawn->StartPuzzle();
+	puzzlePawn->parent = this;
 }
 
 void AFCPawnPossessor::ExitPuzzle()

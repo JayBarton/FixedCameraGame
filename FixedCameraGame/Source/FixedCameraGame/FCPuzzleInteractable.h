@@ -25,11 +25,18 @@ public:
 
 	virtual void Action_Implementation() override;
 
+	virtual void StartPuzzle();
+
 	UFUNCTION(BlueprintCallable, Category = "Functions") //override
 		void OpenLock();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions") //override
 		virtual void ExitPuzzle();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		FString puzzleDescription = "ph";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		FString inactiveText = "ph";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player") //
 		ACameraActor* playerCamera;

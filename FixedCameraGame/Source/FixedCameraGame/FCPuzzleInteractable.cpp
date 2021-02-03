@@ -28,17 +28,19 @@ void AFCPuzzleInteractable::BeginPlay()
 
 void AFCPuzzleInteractable::Action_Implementation()
 {
-/*	if (active)
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (active)
 	{
-		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-	//	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
-
+		gameMode->DisplayText(puzzleDescription, nullptr, this);
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Already used"));
-	}*/
+		gameMode->DisplayText(inactiveText);
+	}
+}
+
+void AFCPuzzleInteractable::StartPuzzle()
+{
 }
 
 void AFCPuzzleInteractable::OpenLock()

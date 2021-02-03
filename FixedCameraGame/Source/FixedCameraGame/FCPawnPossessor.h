@@ -17,7 +17,8 @@ class FIXEDCAMERAGAME_API AFCPawnPossessor : public AFCPuzzleInteractable
 	GENERATED_BODY()
 public:
 	AFCPawnPossessor();
-	virtual void Action_Implementation() override;
+
+	virtual void StartPuzzle();
 
 	virtual void ExitPuzzle() override;
 

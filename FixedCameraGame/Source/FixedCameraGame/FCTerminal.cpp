@@ -19,30 +19,22 @@ AFCTerminal::AFCTerminal()
 	Camera->SetupAttachment(RootComponent);
 }
 
-void AFCTerminal::Action_Implementation()
+void AFCTerminal::StartPuzzle()
 {
-	Super::Action_Implementation();
-	if (active)
-	{
-		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
 	//	pc->SetInputMode(FInputModeUIOnly());
 		//pc->SetShowMouseCursor(false);
-	
-		pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
 
-		auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-		playerPawn->SetActorHiddenInGame(true);
-		playerPawn->SetActorTickEnabled(false);
-		Cast<AFCPlayer>(playerPawn)->inControl = false;
+	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
 
-		Widget->GetUserWidgetObject()->SetKeyboardFocus();
-		SendToWidget();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Already used"));
-	}
+	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	playerPawn->SetActorHiddenInGame(true);
+	playerPawn->SetActorTickEnabled(false);
+	Cast<AFCPlayer>(playerPawn)->inControl = false;
+
+	Widget->GetUserWidgetObject()->SetKeyboardFocus();
+	SendToWidget();
 }
 
 

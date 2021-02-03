@@ -13,6 +13,7 @@
 #include "FCContainer.h"
 #include "FCInfoTextWidget.h"
 #include "FCLockComponent.h"
+#include "FCPuzzleInteractable.h"
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
@@ -254,7 +255,7 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock)
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable)
 {
 	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
@@ -279,7 +280,11 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	inputComponent = UGameplayStatics::GetPlayerController(GetWorld(), 0)->InputComponent;
 	if (lock)
 	{
-		inputComponent->BindAction<InputDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInventory, lock).bExecuteWhenPaused = true;
+		inputComponent->BindAction<InputLockDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInventory, lock).bExecuteWhenPaused = true;
+	}
+	else if (interactable)
+	{
+		inputComponent->BindAction<InputInteractDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInteractable, interactable).bExecuteWhenPaused = true;
 	}
 	else
 	{
@@ -306,11 +311,10 @@ void AFixedCameraGameGameMode::HandleText()
 {
 	if (AdvanceText())
 	{
-		display->RemoveFromParent();
-		display = nullptr;
-		inputComponent->RemoveActionBinding(interactKey);
+		ClearText();
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
 		if (!alreadyPaused)
 		{
 			pc->SetInputMode(FInputModeGameOnly());
@@ -324,17 +328,34 @@ void AFixedCameraGameGameMode::HandleText()
 	}
 }
 
+void AFixedCameraGameGameMode::HandleTextToInteractable(AFCInteractable* interactable)
+{
+	if (AdvanceText())
+	{
+		ClearText();
+
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		auto puzzle = Cast<AFCPuzzleInteractable>(interactable);
+		puzzle->StartPuzzle();
+	}
+}
+
 void AFixedCameraGameGameMode::HandleTextToInventory(UFCLockComponent* lock)
 {
 	if (AdvanceText())
 	{
-		display->RemoveFromParent();
-		display = nullptr;
-		inputComponent->RemoveActionBinding(interactKey);
+		ClearText();
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
 		auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 		player->Toggle(2, lock, nullptr);
 	}
+}
+
+void AFixedCameraGameGameMode::ClearText()
+{
+	display->RemoveFromParent();
+	display = nullptr;
+	inputComponent->RemoveActionBinding(interactKey);
 }

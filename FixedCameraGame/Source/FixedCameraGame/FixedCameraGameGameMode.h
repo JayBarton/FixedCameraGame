@@ -14,8 +14,10 @@ class AFCPlayerCamera;
 
 //Hopefully this being here is temporary
 class UFCLockComponent;
+class AFCInteractable;
 
-DECLARE_DELEGATE_OneParam(InputDelegate, UFCLockComponent*);
+DECLARE_DELEGATE_OneParam(InputLockDelegate, UFCLockComponent*);
+DECLARE_DELEGATE_OneParam(InputInteractDelegate, AFCInteractable*);
 
 
 UCLASS(minimalapi)
@@ -41,11 +43,14 @@ public:
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr);
+	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr, AFCInteractable* interactable = nullptr);
 
 	bool AdvanceText();
 	void HandleText();
+	void HandleTextToInteractable(AFCInteractable* interactable);
 	void HandleTextToInventory(UFCLockComponent* lock);
+
+	void ClearText();
 
 	UInputComponent* inputComponent;
 	AFCObjectWatcher* objectWatcher;
