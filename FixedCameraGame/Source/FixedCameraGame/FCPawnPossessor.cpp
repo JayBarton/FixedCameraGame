@@ -31,7 +31,10 @@ void AFCPawnPossessor::Action_Implementation()
 
 void AFCPawnPossessor::ExitPuzzle()
 {
+	Super::ExitPuzzle();
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	pc->Possess(playerPawn);
 	pc->SetViewTargetWithBlend(playerCamera);
+	UE_LOG(LogTemp, Warning, TEXT("T1"));
+	//pc->SetViewTargetWithBlend(playerCamera, 1.0f, VTBlend_EaseInOut, 3.0f);
 }

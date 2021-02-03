@@ -5,6 +5,7 @@
 #include "Camera/CameraActor.h" 
 #include "FCLockComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "FixedCameraGameGameMode.h"
 
 // Sets default values
 AFCPuzzleInteractable::AFCPuzzleInteractable()
@@ -42,6 +43,7 @@ void AFCPuzzleInteractable::Action_Implementation()
 
 void AFCPuzzleInteractable::OpenLock()
 {
+	UE_LOG(LogTemp, Warning, TEXT("T2"));
 	//Not sure if this is the best way to do this, it should work.
 	if (linkedLock)
 	{
@@ -49,12 +51,17 @@ void AFCPuzzleInteractable::OpenLock()
 	}
 	active = false;
 	ExitPuzzle();
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *pc->GetViewTarget()->GetName());
+	
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->DisplayText("Door unlocked");
 }
 
 void AFCPuzzleInteractable::ExitPuzzle()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base"));
-
 }
 
 

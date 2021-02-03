@@ -45,12 +45,10 @@ void AFCPuzzlePawnBase::StartPuzzle()
 {
 }
 
+//TODO this is not being properly called when puzzles with props are solved, meaning the props are not cleared out
 void AFCPuzzlePawnBase::ExitPuzzle()
 {
 	parent->ExitPuzzle();
-	/*auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	pc->Possess(playerPawn);
-	pc->SetViewTargetWithBlend(playerCamera);*/
 }
 
 void AFCPuzzlePawnBase::SolvePuzzle()

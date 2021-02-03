@@ -37,5 +37,4 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
 	UCameraComponent* Camera;
-
 };

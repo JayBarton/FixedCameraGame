@@ -26,6 +26,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pawn")
 	ACameraActor* newCamera;
 	APawn* playerPawn;
-	ACameraActor* playerCamera;
+	//ACameraActor* playerCamera;
 
 };

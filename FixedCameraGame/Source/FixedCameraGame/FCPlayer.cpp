@@ -115,7 +115,6 @@ void AFCPlayer::StopSprinting()
 
 void AFCPlayer::Interact()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Now"));
 	if (nearestInteractable)
 	{
 		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
@@ -124,8 +123,8 @@ void AFCPlayer::Interact()
 			auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 			if (interactable->puzzle)
 			{
-				gameMode->DisplayText("Need to do a thing");
-				UE_LOG(LogTemp, Warning, TEXT("Need to do a thing"));
+				gameMode->DisplayText("Door is locked, but there is no key hole...");
+			//	UE_LOG(LogTemp, Warning, TEXT("Need to do a thing"));
 			}
 			else
 			{

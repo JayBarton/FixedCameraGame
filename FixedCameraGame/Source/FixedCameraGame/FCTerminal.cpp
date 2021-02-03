@@ -19,8 +19,6 @@ AFCTerminal::AFCTerminal()
 	Camera->SetupAttachment(RootComponent);
 }
 
-
-
 void AFCTerminal::Action_Implementation()
 {
 	Super::Action_Implementation();
@@ -28,13 +26,17 @@ void AFCTerminal::Action_Implementation()
 	{
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-		pc->SetInputMode(FInputModeUIOnly());
-		Widget->GetUserWidgetObject()->SetKeyboardFocus();
+	//	pc->SetInputMode(FInputModeUIOnly());
+		//pc->SetShowMouseCursor(false);
+	
 		pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
+
 		auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 		playerPawn->SetActorHiddenInGame(true);
 		playerPawn->SetActorTickEnabled(false);
 		Cast<AFCPlayer>(playerPawn)->inControl = false;
+
+		Widget->GetUserWidgetObject()->SetKeyboardFocus();
 		SendToWidget();
 	}
 	else
@@ -48,13 +50,17 @@ void AFCTerminal::SendToWidget_Implementation()
 {
 }
 
-
 void AFCTerminal::ExitPuzzle()
 {
+	Super::ExitPuzzle();
+
+	UE_LOG(LogTemp, Warning, TEXT("T1"));
 	//Reset to player control
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
 	pc->SetInputMode(FInputModeGameOnly());
-	pc->SetViewTargetWithBlend(playerCamera, 0.0f, VTBlend_Linear, 0.0f);
+	pc->SetViewTargetWithBlend(playerCamera);
+	//pc->SetViewTargetWithBlend(playerCamera, 1.0f, VTBlend_EaseInOut, 3.0f);
 	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	playerPawn->SetActorHiddenInGame(false);
 	playerPawn->SetActorTickEnabled(true);

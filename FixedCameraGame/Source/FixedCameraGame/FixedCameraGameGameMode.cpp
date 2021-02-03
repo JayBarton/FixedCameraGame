@@ -17,12 +17,6 @@
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
 {
-	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Game/Blueprints/BPFCPlayer"));
-	if (PlayerPawnBPClass.Class != NULL)
-	{
-		DefaultPawnClass = PlayerPawnBPClass.Class;
-	}
 	PrimaryActorTick.bTickEvenWhenPaused = true;
 
 }
@@ -265,11 +259,21 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
 	display->text = toDisplay;
-	//display->SetKeyboardFocus();
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	pc->SetInputMode(FInputModeGameAndUI());
-	//pc->SetInputMode(FInputModeUIOnly());
-	UGameplayStatics::SetGamePaused(GetWorld(), true);
+	//	pc->SetInputMode(FInputModeGameAndUI());
+		//pc->SetInputMode(FInputModeUIOnly());
+	alreadyPaused = true;
+	if (!UGameplayStatics::IsGamePaused(GetWorld()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Right here"));
+		alreadyPaused = false;
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+	}
+	else
+	{
+		pc->SetInputMode(FInputModeGameOnly());
+		pc->SetShowMouseCursor(false);
+	}
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
 
 	inputComponent = UGameplayStatics::GetPlayerController(GetWorld(), 0)->InputComponent;
@@ -304,12 +308,19 @@ void AFixedCameraGameGameMode::HandleText()
 	{
 		display->RemoveFromParent();
 		display = nullptr;
+		inputComponent->RemoveActionBinding(interactKey);
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
-		inputComponent->RemoveActionBinding(interactKey);
-
-		pc->SetInputMode(FInputModeGameOnly());
-		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		if (!alreadyPaused)
+		{
+			pc->SetInputMode(FInputModeGameOnly());
+			UGameplayStatics::SetGamePaused(GetWorld(), false);
+		}
+		else
+		{
+			pc->SetInputMode(FInputModeGameAndUI());
+			pc->SetShowMouseCursor(true);
+		}
 	}
 }
 

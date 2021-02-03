@@ -40,6 +40,7 @@ public:
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr);
 
 	bool AdvanceText();
@@ -63,6 +64,9 @@ public:
 
 	bool fadeIn = false;
 	bool fadeOut = false;
+
+	//Maybe temporary, using this to test out displaying text from the inventory
+	bool alreadyPaused = false;
 
 	FName nextLevel;
 
