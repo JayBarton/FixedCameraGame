@@ -316,10 +316,14 @@ void AFixedCameraGameGameMode::HandleText()
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
+		//rename alreadyPaused
 		if (!alreadyPaused)
 		{
 			pc->SetInputMode(FInputModeGameOnly());
 			UGameplayStatics::SetGamePaused(GetWorld(), false);
+			auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+			player->ClearInventoryWidget();
+			UE_LOG(LogTemp, Warning, TEXT("there's a hole in the morning"));
 		}
 		else
 		{

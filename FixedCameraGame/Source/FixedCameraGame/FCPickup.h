@@ -21,7 +21,7 @@ public:
 	virtual void Action_Implementation() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	bool TakeItem();
+	int32 TakeItem();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Details")
 	FItemStruct details;

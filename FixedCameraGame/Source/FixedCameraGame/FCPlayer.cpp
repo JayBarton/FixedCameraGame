@@ -203,6 +203,14 @@ void AFCPlayer::CreatePickUpWidget_Implementation(AActor* pickup)
 {
 }
 
+void AFCPlayer::DisplayInventoryWidget_Implementation()
+{
+}
+
+void AFCPlayer::ClearInventoryWidget_Implementation()
+{
+}
+
 bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 {
 	int32 ID = Inventory->inventory[index].ID;

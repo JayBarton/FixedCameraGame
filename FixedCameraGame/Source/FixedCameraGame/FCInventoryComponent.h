@@ -25,8 +25,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	int32 AddToInventory(FItemStruct newItem);
 
+	int32 FindFreeSlot();
+
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RemoveFromInventory(int index);
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		TArray<FItemStruct> inventory;

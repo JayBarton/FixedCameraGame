@@ -16,32 +16,40 @@ AFCPickup::AFCPickup()
 
 void AFCPickup::Action_Implementation()
 {
-	//TakeItem();
 	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	pc->CreatePickUpWidget(this);
-	UE_LOG(LogTemp, Warning, TEXT("HAET"));
-	//display "do you want to take [item]?" text
-	//create widget
+	if (pc->Inventory->FindFreeSlot() >= 0)
+	{
+		//display "do you want to take [item]?" text
+		//create widget
+		pc->CreatePickUpWidget(this);
+	}
+	else
+	{
+		pc->DisplayInventoryWidget();
+		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		FString display = "Can't take " + details.name.ToString() + ". Inventory full";
+		gameMode->DisplayText(display);
+	}
 }
 
-bool AFCPickup::TakeItem()
+int32 AFCPickup::TakeItem()
 {
-	bool pickedUp = false;
 	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	if (pc->Inventory->AddToInventory(details) >= 0)
+	int32 pickedUpIndex = pc->Inventory->AddToInventory(details);
+	if (pickedUpIndex >= 0)
 	{
 		//display text
-		pickedUp = true;
 		//remove widget
 		//reset game input
 		//reset player input
 		Destroy();
 	}
+	//Don't think this is in use right now...
 	else
 	{
 		//reset player input
 		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 		gameMode->DisplayText("Inventory full");
 	}
-	return pickedUp;
+	return pickedUpIndex;
 }

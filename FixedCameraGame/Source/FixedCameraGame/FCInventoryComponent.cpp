@@ -26,8 +26,8 @@ void UFCInventoryComponent::BeginPlay()
 
 int32 UFCInventoryComponent::AddToInventory(FItemStruct newItem)
 {	
-	int32 addedIndex = -1;
-	for (int i = 0; i < capacity; i++)
+	int32 addedIndex = FindFreeSlot();
+	/*for (int i = 0; i < capacity; i++)
 	{
 		if (inventory[i].ID < 0)
 		{
@@ -35,9 +35,26 @@ int32 UFCInventoryComponent::AddToInventory(FItemStruct newItem)
 			addedIndex = i;
 			break;
 		}
+	}*/
+	if (addedIndex >= 0)
+	{
+		inventory[addedIndex] = newItem;
 	}
-
 	return addedIndex;
+}
+
+int32 UFCInventoryComponent::FindFreeSlot()
+{
+	int32 freeIndex = -1;
+	for (int i = 0; i < capacity; i++)
+	{
+		if (inventory[i].ID < 0)
+		{
+			freeIndex = i;
+			break;
+		}
+	}
+	return freeIndex;
 }
 
 void UFCInventoryComponent::RemoveFromInventory(int index)

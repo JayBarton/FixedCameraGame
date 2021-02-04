@@ -50,6 +50,14 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 	void CreatePickUpWidget(AActor* pickup);
 
+	//Display non-interactable inventory
+	//May end up rewriting a lot of UI stuff
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void DisplayInventoryWidget();
+	//Definitely rewriting some of this
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void ClearInventoryWidget();
+
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);
 
