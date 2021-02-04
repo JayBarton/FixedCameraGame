@@ -255,11 +255,12 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable)
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, bool advanceClear)
 {
 	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
 	display->text = toDisplay;
+	display->advanceClear = advanceClear;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//	pc->SetInputMode(FInputModeGameAndUI());
 		//pc->SetInputMode(FInputModeUIOnly());
@@ -310,7 +311,7 @@ bool AFixedCameraGameGameMode::AdvanceText()
 
 void AFixedCameraGameGameMode::HandleText()
 {
-	if (AdvanceText())
+	if (AdvanceText() && display->advanceClear)
 	{
 		ClearText();
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);

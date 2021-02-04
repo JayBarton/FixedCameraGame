@@ -43,19 +43,21 @@ public:
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr, AFCInteractable* interactable = nullptr);
+	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr, AFCInteractable* interactable = nullptr, bool advanceClear = true);
 
 	bool AdvanceText();
 	void HandleText();
 	void HandleTextToInteractable(AFCInteractable* interactable);
 	void HandleTextToInventory(UFCLockComponent* lock);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void ClearText();
 
 	UInputComponent* inputComponent;
 	AFCObjectWatcher* objectWatcher;
 	AFCContainer* container;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Text")
 	UFCInfoTextWidget* display = nullptr;
 
 	AFCPlayerCamera* playerCamera;

@@ -18,7 +18,13 @@ public:
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		bool IsTextFinished();
 
+	//Using this so that I can still advance the text from the pickup prompt, but not close the widget until a button is press
+	//Real brute force solution to this problem
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+	bool advanceClear = true;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 	FString text;

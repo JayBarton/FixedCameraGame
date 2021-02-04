@@ -15,15 +15,27 @@ void UFCInfoTextWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTim
 {
 	Super::Tick(MyGeometry, InDeltaTime);
 
-	currentTime += InDeltaTime;
-
-	if (currentTime >= delay)
+	if (!IsTextFinished())
 	{
-		if (index < text.Len())
+		currentTime += InDeltaTime;
+
+		if (currentTime >= delay)
 		{
-			currentTime = 0;
-			displayedText.Append(UKismetStringLibrary::GetCharacterArrayFromString(text)[index]);
-			index++;
+			if (index < text.Len())
+			{
+				currentTime = 0;
+				displayedText.Append(UKismetStringLibrary::GetCharacterArrayFromString(text)[index]);
+				index++;
+			}
 		}
 	}
+}
+
+bool UFCInfoTextWidget::IsTextFinished()
+{
+	if (index == text.Len())
+	{
+		return true;
+	}
+	return false;
 }
