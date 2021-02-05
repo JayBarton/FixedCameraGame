@@ -64,18 +64,17 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 		FindStart(instance);
 
-		fadeOut = true;
+		levelFadeIn = true;
 		playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
-		//playerCamera->SetDynamicMaterial();
 		playerCamera->SetMaterial(1.0f);
-		//UGameplayStatics::SetGamePaused(GetWorld(), true);
+	//	UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 }
 
 void AFixedCameraGameGameMode::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (fadeIn)
+	if (levelFadeOut)
 	{
 		transitionTimer += DeltaTime;
 		//update camera
@@ -85,18 +84,25 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 			MoveToLevel(nextLevel);
 		}
 	}
-	else if (fadeOut)
+	else if (levelFadeIn)
 	{
 		transitionTimer += DeltaTime;
 		playerCamera->UpdateMaterial(1.0f - transitionTimer, transitionTime);
 		if (transitionTimer >= transitionTime)
 		{
 			transitionTimer = 0.0f;
-			UGameplayStatics::SetGamePaused(GetWorld(), false);
-			fadeOut = false;
+			//UGameplayStatics::SetGamePaused(GetWorld(), false);
+			levelFadeIn = false;
 		}
 	}
 
+	//make sure the camera is still updating when the game is paused
+	//To allow changing cameras while paused
+	if(UGameplayStatics::IsGamePaused(GetWorld()))
+	{
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		pc->UpdateCameraManager(DeltaTime);
+	}
 }
 
 void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
@@ -219,7 +225,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			{
 				instance->containerInventory = container->Inventory->inventory;
 			}
-			fadeIn = true;
+			levelFadeOut = true;
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
@@ -261,15 +267,20 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	display->AddToViewport();
 	display->text = toDisplay;
 	display->advanceClear = advanceClear;
+
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//	pc->SetInputMode(FInputModeGameAndUI());
 		//pc->SetInputMode(FInputModeUIOnly());
+
 	auto playerCharacter = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
-	alreadyPaused = playerCharacter->inInventory;
-	if (!alreadyPaused)
+	inMenu = false;
+	if (playerCharacter)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Right here"));
+		inMenu = playerCharacter->inInventory;
+	}
+	if (!inMenu)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("paused here"));
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 	else
@@ -318,12 +329,14 @@ void AFixedCameraGameGameMode::HandleText()
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
 		//rename alreadyPaused
-		if (!alreadyPaused)
+		if (!inMenu)
 		{
 			pc->SetInputMode(FInputModeGameOnly());
 			UGameplayStatics::SetGamePaused(GetWorld(), false);
-			auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-			player->ClearInventoryWidget();
+			if (auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)))
+			{
+				player->ClearInventoryWidget();
+			}
 			UE_LOG(LogTemp, Warning, TEXT("there's a hole in the morning"));
 		}
 		else
@@ -339,6 +352,8 @@ void AFixedCameraGameGameMode::HandleTextToInteractable(AFCInteractable* interac
 	if (AdvanceText())
 	{
 		ClearText();
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
 		UGameplayStatics::SetGamePaused(GetWorld(), false);
 		auto puzzle = Cast<AFCPuzzleInteractable>(interactable);

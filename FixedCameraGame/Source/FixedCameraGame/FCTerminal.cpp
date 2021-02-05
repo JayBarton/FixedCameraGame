@@ -37,7 +37,6 @@ void AFCTerminal::StartPuzzle()
 	SendToWidget();
 }
 
-
 void AFCTerminal::SendToWidget_Implementation()
 {
 }
@@ -56,6 +55,7 @@ void AFCTerminal::ExitPuzzle()
 	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	playerPawn->SetActorHiddenInGame(false);
 	playerPawn->SetActorTickEnabled(true);
+
 	Cast<AFCPlayer>(playerPawn)->inControl = true;
 
 }

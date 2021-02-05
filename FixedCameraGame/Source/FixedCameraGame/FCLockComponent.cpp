@@ -27,7 +27,6 @@ void UFCLockComponent::Open(int32 keyID)
 {
 	if (keyID == ID)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Open"));
 		DestroyComponent();
 	}
 	else

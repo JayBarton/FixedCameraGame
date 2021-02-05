@@ -59,6 +59,7 @@ void AFCPuzzleInteractable::OpenLock()
 	
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->DisplayText("Door unlocked");
+	UE_LOG(LogTemp, Warning, TEXT("door unlocked"));
 }
 
 void AFCPuzzleInteractable::ExitPuzzle()

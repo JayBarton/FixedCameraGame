@@ -69,11 +69,11 @@ public:
 	float transitionTime = 1.0f;
 	float transitionTimer = 0.0f;
 
-	bool fadeIn = false;
-	bool fadeOut = false;
+	bool levelFadeOut = false;
+	bool levelFadeIn = false;
 
 	//Maybe temporary, using this to test out displaying text from the inventory
-	bool alreadyPaused = false;
+	bool inMenu = false;
 
 	FName nextLevel;
 
