@@ -29,6 +29,7 @@ void UFCLockComponent::Open(int32 keyID)
 	{
 		DestroyComponent();
 	}
+	//pretty sure this isn't in use...
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No matching key"));

@@ -12,13 +12,27 @@ AFCPawnPossessor::AFCPawnPossessor()
 
 void AFCPawnPossessor::StartPuzzle()
 {
-	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-	playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	pc->Possess(puzzlePawn);
-	pc->SetViewTargetWithBlend(newCamera);
-	puzzlePawn->StartPuzzle();
-	puzzlePawn->parent = this;
+	if (puzzlePawn)
+	{
+		if (newCamera)
+		{
+			auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+			playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+			playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+			pc->Possess(puzzlePawn);
+			pc->SetViewTargetWithBlend(newCamera);
+			puzzlePawn->StartPuzzle();
+			puzzlePawn->parent = this;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No puzzle camera specified"))
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No puzzle pawn specified"))
+	}
 }
 
 void AFCPawnPossessor::ExitPuzzle()

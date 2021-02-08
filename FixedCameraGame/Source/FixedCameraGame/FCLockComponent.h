@@ -28,5 +28,10 @@ public:
 	//The id that opens this lock
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 	int32 ID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
+		FString description = "Door is locked";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
+		FString unlockDescription = "Door unlocked";
 		
 };

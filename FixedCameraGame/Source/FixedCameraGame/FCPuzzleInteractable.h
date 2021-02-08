@@ -37,6 +37,8 @@ public:
 		FString puzzleDescription = "ph";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 		FString inactiveText = "ph";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		FString puzzleCompleteText = "Door unlocked";
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player") //
 		ACameraActor* playerCamera;

@@ -128,7 +128,7 @@ void AFCPlayer::Interact()
 			}
 			else
 			{
-				gameMode->DisplayText("Door is locked", lock);
+				gameMode->DisplayText(lock->description, lock);
 			//	Toggle(2, lock, nullptr);
 			}
 		}

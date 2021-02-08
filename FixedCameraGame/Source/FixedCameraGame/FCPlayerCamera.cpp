@@ -28,7 +28,6 @@ void AFCPlayerCamera::SetDynamicMaterial()
 {
 	if (!materialSetUp)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("hey hey"));
 		dynamicMaterial = UMaterialInstanceDynamic::Create(MaterialTest, this);
 		GetCameraComponent()->AddOrUpdateBlendable(dynamicMaterial);
 		materialSetUp = true;
@@ -43,6 +42,13 @@ void AFCPlayerCamera::UpdateMaterial(float t, float transitionTime)
 
 void AFCPlayerCamera::SetMaterial(float alpha)
 {
-	dynamicMaterial->SetScalarParameterValue("Alpha", alpha);
+	if (dynamicMaterial)
+	{
+		dynamicMaterial->SetScalarParameterValue("Alpha", alpha);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("2"));
+	}
 
 }

@@ -29,11 +29,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 	TArray<AActor*> FoundActors;
 
-	if (objectWatcher == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Objectwatcher null"));
-	}
-
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCObjectWatcher::StaticClass(), FoundActors);
 	if (FoundActors.Num() > 0)
 	{
@@ -65,7 +60,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 		FindStart(instance);
 
 		levelFadeIn = true;
-		playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 		playerCamera->SetMaterial(1.0f);
 	//	UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
@@ -176,24 +170,25 @@ void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundActors);
-
 	for (int i = 0; i < FoundActors.Num(); i++)
 	{
-		auto startCamera = Cast<AFCPlayerCamera>(FoundActors[i]);
-		if (startCamera)
+		playerCamera = Cast<AFCPlayerCamera>(FoundActors[i]);
+		if (playerCamera)
 		{
-			if (startCamera->startIndex == instance->startIndex)
+			if (playerCamera->startIndex == instance->startIndex)
 			{
 				APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 				if (playerController)
 				{
 					FViewTargetTransitionParams transitionParams;
-					playerController->SetViewTarget(startCamera, transitionParams);
-					break;
+					playerController->SetViewTarget(playerCamera, transitionParams);
+					return;
 				}
 			}
 		}
 	}
+	//if the start camera is not properly set
+	UE_LOG(LogTemp, Warning, TEXT("start camera not found, view not set"))
 }
 
 void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
@@ -257,7 +252,7 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 			}
 		}
 	}
-
+	UE_LOG(LogTemp, Warning, TEXT("Player start at index not found"));
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
@@ -328,7 +323,6 @@ void AFixedCameraGameGameMode::HandleText()
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
-		//rename alreadyPaused
 		if (!inMenu)
 		{
 			pc->SetInputMode(FInputModeGameOnly());
@@ -337,7 +331,6 @@ void AFixedCameraGameGameMode::HandleText()
 			{
 				player->ClearInventoryWidget();
 			}
-			UE_LOG(LogTemp, Warning, TEXT("there's a hole in the morning"));
 		}
 		else
 		{
