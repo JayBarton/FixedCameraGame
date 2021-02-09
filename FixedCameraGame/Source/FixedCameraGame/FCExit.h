@@ -22,4 +22,7 @@ public:
 	int index;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
 	FName levelName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current Level")
+		int32 currentIndex = 0;
 };

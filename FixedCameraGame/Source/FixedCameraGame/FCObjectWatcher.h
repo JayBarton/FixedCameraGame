@@ -14,7 +14,6 @@ struct FDataToWatch
     GENERATED_BODY()
 
 public:
-
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
         AActor* actor;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
@@ -35,6 +34,15 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     TArray<FDataToWatch> data;
+};
+
+USTRUCT(BlueprintType)
+struct FPendingLocks
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        TArray<int32> data;
 };
 
 //Use this class to keep track of objects after leaving a map

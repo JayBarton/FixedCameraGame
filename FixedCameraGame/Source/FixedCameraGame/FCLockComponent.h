@@ -10,7 +10,8 @@ UENUM(BlueprintType)
 enum class LockType : uint8 {
 	KEY UMETA(DisplayName = "KEY"),
 	PUZZLE UMETA(DisplayName = "PUZZLE"),
-	ONE_WAY UMETA(DisplayName = "ONE WAY"),
+	ONE_WAY_LOCKED UMETA(DisplayName = "ONE WAY LOCKED"),
+	ONE_WAY_UNLOCK UMETA(DisplayName = "ONE WAY UNLOCK"),
 };
 
 //Used to handle interactables that can be locked, such as doors

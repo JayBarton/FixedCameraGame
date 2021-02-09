@@ -34,10 +34,14 @@ public:
 
 	void CheckObjects(UFCGameInstance* instance);
 
+	void HandlePendingLocks(UFCGameInstance* instance);
+
 	void FindStart(UFCGameInstance* instance);
 
 	void ChangeLevel(int index, FName levelName);
 	void MoveToLevel(FName levelName);
+
+	void SetPendingLock(FString levelName, int32 index);
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 

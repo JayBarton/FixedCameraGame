@@ -14,6 +14,7 @@
 #include "FCInfoTextWidget.h"
 #include "FCLockComponent.h"
 #include "FCPuzzleInteractable.h"
+#include "FCExit.h"
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
@@ -113,7 +114,6 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					objectWatcher->objects.data[i].spawn = instance->savedObjects[currentLevel].data[i].spawn;
 					objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
 					objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
-					//objectWatcher->objects.data[i].puzzle = instance->savedObjects[currentLevel].data[i].puzzle;
 				}
 
 				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
@@ -152,10 +152,48 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
+		HandlePendingLocks(instance);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no object watcher"));
+	}
+}
+
+void AFixedCameraGameGameMode::HandlePendingLocks(UFCGameInstance* instance)
+{
+	if (instance->pendingLocks.Contains(currentLevel))
+	{
+		for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
+		{
+			auto object = objectWatcher->objects.data[i];
+			if (object.locked)
+			{
+				if (auto door = Cast<AFCExit>(object.actor))
+				{
+					for (int c = 0; c < instance->pendingLocks[currentLevel].data.Num(); c++)
+					{
+						if (door->currentIndex == instance->pendingLocks[currentLevel].data[c])
+						{
+							if (auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass()))
+							{
+								instance->pendingLocks[currentLevel].data.RemoveAt(c);
+								c--;
+								lock->DestroyComponent();
+							}
+						}
+					}
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("one way lock attached to non-exit"));
+				}
+			}
+		}
+		if (instance->pendingLocks[currentLevel].data.Num() == 0)
+		{
+			instance->pendingLocks.Remove(currentLevel);
+		}
 	}
 }
 
@@ -225,6 +263,26 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 {
 	UGameplayStatics::OpenLevel(GetWorld(), levelName);
+}
+
+void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
+{
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	if (instance)
+	{
+		if (instance->pendingLocks.Contains(levelName))
+		{
+			instance->pendingLocks[levelName].data.Add(index);
+		}
+		else
+		{
+			FPendingLocks newLock;
+			newLock.data.Add(index);
+			instance->pendingLocks.Add(levelName, newLock);
+		}
+
+	}
 }
 
 AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* Player)

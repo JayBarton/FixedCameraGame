@@ -11,6 +11,7 @@
 #include "FCLockComponent.h"
 #include "Blueprint/UserWidget.h" 
 #include "FCInteractable.h"
+#include "FCExit.h"
 #include "Kismet/GameplayStatics.h" 
 #include "FixedCameraGameGameMode.h"
 #include "DrawDebugHelpers.h" 
@@ -125,9 +126,20 @@ void AFCPlayer::Interact()
 			{
 				gameMode->DisplayText("Door is locked, but there is no key hole...");
 			}
-			else
+			else if (lock->type == LockType::KEY)
 			{
 				gameMode->DisplayText(lock->description, lock);
+			}
+			else if(lock->type == LockType::ONE_WAY_LOCKED)
+			{
+				gameMode->DisplayText("Locked from the other side.");
+			}
+			else if (lock->type == LockType::ONE_WAY_UNLOCK)
+			{
+				auto exit = Cast<AFCExit>(nearestInteractable);
+				gameMode->SetPendingLock(exit->levelName.ToString(), exit->index);
+				lock->Open(lock->ID);
+				gameMode->DisplayText("Unlocked");
 			}
 		}
 		else
