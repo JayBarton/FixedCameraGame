@@ -113,7 +113,7 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					objectWatcher->objects.data[i].spawn = instance->savedObjects[currentLevel].data[i].spawn;
 					objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
 					objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
-					objectWatcher->objects.data[i].puzzle = instance->savedObjects[currentLevel].data[i].puzzle;
+					//objectWatcher->objects.data[i].puzzle = instance->savedObjects[currentLevel].data[i].puzzle;
 				}
 
 				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
@@ -138,13 +138,6 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 						if (auto interactable = Cast<AFCInteractable>(object.actor))
 						{
 							interactable->active = false;
-						}
-					}
-					if (!object.puzzle)
-					{
-						if (auto interactable = Cast<AFCInteractable>(object.actor))
-						{
-							interactable->puzzle = false;
 						}
 					}
 				}

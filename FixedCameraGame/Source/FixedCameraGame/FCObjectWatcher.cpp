@@ -49,14 +49,6 @@ void AFCObjectWatcher::UpdateObjects()
 				objects.data[i].active = false;
 			}
 		}
-		if (object.puzzle)
-		{
-			auto interactable = Cast<AFCInteractable>(object.actor);
-			if (interactable && !interactable->puzzle)
-			{
-				objects.data[i].puzzle = false;
-			}
-		}
 	}
 }
 

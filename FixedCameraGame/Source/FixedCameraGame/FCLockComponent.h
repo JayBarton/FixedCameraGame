@@ -6,8 +6,14 @@
 #include "Components/ActorComponent.h"
 #include "FCLockComponent.generated.h"
 
-//Used to handle interactables that can be locked, such as doors
+UENUM(BlueprintType)
+enum class LockType : uint8 {
+	KEY UMETA(DisplayName = "KEY"),
+	PUZZLE UMETA(DisplayName = "PUZZLE"),
+	ONE_WAY UMETA(DisplayName = "ONE WAY"),
+};
 
+//Used to handle interactables that can be locked, such as doors
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FIXEDCAMERAGAME_API UFCLockComponent : public UActorComponent
 {
@@ -33,5 +39,7 @@ public:
 		FString description = "Door is locked";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 		FString unlockDescription = "Door unlocked";
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
+		LockType type;
 		
 };

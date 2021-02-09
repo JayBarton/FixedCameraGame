@@ -28,10 +28,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	bool active = true;
 
-	//Not ideal, but should work for now
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	bool puzzle = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
 		FString prompt = "";
 

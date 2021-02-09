@@ -119,17 +119,15 @@ void AFCPlayer::Interact()
 	{
 		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
 		{
-			auto interactable = Cast<AFCInteractable>(nearestInteractable);
 			auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-			if (interactable->puzzle)
+			//check lock type
+			if (lock->type == LockType::PUZZLE)
 			{
 				gameMode->DisplayText("Door is locked, but there is no key hole...");
-			//	UE_LOG(LogTemp, Warning, TEXT("Need to do a thing"));
 			}
 			else
 			{
 				gameMode->DisplayText(lock->description, lock);
-			//	Toggle(2, lock, nullptr);
 			}
 		}
 		else
