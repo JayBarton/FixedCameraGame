@@ -313,6 +313,10 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	display->AddToViewport();
 	display->text = toDisplay;
 	display->advanceClear = advanceClear;
+	display->SetUpSegments();
+
+	UE_LOG(LogTemp, Warning, TEXT("segments %i"), display->numberOfSegments);
+
 
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//	pc->SetInputMode(FInputModeGameAndUI());
@@ -355,13 +359,22 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 bool AFixedCameraGameGameMode::AdvanceText()
 {
 	bool finished = false;
-	if (display->index == display->text.Len())
+	if (display->IsTextFinished())
 	{
 		finished = true;
 	}
 	else
 	{
-		display->delay = display->fastDelay;
+		if (display->IsSegmentFinished())
+		{
+			display->GetNextSegment();
+			UE_LOG(LogTemp, Warning, TEXT("where am i"));
+
+		}
+		else
+		{
+			display->delay = display->fastDelay;
+		}
 	}
 	return finished;
 }

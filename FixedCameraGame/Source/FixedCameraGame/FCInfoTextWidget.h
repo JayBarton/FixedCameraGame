@@ -21,6 +21,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		bool IsTextFinished();
 
+	bool IsSegmentFinished();
+
+	void SetUpSegments();
+	void GetNextSegment();
+
 	//Using this so that I can still advance the text from the pickup prompt, but not close the widget until a button is press
 	//Real brute force solution to this problem
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
@@ -32,6 +37,10 @@ public:
 		FString displayedText;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 		int32 index;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+		int32 segmentLength;
+	int32 numberOfSegments;
+	int32 nextIndex;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
 		float currentTime;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
