@@ -233,6 +233,13 @@ bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 	return false;
 }
 
+void AFCPlayer::SwapItems(int32 first, int32 second)
+{
+	FItemStruct temp = Inventory->inventory[second];
+	Inventory->inventory[second] = Inventory->inventory[first];
+	Inventory->inventory[first] = temp;
+}
+
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
 {
 }
