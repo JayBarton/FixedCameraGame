@@ -38,10 +38,7 @@ int32 AFCPickup::TakeItem()
 	int32 pickedUpIndex = pc->Inventory->AddToInventory(details);
 	if (pickedUpIndex >= 0)
 	{
-		//display text
-		//remove widget
-		//reset game input
-		//reset player input
+
 		Destroy();
 	}
 	//Don't think this is in use right now...

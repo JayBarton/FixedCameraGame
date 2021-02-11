@@ -13,9 +13,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     int ID = -1;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    int maxCapacity = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    int amount = 0;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FName name;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FString description;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     UTexture2D* thumbnail;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    bool isStackable = false;
 };

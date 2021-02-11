@@ -66,6 +66,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void SwapItems(int32 first, int32 second);
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		bool CombineItems(int32 first, int32 second);
 
 	//Just using this to test the text display, come up with a better solution later
 	UPROPERTY(BlueprintReadOnly, Category = "Delete Later")
