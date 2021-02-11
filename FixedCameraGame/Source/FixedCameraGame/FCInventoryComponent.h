@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RemoveFromInventory(int index);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		void CombineItem(int firstIndex, UFCInventoryComponent* otherInventory, int secondIndex);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		TArray<FItemStruct> inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")

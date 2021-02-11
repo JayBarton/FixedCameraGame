@@ -240,33 +240,6 @@ void AFCPlayer::SwapItems(int32 first, int32 second)
 	Inventory->inventory[first] = temp;
 }
 
-bool AFCPlayer::CombineItems(int32 first, int32 second)
-{
-	FItemStruct& firstItem = Inventory->inventory[first];
-	FItemStruct& secondItem = Inventory->inventory[second];
-
-	bool added = false;
-	if (firstItem.ID == secondItem.ID)
-	{
-		if (firstItem.amount < firstItem.maxCapacity && secondItem.amount < secondItem.maxCapacity)
-		{
-			int32 toAdd = secondItem.maxCapacity - secondItem.amount;
-			if (firstItem.amount <= toAdd)
-			{
-				secondItem.amount += firstItem.amount;
-				firstItem = FItemStruct();
-			}
-			else
-			{
-				secondItem.amount += toAdd;
-				firstItem.amount -= toAdd;
-			}
-			added = true;
-		}
-	}
-	return added;
-}
-
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
 {
 }

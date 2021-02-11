@@ -3,6 +3,8 @@
 
 #include "FCInventoryComponent.h"
 #include "Blueprint/UserWidget.h" 
+#include "FixedCameraGameGameMode.h"
+#include "Kismet/GameplayStatics.h" 
 
 // Sets default values for this component's properties
 UFCInventoryComponent::UFCInventoryComponent()
@@ -51,6 +53,38 @@ int32 UFCInventoryComponent::FindFreeSlot()
 void UFCInventoryComponent::RemoveFromInventory(int index)
 {
 	inventory[index] = FItemStruct();
+}
+
+void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherInventory, int second)
+{
+	FItemStruct& firstItem = inventory[first];
+	FItemStruct& secondItem = otherInventory->inventory[second];
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	bool added = false;
+	if (firstItem.ID == secondItem.ID)
+	{
+		if (firstItem.amount < firstItem.maxCapacity && secondItem.amount < secondItem.maxCapacity)
+		{
+			int32 toAdd = secondItem.maxCapacity - secondItem.amount;
+			if (firstItem.amount <= toAdd)
+			{
+				secondItem.amount += firstItem.amount;
+				firstItem = FItemStruct();
+			}
+			else
+			{
+				secondItem.amount += toAdd;
+				firstItem.amount -= toAdd;
+			}
+			added = true;
+		}
+	}
+	if (!added)
+	{
+		gameMode->DisplayText("Cannot combine these");
+	}
+
+	//return added;
 }
 
 
