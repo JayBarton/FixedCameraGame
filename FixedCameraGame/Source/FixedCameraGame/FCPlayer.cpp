@@ -209,6 +209,10 @@ void AFCPlayer::LookForInteractable()
 	}
 }
 
+void AFCPlayer::CreateSwitchWidget_Implementation(AFCSwitchInteractable* switchInteractable)
+{
+}
+
 void AFCPlayer::CreatePickUpWidget_Implementation(AActor* pickup)
 {
 }

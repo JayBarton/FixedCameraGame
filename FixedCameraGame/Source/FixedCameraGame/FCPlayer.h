@@ -7,6 +7,7 @@
 #include "FCPlayer.generated.h"
 
 class UFCInventoryComponent;
+class AFCSwitchInteractable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
@@ -49,6 +50,9 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 	void CreatePickUpWidget(AActor* pickup);
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+	void CreateSwitchWidget(AFCSwitchInteractable* switchInteractable);
 
 	//Display non-interactable inventory
 	//May end up rewriting a lot of UI stuff

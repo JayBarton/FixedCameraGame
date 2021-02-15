@@ -81,7 +81,6 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 		boxes[grid[index] - 1]->SetActorLocation(newLocation);
 		grid[index] = -1;
 		updateIndex();
-	//	index = nextIndex;
 	}
 	else
 	{
