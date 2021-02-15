@@ -67,6 +67,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void SwapItems(int32 first, int32 second);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		void Heal(int32 index);
+
 	//Just using this to test the text display, come up with a better solution later
 	UPROPERTY(BlueprintReadOnly, Category = "Delete Later")
 		bool inControl = true;
@@ -80,6 +83,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float runSpeed = 500.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 maxHealth = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	int32 currentHealth;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		UFCInventoryComponent* Inventory;
 
@@ -88,15 +97,15 @@ public:
 
 	//Probably going to rework this later
 	UPROPERTY(EditAnywhere, Category = "UI")
-		TSubclassOf<UUserWidget> pWidget;
+	TSubclassOf<UUserWidget> pWidget;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
-		UUserWidget* pickupWidget = nullptr;
+	UUserWidget* pickupWidget = nullptr;
 
 	FTimerHandle LookTimerHandle;
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-		FInteractableDelegate Interacted;
+	FInteractableDelegate Interacted;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FNewInteractableDelegate NewInteractable;
 

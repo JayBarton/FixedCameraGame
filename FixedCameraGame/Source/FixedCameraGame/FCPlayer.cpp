@@ -240,6 +240,16 @@ void AFCPlayer::SwapItems(int32 first, int32 second)
 	Inventory->inventory[first] = temp;
 }
 
+void AFCPlayer::Heal(int32 index)
+{
+	currentHealth += Inventory->inventory[index].healAmount;
+	if (currentHealth > maxHealth)
+	{
+		currentHealth = maxHealth;
+	}
+	Inventory->RemoveFromInventory(index);
+}
+
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
 {
 }
