@@ -3,6 +3,7 @@
 
 #include "FCPickup.h"
 #include "Kismet/GameplayStatics.h" 
+#include "Engine/DataTable.h" 
 #include "FCPlayer.h"
 #include "FCInventoryComponent.h"
 #include "Structs.h"
@@ -29,6 +30,20 @@ void AFCPickup::Action_Implementation()
 		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 		FString display = "Can't take " + details.name.ToString() + ". Inventory full";
 		gameMode->DisplayText(display);
+	}
+}
+
+void AFCPickup::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (data)
+	{
+		auto toLoad = data->FindRow<FItemStruct>(FName(*FString::FromInt(details.ID)), "");
+		if (toLoad)
+		{
+			details = *toLoad;
+		}
 	}
 }
 

@@ -7,6 +7,8 @@
 #include "Structs.h"
 #include "FCPickup.generated.h"
 
+
+class UDataTable;
 /**
  * 
  */
@@ -20,9 +22,14 @@ public:
 
 	virtual void Action_Implementation() override;
 
+	virtual void BeginPlay() override;
+
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	int32 TakeItem();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Details")
 	FItemStruct details;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* data;
 };

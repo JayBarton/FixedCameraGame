@@ -6,7 +6,7 @@
 
 
 USTRUCT(BlueprintType)
-struct FItemStruct
+struct FItemStruct : public FTableRowBase
 {
     GENERATED_BODY()
 
