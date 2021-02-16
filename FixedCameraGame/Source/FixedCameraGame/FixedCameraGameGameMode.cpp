@@ -14,6 +14,7 @@
 #include "FCInfoTextWidget.h"
 #include "FCLockComponent.h"
 #include "FCPuzzleInteractable.h"
+#include "FCSwitchInteractable.h"
 #include "FCExit.h"
 
 
@@ -114,6 +115,7 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					objectWatcher->objects.data[i].spawn = instance->savedObjects[currentLevel].data[i].spawn;
 					objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
 					objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
+					objectWatcher->objects.data[i].switched = instance->savedObjects[currentLevel].data[i].switched;
 				}
 
 				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
@@ -138,6 +140,14 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 						if (auto interactable = Cast<AFCInteractable>(object.actor))
 						{
 							interactable->active = false;
+						}
+					}
+					if (object.switched)
+					{
+						if (auto interactable = Cast<AFCSwitchInteractable>(object.actor))
+						{
+							interactable->switchState = true;
+							interactable->SwitchOn.Broadcast();
 						}
 					}
 				}

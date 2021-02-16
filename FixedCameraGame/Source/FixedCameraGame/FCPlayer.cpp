@@ -50,6 +50,7 @@ void AFCPlayer::BeginPlay()
 	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
 //	GetWorld()->GetTimerManager().
 	//LookTimerHandle.Invalidate
+	
 }
 
 // Called every frame

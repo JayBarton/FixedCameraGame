@@ -75,7 +75,8 @@ public:
 		void Heal(int32 index);
 
 	//Just using this to test the text display, come up with a better solution later
-	UPROPERTY(BlueprintReadOnly, Category = "Delete Later")
+	//Still want a better solution
+	UPROPERTY(BlueprintReadWrite, Category = "Delete Later")
 		bool inControl = true;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
