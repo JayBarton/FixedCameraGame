@@ -8,6 +8,7 @@
 
 class UFCInventoryComponent;
 class AFCSwitchInteractable;
+class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
@@ -74,6 +75,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void Heal(int32 index);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		void CombineItems(int32 first, int32 second);
+
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
 	UPROPERTY(BlueprintReadWrite, Category = "Delete Later")
@@ -96,6 +100,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		UFCInventoryComponent* Inventory;
+	//I don't know that it's a great solution to have a reference to the item data here,
+	//I need it for the item combination, it will work for now.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+		UDataTable* itemData;
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	AActor* nearestInteractable;

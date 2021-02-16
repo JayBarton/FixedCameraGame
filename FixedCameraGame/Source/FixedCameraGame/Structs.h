@@ -21,6 +21,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     int healAmount = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    int combineWith;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    int combineResult;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FName name;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FString description;
@@ -30,4 +34,6 @@ public:
     bool isStackable = false;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     bool isConsumable = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    bool isCombinable = false;
 };

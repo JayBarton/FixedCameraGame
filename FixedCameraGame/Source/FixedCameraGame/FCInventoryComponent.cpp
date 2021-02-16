@@ -59,7 +59,6 @@ void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherI
 {
 	FItemStruct& firstItem = inventory[first];
 	FItemStruct& secondItem = otherInventory->inventory[second];
-	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	bool added = false;
 	if (firstItem.ID == secondItem.ID)
 	{
@@ -81,6 +80,7 @@ void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherI
 	}
 	if (!added)
 	{
+		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 		gameMode->DisplayText("Cannot combine these");
 	}
 

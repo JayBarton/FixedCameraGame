@@ -14,6 +14,8 @@
 #include "FCExit.h"
 #include "Kismet/GameplayStatics.h" 
 #include "FixedCameraGameGameMode.h"
+#include "Engine/DataTable.h" 
+
 #include "DrawDebugHelpers.h" 
 
 // Sets default values
@@ -253,6 +255,32 @@ void AFCPlayer::Heal(int32 index)
 		currentHealth = maxHealth;
 	}
 	Inventory->RemoveFromInventory(index);
+}
+
+void AFCPlayer::CombineItems(int32 first, int32 second)
+{
+	FItemStruct& firstItem = Inventory->inventory[first];
+	FItemStruct& secondItem = Inventory->inventory[second];
+	bool combined = false;
+	if (firstItem.combineWith == secondItem.ID)
+	{
+		firstItem.ID = firstItem.combineResult;
+		if (itemData)
+		{
+			auto toLoad = itemData->FindRow<FItemStruct>(FName(*FString::FromInt(firstItem.ID)), "");
+			if (toLoad)
+			{
+				firstItem = *toLoad;
+			}
+		}
+		secondItem = FItemStruct();
+		//update slots (in blueprint)
+	}
+	else
+	{
+		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		gameMode->DisplayText("Cannot combine these");
+	}
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
