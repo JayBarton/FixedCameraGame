@@ -7,6 +7,7 @@
 #include "Structs.h"
 #include "FCInventoryComponent.generated.h"
 
+
 class UUserWidget;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FIXEDCAMERAGAME_API UFCInventoryComponent : public UActorComponent
@@ -39,5 +40,4 @@ public:
 		int32 capacity;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		UUserWidget* inventoryWindow;
-
 };

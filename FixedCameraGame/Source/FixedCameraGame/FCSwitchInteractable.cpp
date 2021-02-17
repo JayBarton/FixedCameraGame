@@ -4,11 +4,14 @@
 #include "FCSwitchInteractable.h"
 #include "FCPlayer.h"
 #include "FixedCameraGameGameMode.h"
+#include "FCSwitchComponent.h"
 #include "Kismet/GameplayStatics.h" 
 
 AFCSwitchInteractable::AFCSwitchInteractable()
 {
 	prompt = "turn on";
+	Switch = CreateDefaultSubobject<UFCSwitchComponent>(TEXT("Switch"));
+
 }
 
 void AFCSwitchInteractable::Action_Implementation()
@@ -27,8 +30,9 @@ void AFCSwitchInteractable::Action_Implementation()
 
 void AFCSwitchInteractable::PressSwitch()
 {
-	switchState = !switchState;
-	Switch.Broadcast(switchState);
+	//switchState = !switchState;
+	//Switch.Broadcast(switchState);
+	Switch->PressSwitch();
 	if (!isToggle)
 	{
 		//Need to make sure any affected objects are also saved by the object watcher

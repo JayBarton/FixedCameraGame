@@ -5,6 +5,7 @@
 #include "FCLockComponent.h"
 #include "FCInteractable.h"
 #include "FCSwitchInteractable.h"
+#include "FCSwitchComponent.h"
 
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
@@ -52,10 +53,10 @@ void AFCObjectWatcher::UpdateObjects()
 		}
 		if (object.switched)
 		{
-			auto interactable = Cast<AFCSwitchInteractable>(object.actor);
-			if (interactable)
+			auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass()));
+			if (switchComponent)
 			{
-				objects.data[i].switched = interactable->switchState;
+				objects.data[i].switched = switchComponent->switchState;
 			}
 		}
 

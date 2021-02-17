@@ -15,6 +15,7 @@
 #include "FCLockComponent.h"
 #include "FCPuzzleInteractable.h"
 #include "FCSwitchInteractable.h"
+#include "FCSwitchComponent.h"
 #include "FCExit.h"
 
 
@@ -144,10 +145,10 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					}
 					if (object.switched)
 					{
-						if (auto interactable = Cast<AFCSwitchInteractable>(object.actor))
+						if (auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass())))
 						{
-							interactable->switchState = true;
-							interactable->SwitchOn.Broadcast();
+							switchComponent->switchState = true;
+							switchComponent->SwitchOn.Broadcast();
 						}
 					}
 				}

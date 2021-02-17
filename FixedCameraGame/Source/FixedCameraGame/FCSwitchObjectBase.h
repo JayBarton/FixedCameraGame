@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "FCSwitchObjectBase.generated.h"
 
-class AFCSwitchInteractable;
+class UFCSwitchComponent;
 
 UCLASS()
 class FIXEDCAMERAGAME_API AFCSwitchObjectBase : public AActor
@@ -29,8 +29,14 @@ public:
 		virtual void SwitchAction(bool isOn);
 	UFUNCTION()
 		virtual void SetToOnState();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void Action(bool isOn);
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void ToOnState();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
-		AFCSwitchInteractable* attachedSwitch;
+	AActor* attachedActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+	UFCSwitchComponent* attachedSwitch = nullptr;
 
 };

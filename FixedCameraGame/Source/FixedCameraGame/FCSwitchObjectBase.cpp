@@ -3,6 +3,7 @@
 
 #include "FCSwitchObjectBase.h"
 #include "FCSwitchInteractable.h"
+#include "FCSwitchComponent.h"
 
 // Sets default values
 AFCSwitchObjectBase::AFCSwitchObjectBase()
@@ -16,10 +17,18 @@ AFCSwitchObjectBase::AFCSwitchObjectBase()
 void AFCSwitchObjectBase::BeginPlay()
 {
 	Super::BeginPlay();
-	if (attachedSwitch)
+	if (attachedActor)
 	{
-	//	attachedSwitch->SwitchOn.AddDynamic(this, &AFCSwitchObjectBase::SetToOnState);
-	//	attachedSwitch->Switch.AddDynamic(this, &AFCSwitchObjectBase::SwitchAction);
+		attachedSwitch = Cast<UFCSwitchComponent>(attachedActor->FindComponentByClass(UFCSwitchComponent::StaticClass()));
+		if (attachedSwitch)
+		{
+			attachedSwitch->SwitchOn.AddDynamic(this, &AFCSwitchObjectBase::SetToOnState);
+			attachedSwitch->Switch.AddDynamic(this, &AFCSwitchObjectBase::SwitchAction);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No switch component found"))
+		}
 	}
 }
 
@@ -34,14 +43,30 @@ void AFCSwitchObjectBase::SwitchAction(bool isOn)
 {
 	if (isOn)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("On"));
+		UE_LOG(LogTemp, Warning, TEXT("Turn on"));
+
 	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Turn off"));
+
+	}
+	Action(isOn);
 }
 
 void AFCSwitchObjectBase::SetToOnState()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Testing this"));
+	ToOnState();
 
+}
+
+void AFCSwitchObjectBase::Action_Implementation(bool isOn)
+{
+}
+
+void AFCSwitchObjectBase::ToOnState_Implementation()
+{
 }
 
 
