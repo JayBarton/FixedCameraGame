@@ -10,6 +10,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchDelegate, bool, isOn);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchStartDelegate);
 
+class ACameraActor;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FIXEDCAMERAGAME_API UFCSwitchComponent : public UActorComponent
 {
@@ -29,6 +31,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void PressSwitch();
+	void SetUpScene();
+	//UFUNCTION()
+	//void PlayScene();
+	UFUNCTION()
+	void EndScene();
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FSwitchDelegate Switch;
@@ -38,8 +45,15 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Interactable")
 		bool switchState = false;
+
 	//If we move the camera to show an effect, we don't want to return input until that effect is finished
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Interactable")
-		bool playScene = false;
-		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	bool playScene = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	ACameraActor* sceneCamera;
+	//might be able to remove this
+	ACameraActor* playerCamera;
+	//How long the scene lasts in seconds
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+		float sceneLength;
 };

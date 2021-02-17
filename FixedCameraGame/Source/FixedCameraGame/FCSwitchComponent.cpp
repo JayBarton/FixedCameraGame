@@ -2,6 +2,11 @@
 
 
 #include "FCSwitchComponent.h"
+#include "Components/TimelineComponent.h" 
+#include "Kismet/GameplayStatics.h" 
+#include "FCPlayer.h"
+#include "FCPlayerCamera.h"
+
 
 // Sets default values for this component's properties
 UFCSwitchComponent::UFCSwitchComponent()
@@ -18,9 +23,6 @@ UFCSwitchComponent::UFCSwitchComponent()
 void UFCSwitchComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// ...
-	
 }
 
 
@@ -29,12 +31,40 @@ void UFCSwitchComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+//	MyTimeline.TickTimeline(DeltaTime);
 }
 
 void UFCSwitchComponent::PressSwitch()
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
+	if (playScene)
+	{
+		SetUpScene();
+	}
+}
+
+void UFCSwitchComponent::SetUpScene()
+{
+	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	player->inControl = false;
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
+	FViewTargetTransitionParams transitionParams;
+	pc->SetViewTarget(sceneCamera, transitionParams);
+
+	FTimerHandle SceneTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
+}
+
+void UFCSwitchComponent::EndScene()
+{
+	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	player->inControl = false;
+	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+	FViewTargetTransitionParams transitionParams;
+	pc->SetViewTarget(playerCamera, transitionParams);
 }
 
