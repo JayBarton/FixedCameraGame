@@ -8,6 +8,9 @@
 
 class ACameraActor;
 class UFCLockComponent;
+
+class UFCSwitchComponent;
+
 UCLASS()
 class FIXEDCAMERAGAME_API AFCPuzzleInteractable : public AFCInteractable
 {
@@ -46,4 +49,7 @@ public:
 		AFCInteractable* linkedInteractable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level") 
 		UFCLockComponent* linkedLock;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
+		UFCSwitchComponent* Switch;
 };

@@ -6,6 +6,7 @@
 #include "FCLockComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "FixedCameraGameGameMode.h"
+#include "FCSwitchComponent.h"
 
 // Sets default values
 AFCPuzzleInteractable::AFCPuzzleInteractable()
@@ -13,6 +14,9 @@ AFCPuzzleInteractable::AFCPuzzleInteractable()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 	prompt = "Use";
+
+	Switch = CreateDefaultSubobject<UFCSwitchComponent>(TEXT("Switch"));
+
 }
 
 // Called when the game starts or when spawned
@@ -57,6 +61,7 @@ void AFCPuzzleInteractable::OpenLock()
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->DisplayText(puzzleCompleteText);
 	UE_LOG(LogTemp, Warning, TEXT("door unlocked"));
+	Switch->PressSwitch();
 }
 
 void AFCPuzzleInteractable::ExitPuzzle()
