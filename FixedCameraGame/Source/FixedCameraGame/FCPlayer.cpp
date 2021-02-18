@@ -15,6 +15,8 @@
 #include "Kismet/GameplayStatics.h" 
 #include "FixedCameraGameGameMode.h"
 #include "Engine/DataTable.h" 
+#include "Components/PawnNoiseEmitterComponent.h"
+
 
 #include "DrawDebugHelpers.h" 
 
@@ -37,6 +39,9 @@ AFCPlayer::AFCPlayer()
 
 	Inventory = CreateDefaultSubobject<UFCInventoryComponent>(TEXT("Inventory"));
 	Inventory->capacity = 6;
+
+	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitterComponent"));
+
 
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;

@@ -9,6 +9,8 @@
 class UFCInventoryComponent;
 class AFCSwitchInteractable;
 class UDataTable;
+class UPawnNoiseEmitterComponent;
+
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
@@ -99,11 +101,13 @@ public:
 	int32 currentHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-		UFCInventoryComponent* Inventory;
+	UFCInventoryComponent* Inventory;
 	//I don't know that it's a great solution to have a reference to the item data here,
 	//I need it for the item combination, it will work for now.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
-		UDataTable* itemData;
+	UDataTable* itemData;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UPawnNoiseEmitterComponent* NoiseEmitterComponent;
 
 	UPROPERTY(BlueprintReadOnly, Category = "UI")
 	AActor* nearestInteractable;
