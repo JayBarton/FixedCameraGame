@@ -37,6 +37,7 @@ public:
 
 	APawn* player = nullptr;
 
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool hasNoticedPlayer = false;
 
 
