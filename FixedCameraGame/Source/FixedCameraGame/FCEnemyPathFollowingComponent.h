@@ -6,6 +6,7 @@
 #include "Navigation/PathFollowingComponent.h"
 #include "FCEnemyPathFollowingComponent.generated.h"
 
+class UCharacterMovementComponent;
 /**
  * 
  */
@@ -16,4 +17,9 @@ class FIXEDCAMERAGAME_API UFCEnemyPathFollowingComponent : public UPathFollowing
 protected:
 	/** follow current path segment */
 	virtual void FollowPathSegment(float DeltaTime) override;
+
+	virtual void SetMovementComponent(UNavMovementComponent* MoveComp) override;
+
+public:
+	UCharacterMovementComponent* CharacterMoveComp;
 };

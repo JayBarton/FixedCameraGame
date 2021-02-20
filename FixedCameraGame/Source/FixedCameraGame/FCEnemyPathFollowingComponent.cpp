@@ -2,6 +2,7 @@
 
 
 #include "FCEnemyPathFollowingComponent.h"
+#include "GameFramework/CharacterMovementComponent.h" 
 
 void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
 {
@@ -9,27 +10,55 @@ void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
     if (Owner)
     {
         FVector location = Owner->GetActorLocation();
-        FVector target = GetCurrentTargetLocation();
+        FVector target = Path->GetPathPoints()[GetNextPathIndex()].Location;;
         FVector direction = target - location;
+        FVector MoveVelocity = Owner->GetActorForwardVector() * CharacterMoveComp->MaxWalkSpeed;
 
-        FRotator rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+        FVector desired = direction.GetSafeNormal() * CharacterMoveComp->MaxWalkSpeed;
+        FVector steer = desired - MoveVelocity;
+
+        float maxSteer = 2.5f;
+
+        if (steer.Size() > maxSteer)
+        {
+            steer.Normalize();
+            steer *= maxSteer;
+        }
+        
+        const int32 LastSegmentStartIndex = Path->GetPathPoints().Num() - 2;
+        const bool bNotFollowingLastSegment = (MoveSegmentStartIndex < LastSegmentStartIndex);
+
+        MoveVelocity = MoveVelocity + steer;
+
+        if (MoveVelocity.Size() > CharacterMoveComp->MaxWalkSpeed)
+        {
+            MoveVelocity.Normalize();
+            MoveVelocity *= CharacterMoveComp->MaxWalkSpeed;
+        }
+        PostProcessMove.ExecuteIfBound(this, MoveVelocity);
+        MovementComp->RequestDirectMove(MoveVelocity, bNotFollowingLastSegment);
+
+        UE_LOG(LogTemp, Warning, TEXT("velocity %s"), *MovementComp->Velocity.ToString());
+        UE_LOG(LogTemp, Warning, TEXT("steer %s"), *steer.ToString());
+       // UE_LOG(LogTemp, Warning, TEXT("walk speed %f"), CharacterMoveComp->MaxWalkSpeed);
+     /*   FRotator rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
         float deltaYaw = (rotatorDirection - Owner->GetActorRotation()).Yaw;
         if (deltaYaw >= 70.0f)
         {
             
             Owner->SetActorRotation(FMath::RInterpTo(Owner->GetActorRotation(), rotatorDirection, DeltaTime, 2.0f));
-            UE_LOG(LogTemp, Warning, TEXT("%f"), deltaYaw);
-
+           // UE_LOG(LogTemp, Warning, TEXT("%f"), deltaYaw);
         }
         else
         {
-            Super::FollowPathSegment(DeltaTime);
-        }
+        }*/
 
     }
-    else
-    {
-        Super::FollowPathSegment(DeltaTime);
+}
 
-    }
+void UFCEnemyPathFollowingComponent::SetMovementComponent(UNavMovementComponent* MoveComp)
+{
+    Super::SetMovementComponent(MoveComp);
+
+    CharacterMoveComp = Cast<UCharacterMovementComponent>(MovementComp);
 }
