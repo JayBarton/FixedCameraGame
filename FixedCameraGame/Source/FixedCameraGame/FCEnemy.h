@@ -25,12 +25,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetUpAttack();
+
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 	UFUNCTION()
 	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volumne);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void NoticePlayer();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void Attack();
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
@@ -39,6 +44,25 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool hasNoticedPlayer = false;
+	//playing attack animation
+	//read write should be temporary
+	UPROPERTY(BlueprintReadWrite, Category = "AI")
+	bool isAttacking = false;
+	//for the actual attack damage
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+	bool hasAttacked = false;
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+		bool turning;
 
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float attackDistance = 150.0f;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float attackRange = 200.0f;
+	UPROPERTY(EditAnywhere, Category = "Attack")
+	float attackLength = 1.7f;
+	float halfAttackLength = 0.0f;
+	float attackTime = 0.0f;
+
+	FRotator rotatorDirection;
 
 };
