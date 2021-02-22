@@ -45,6 +45,12 @@ public:
 
 	void StopSprinting();
 
+	void Aim();
+
+	void StopAiming();
+
+	void Fire();
+
 	void Interact();
 
 	void OpenInventory();
@@ -80,6 +86,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void CombineItems(int32 first, int32 second);
 
+	void Reload();
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		void ReloadWeapon(int32 first, int32 second);
+
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
 	UPROPERTY(BlueprintReadWrite, Category = "Delete Later")
@@ -87,6 +98,12 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
 		bool inInventory = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Weapons")
+		bool isAiming = false;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
+		bool isReloading = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
@@ -99,6 +116,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	int32 currentHealth;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
+		int32 equipped = -1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UFCInventoryComponent* Inventory;

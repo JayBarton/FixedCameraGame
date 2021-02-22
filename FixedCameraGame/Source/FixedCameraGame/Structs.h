@@ -25,6 +25,8 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     int combineResult;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    int ammoID;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FName name;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     FString description;
@@ -36,4 +38,6 @@ public:
     bool isConsumable = false;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
     bool isCombinable = false;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+    bool isEquipable = false;
 };

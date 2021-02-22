@@ -81,6 +81,13 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
 
+	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AFCPlayer::Aim);
+	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AFCPlayer::StopAiming);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFCPlayer::Fire);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFCPlayer::Reload);
+
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCPlayer::Interact);
 
 	//PlayerInputComponent->BindAction("Open Inventory", IE_Pressed, this, &AFCPlayer::OpenInventory);
@@ -91,9 +98,12 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AFCPlayer::MoveForward(float value)
 {
-	if (value != 0.0f)
+	if (!isAiming && !isReloading)
 	{
-		AddMovementInput(GetActorForwardVector(), value);
+		if (value != 0.0f)
+		{
+			AddMovementInput(GetActorForwardVector(), value);
+		}
 	}
 }
 
@@ -122,41 +132,67 @@ void AFCPlayer::StopSprinting()
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
+void AFCPlayer::Aim()
+{
+	if (equipped >= 0)
+	{
+		isAiming = true;
+	}
+}
+
+void AFCPlayer::StopAiming()
+{
+	if (equipped >= 0)
+	{
+		isAiming = false;
+	}
+}
+
+void AFCPlayer::Fire()
+{
+	if (isAiming)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BANG"));
+	}
+}
+
 void AFCPlayer::Interact()
 {
-	if (nearestInteractable)
+	if (!isAiming)
 	{
-		if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
+		if (nearestInteractable)
 		{
-			auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-			//check lock type
-			if (lock->type == LockType::PUZZLE)
+			if (auto lock = Cast<UFCLockComponent>(nearestInteractable->FindComponentByClass(UFCLockComponent::StaticClass())))
 			{
-				gameMode->DisplayText("Door is locked, but there is no key hole...");
+				auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+				//check lock type
+				if (lock->type == LockType::PUZZLE)
+				{
+					gameMode->DisplayText("Door is locked, but there is no key hole...");
+				}
+				else if (lock->type == LockType::KEY)
+				{
+					gameMode->DisplayText(lock->description, lock);
+				}
+				else if (lock->type == LockType::ONE_WAY_LOCKED)
+				{
+					gameMode->DisplayText("Locked from the other side.");
+				}
+				else if (lock->type == LockType::ONE_WAY_UNLOCK)
+				{
+					auto exit = Cast<AFCExit>(nearestInteractable);
+					gameMode->SetPendingLock(exit->levelName.ToString(), exit->index);
+					lock->Open(lock->ID);
+					gameMode->DisplayText("Unlocked");
+				}
 			}
-			else if (lock->type == LockType::KEY)
+			else
 			{
-				gameMode->DisplayText(lock->description, lock);
+				IFCInteractableInterface::Execute_Action(nearestInteractable);
 			}
-			else if(lock->type == LockType::ONE_WAY_LOCKED)
-			{
-				gameMode->DisplayText("Locked from the other side.");
-			}
-			else if (lock->type == LockType::ONE_WAY_UNLOCK)
-			{
-				auto exit = Cast<AFCExit>(nearestInteractable);
-				gameMode->SetPendingLock(exit->levelName.ToString(), exit->index);
-				lock->Open(lock->ID);
-				gameMode->DisplayText("Unlocked");
-			}
+			Interacted.Broadcast();
 		}
-		else
-		{
-			IFCInteractableInterface::Execute_Action(nearestInteractable);
-		}
-		Interacted.Broadcast();
 	}
-
 }
 
 void AFCPlayer::OpenInventory()
@@ -286,6 +322,53 @@ void AFCPlayer::CombineItems(int32 first, int32 second)
 		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 		gameMode->DisplayText("Cannot combine these");
 	}
+}
+
+void AFCPlayer::Reload()
+{
+	if (isAiming && !isReloading)
+	{
+		isReloading = true;
+	}
+}
+
+void AFCPlayer::ReloadWeapon(int32 first, int32 second)
+{
+	FItemStruct& firstItem = Inventory->inventory[first];
+	FItemStruct& secondItem = Inventory->inventory[second];
+	if (!firstItem.isEquipable)
+	{
+		FItemStruct& temp = secondItem;
+		secondItem = firstItem;
+		firstItem = secondItem;
+	}
+
+	if (firstItem.ammoID == secondItem.ID)
+	{
+		int32 toAdd = firstItem.maxCapacity - firstItem.amount;
+		if (secondItem.amount <= toAdd)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("q1"));
+
+			firstItem.amount += secondItem.amount;
+			secondItem = FItemStruct();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%i"), toAdd);
+			UE_LOG(LogTemp, Warning, TEXT("%i"), firstItem.amount);
+			UE_LOG(LogTemp, Warning, TEXT("%i"), secondItem.amount);
+
+			firstItem.amount += toAdd;
+			secondItem.amount -= toAdd;
+		}
+	}
+	else
+	{
+		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		gameMode->DisplayText("Cannot combine these");
+	}
+
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
