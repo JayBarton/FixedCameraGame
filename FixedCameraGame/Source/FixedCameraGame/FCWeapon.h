@@ -27,6 +27,7 @@ public:
 
 	void Fire();
 
+	//Not sure if I'm using this anymore...
 	void Reload(int32 toAdd);
 
 	void Hide();
@@ -36,8 +37,8 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 		USkeletalMeshComponent* MeshComp;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
-		int32 currentAmmo;
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
+	//	int32 currentAmmo;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Ammo")
 		int32 maxAmmo;
 	int32 ammoID;

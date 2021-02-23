@@ -53,7 +53,6 @@ void AFCPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-
 	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
 
 	FActorSpawnParameters SpawnInfo;
@@ -61,7 +60,11 @@ void AFCPlayer::BeginPlay()
 	currentWeapon = GetWorld()->SpawnActor<AFCWeapon>(weapon, SpawnInfo);
 	currentWeapon->player = this;
 	currentWeapon->Hide();
-	currentWeapon->currentAmmo = 4;
+
+	if (equipped >= 0)
+	{
+		EquipWeapon(equipped);
+	}
 	
 	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
 //	GetWorld()->GetTimerManager().
@@ -145,6 +148,9 @@ void AFCPlayer::Aim()
 {
 	if (equipped >= 0)
 	{
+		//Can't interact while aiming, so turn off the timer
+		nearestInteractable = nullptr;
+		GetWorld()->GetTimerManager().ClearTimer(LookTimerHandle);
 		isAiming = true;
 	}
 }
@@ -153,6 +159,7 @@ void AFCPlayer::StopAiming()
 {
 	if (equipped >= 0)
 	{
+		GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
 		isAiming = false;
 	}
 }
@@ -161,23 +168,37 @@ void AFCPlayer::Fire()
 {
 	if (isAiming)
 	{
-		currentWeapon->Fire();
+		FItemStruct& weaponSlot = Inventory->inventory[equipped];
+		if (weaponSlot.amount > 0)
+		{
+			weaponSlot.amount--;
+			currentWeapon->Fire();
+			UE_LOG(LogTemp, Warning, TEXT("%i"), weaponSlot.amount);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("reloading"));
+			Reload();
+		}
 	}
 }
 
 void AFCPlayer::EquipWeapon(int32 inventoryIndex)
 {
 	FItemStruct& slot = Inventory->inventory[inventoryIndex];
-	equipped = slot.ID;
-	//currentWeapon->currentAmmo = slot.amount;
+	equipped = inventoryIndex;
 	currentWeapon->ammoID = slot.ammoID;
 	currentWeapon->Show();
+	//currentWeapon->currentAmmo = slot.amount;
+	//currentWeapon->currentAmmo = slot.amount;
 }
 
-void AFCPlayer::UnEquipWeapon()
+void AFCPlayer::UnEquipWeapon(int32 inventoryIndex)
 {
 	equipped = -1;
 	currentWeapon->Hide();
+	//FItemStruct& slot = Inventory->inventory[inventoryIndex];
+	//slot.amount = currentWeapon->currentAmmo;
 }
 
 void AFCPlayer::Interact()
@@ -258,7 +279,6 @@ void AFCPlayer::LookForInteractable()
 			if (!nearestInteractable)
 			{
 				nearestInteractable = OutHit.GetActor();
-				UE_LOG(LogTemp, Warning, TEXT("%s"), *nearestInteractable->GetName());
 				NewInteractable.Broadcast();
 
 			}
@@ -269,7 +289,6 @@ void AFCPlayer::LookForInteractable()
 	{
 		if (nearestInteractable)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("nothin'"));
 			nearestInteractable = nullptr;
 			NewInteractable.Broadcast();
 
@@ -307,8 +326,30 @@ bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 
 void AFCPlayer::SwapItems(int32 first, int32 second)
 {
+	if (equipped >= 0)
+	{
+		if (equipped == first)
+		{
+			equipped = second;
+		}
+		else if (equipped == second)
+		{
+			equipped = first;
+		}
+	}
 	FItemStruct temp = Inventory->inventory[second];
 	Inventory->inventory[second] = Inventory->inventory[first];
+	Inventory->inventory[first] = temp;
+}
+
+void AFCPlayer::SwapWithContainer(int32 first, int32 second, UFCInventoryComponent* containerInventory)
+{
+	if (equipped == first)
+	{
+		UnEquipWeapon(first);
+	}
+	FItemStruct temp = containerInventory->inventory[second];
+	containerInventory->inventory[second] = Inventory->inventory[first];
 	Inventory->inventory[first] = temp;
 }
 
@@ -352,7 +393,9 @@ void AFCPlayer::Reload()
 {
 	if (isAiming && !isReloading)
 	{
-		int toAdd = currentWeapon->maxAmmo - currentWeapon->currentAmmo;
+		FItemStruct& weaponSlot = Inventory->inventory[equipped];
+
+		int toAdd = currentWeapon->maxAmmo - weaponSlot.amount;
 		UE_LOG(LogTemp, Warning, TEXT("to add %i"), toAdd);
 		UE_LOG(LogTemp, Warning, TEXT("ammo id %i"), currentWeapon->ammoID);
 		int canAdd = 0;
@@ -384,8 +427,9 @@ void AFCPlayer::Reload()
 		}
 		if (canAdd > 0)
 		{
-			currentWeapon->Reload(canAdd);
+			weaponSlot.amount += canAdd;
 			isReloading = true;
+			//	currentWeapon->Reload(canAdd);
 		}
 		else
 		{

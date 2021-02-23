@@ -30,7 +30,7 @@ void AFCWeapon::Tick(float DeltaTime)
 
 void AFCWeapon::Fire()
 {
-	if (currentAmmo > 0)
+	/*if (currentAmmo > 0)
 	{
 		currentAmmo--;
 		UE_LOG(LogTemp, Warning, TEXT("BANG"));
@@ -41,12 +41,13 @@ void AFCWeapon::Fire()
 		UE_LOG(LogTemp, Warning, TEXT("reloading"));
 
 		player->Reload();
-	}
+	}*/
+	UE_LOG(LogTemp, Warning, TEXT("BANG"));
 }
 
 void AFCWeapon::Reload(int32 toAdd)
 {
-	currentAmmo += toAdd;
+	//currentAmmo += toAdd;
 }
 
 void AFCWeapon::Hide()

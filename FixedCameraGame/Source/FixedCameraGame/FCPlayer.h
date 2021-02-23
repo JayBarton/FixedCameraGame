@@ -54,7 +54,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void EquipWeapon(int32 inventoryIndex);
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void UnEquipWeapon();
+	void UnEquipWeapon(int32 inventoryIndex);
 
 	void Interact();
 
@@ -84,6 +84,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void SwapItems(int32 first, int32 second);
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+		void SwapWithContainer(int32 first, int32 second, UFCInventoryComponent* containerInventory);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void Heal(int32 index);
@@ -123,7 +126,9 @@ public:
 	int32 currentHealth;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
-		int32 equipped = -1;
+	int32 equipped = -1;
+
+	int32* ammo;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
 		FName WeaponAttachPoint;

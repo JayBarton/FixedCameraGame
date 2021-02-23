@@ -21,6 +21,9 @@ public:
 	int startIndex = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+		int equippedIndex = -1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TArray<FItemStruct> playerInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
@@ -33,4 +36,6 @@ public:
 	//Using this for one way locks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TMap<FString, FPendingLocks> pendingLocks;
+
+
 };

@@ -58,6 +58,7 @@ void AFixedCameraGameGameMode::BeginPlay()
 		if (pc)
 		{
 			pc->Inventory->inventory = instance->playerInventory;
+			pc->equipped = instance->equippedIndex;
 		}
 
 		FindStart(instance);
@@ -245,6 +246,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 		{
 			instance->startIndex = index;
 			instance->playerInventory = pc->Inventory->inventory;
+			instance->equippedIndex = pc->equipped;
 			if (objectWatcher)
 			{
 				objectWatcher->UpdateObjects();
