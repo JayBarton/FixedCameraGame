@@ -10,7 +10,7 @@ class UFCInventoryComponent;
 class AFCSwitchInteractable;
 class UDataTable;
 class UPawnNoiseEmitterComponent;
-
+class AFCWeapon;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
@@ -50,6 +50,11 @@ public:
 	void StopAiming();
 
 	void Fire();
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void EquipWeapon(int32 inventoryIndex);
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void UnEquipWeapon();
 
 	void Interact();
 
@@ -119,6 +124,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
 		int32 equipped = -1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+		FName WeaponAttachPoint;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+		AFCWeapon* currentWeapon;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+		TSubclassOf<AFCWeapon> weapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UFCInventoryComponent* Inventory;

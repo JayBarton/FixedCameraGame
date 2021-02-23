@@ -12,6 +12,7 @@
 #include "Blueprint/UserWidget.h" 
 #include "FCInteractable.h"
 #include "FCExit.h"
+#include "FCWeapon.h"
 #include "Kismet/GameplayStatics.h" 
 #include "FixedCameraGameGameMode.h"
 #include "Engine/DataTable.h" 
@@ -54,6 +55,14 @@ void AFCPlayer::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 
 	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
+
+	FActorSpawnParameters SpawnInfo;
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	currentWeapon = GetWorld()->SpawnActor<AFCWeapon>(weapon, SpawnInfo);
+	currentWeapon->player = this;
+	currentWeapon->Hide();
+	currentWeapon->currentAmmo = 4;
+	
 	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
 //	GetWorld()->GetTimerManager().
 	//LookTimerHandle.Invalidate
@@ -152,8 +161,23 @@ void AFCPlayer::Fire()
 {
 	if (isAiming)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("BANG"));
+		currentWeapon->Fire();
 	}
+}
+
+void AFCPlayer::EquipWeapon(int32 inventoryIndex)
+{
+	FItemStruct& slot = Inventory->inventory[inventoryIndex];
+	equipped = slot.ID;
+	//currentWeapon->currentAmmo = slot.amount;
+	currentWeapon->ammoID = slot.ammoID;
+	currentWeapon->Show();
+}
+
+void AFCPlayer::UnEquipWeapon()
+{
+	equipped = -1;
+	currentWeapon->Hide();
 }
 
 void AFCPlayer::Interact()
@@ -328,7 +352,45 @@ void AFCPlayer::Reload()
 {
 	if (isAiming && !isReloading)
 	{
-		isReloading = true;
+		int toAdd = currentWeapon->maxAmmo - currentWeapon->currentAmmo;
+		UE_LOG(LogTemp, Warning, TEXT("to add %i"), toAdd);
+		UE_LOG(LogTemp, Warning, TEXT("ammo id %i"), currentWeapon->ammoID);
+		int canAdd = 0;
+		for (int i = 0; i < Inventory->inventory.Num(); i++)
+		{
+			FItemStruct& slot = Inventory->inventory[i];
+			if (slot.ID == currentWeapon->ammoID)
+			{
+				if (slot.amount <= toAdd)
+				{
+					canAdd += slot.amount;
+					slot = FItemStruct();
+				}
+				else
+				{
+					canAdd += toAdd;
+					slot.amount -= toAdd;
+				}
+				if (canAdd == toAdd)
+				{
+					//done
+					break;
+				}
+				else
+				{
+					toAdd -= canAdd;
+				}
+			}
+		}
+		if (canAdd > 0)
+		{
+			currentWeapon->Reload(canAdd);
+			isReloading = true;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No ammo"));
+		}
 	}
 }
 
