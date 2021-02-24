@@ -3,6 +3,10 @@
 
 #include "FCWeapon.h"
 #include "FCPlayer.h"
+#include "Kismet/GameplayStatics.h" 
+#include "Particles/ParticleSystem.h" 
+
+#include "DrawDebugHelpers.h" 
 
 // Sets default values
 AFCWeapon::AFCWeapon()
@@ -12,6 +16,7 @@ AFCWeapon::AFCWeapon()
 
 	MeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("MeshComp"));
 	RootComponent = MeshComp;
+
 }
 
 // Called when the game starts or when spawned
@@ -30,24 +35,67 @@ void AFCWeapon::Tick(float DeltaTime)
 
 void AFCWeapon::Fire()
 {
-	/*if (currentAmmo > 0)
+	
+	if (player)
 	{
-		currentAmmo--;
-		UE_LOG(LogTemp, Warning, TEXT("BANG"));
-		UE_LOG(LogTemp, Warning, TEXT("%i"), currentAmmo);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("reloading"));
 
-		player->Reload();
-	}*/
-	UE_LOG(LogTemp, Warning, TEXT("BANG"));
+		FVector shotStart = player->GetActorLocation();
+		FVector shotDirection = player->GetActorForwardVector();
+
+		float HalfRad = FMath::DegreesToRadians(0.0f);
+		//float HalfRad = FMath::DegreesToRadians(BulletSpread);
+		shotDirection = FMath::VRandCone(shotDirection, HalfRad, HalfRad);
+
+		FVector TraceEnd = shotStart + (shotDirection * 10000);
+
+		FCollisionQueryParams QueryParams;
+		QueryParams.AddIgnoredActor(player);
+		QueryParams.AddIgnoredActor(this);
+		QueryParams.bTraceComplex = true;
+		QueryParams.bReturnPhysicalMaterial = true;
+
+		FVector TracerEndpoint = TraceEnd;
+
+		EPhysicalSurface SurfaceType = SurfaceType_Default;
+
+		FHitResult Hit;
+		//if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
+		if (GetWorld()->LineTraceSingleByChannel(Hit, shotStart, TraceEnd, ECC_Visibility, QueryParams))
+		{
+			//Blocking hit, process damage
+			AActor* HitActor = Hit.GetActor();
+
+			//	SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
+
+			float ActualDamage = 1.0f;
+
+			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, shotDirection, Hit, player->GetInstigatorController(), this, DamageType);
+
+		//	PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
+
+			TracerEndpoint = Hit.ImpactPoint;
+
+		}
+
+		DrawDebugLine(GetWorld(), shotStart, TraceEnd, FColor::White, false, 1.0f, 0, 1.0f);
+
+		/*
+		impact effect
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
+
+		*/
+		UE_LOG(LogTemp, Warning, TEXT("BANG"));
+	}
+	MeshComp->PlayAnimation(fireAnimation, false);
+	canFire = false;
+	FTimerHandle FireTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(FireTimerHandle, this, &AFCWeapon::FireCoolDown, fireRate, false);
+
 }
 
-void AFCWeapon::Reload(int32 toAdd)
+void AFCWeapon::Reload()
 {
-	//currentAmmo += toAdd;
+
 }
 
 void AFCWeapon::Hide()
@@ -60,7 +108,13 @@ void AFCWeapon::Show()
 {
 	if (player)
 	{
+		canFire = true;
 		MeshComp->SetHiddenInGame(false);
 		MeshComp->AttachToComponent(player->GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, player->WeaponAttachPoint);
 	}
+}
+
+void AFCWeapon::FireCoolDown()
+{
+	canFire = true;
 }

@@ -18,7 +18,6 @@
 #include "Engine/DataTable.h" 
 #include "Components/PawnNoiseEmitterComponent.h"
 
-
 #include "DrawDebugHelpers.h" 
 
 // Sets default values
@@ -166,13 +165,14 @@ void AFCPlayer::StopAiming()
 
 void AFCPlayer::Fire()
 {
-	if (isAiming)
+	if (isAiming && !isReloading && currentWeapon->canFire)
 	{
 		FItemStruct& weaponSlot = Inventory->inventory[equipped];
 		if (weaponSlot.amount > 0)
 		{
 			weaponSlot.amount--;
 			currentWeapon->Fire();
+			MakeNoise(2.0f, this);
 			UE_LOG(LogTemp, Warning, TEXT("%i"), weaponSlot.amount);
 		}
 		else
@@ -429,7 +429,7 @@ void AFCPlayer::Reload()
 		{
 			weaponSlot.amount += canAdd;
 			isReloading = true;
-			//	currentWeapon->Reload(canAdd);
+			//currentWeapon->Reload();
 		}
 		else
 		{
