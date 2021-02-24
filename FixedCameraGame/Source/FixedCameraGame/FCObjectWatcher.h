@@ -7,6 +7,8 @@
 #include "FCObjectWatcher.generated.h"
 
 
+class AFCEnemy;
+
 //Struct of the data to keep track of
 USTRUCT(BlueprintType)
 struct FDataToWatch
@@ -26,6 +28,21 @@ public:
         bool switched = false;
 };
 
+//Struct of the enemies to keep track of
+USTRUCT(BlueprintType)
+struct FEnemiesToWatch
+{
+    GENERATED_BODY()
+public:
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+    AFCEnemy* enemy;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+    bool spawn = true;
+    UPROPERTY(BlueprintReadOnly, Category = "Data")
+    FTransform transform;
+};
+
 //Have to create an array in this struct to get around ue4 not allowing double nesting
 USTRUCT(BlueprintType)
 struct FDataArray
@@ -36,6 +53,17 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     TArray<FDataToWatch> data;
+};
+
+USTRUCT(BlueprintType)
+struct FEnemyArray
+{
+    GENERATED_BODY()
+
+public:
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        TArray<FEnemiesToWatch> data;
 };
 
 USTRUCT(BlueprintType)
@@ -66,5 +94,8 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
         FDataArray objects;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        FEnemyArray enemies;
 
 };

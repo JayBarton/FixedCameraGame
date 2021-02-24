@@ -32,7 +32,11 @@ public:
 	
 	virtual void Tick(float DeltaTime) override;
 
+	void CheckInstance(UFCGameInstance* instance);
+
 	void CheckObjects(UFCGameInstance* instance);
+
+	void CheckEnemies(UFCGameInstance* instance);
 
 	void HandlePendingLocks(UFCGameInstance* instance);
 

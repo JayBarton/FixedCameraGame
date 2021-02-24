@@ -17,6 +17,7 @@
 #include "FCSwitchInteractable.h"
 #include "FCSwitchComponent.h"
 #include "FCExit.h"
+#include "FCEnemy.h"
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
@@ -51,7 +52,7 @@ void AFixedCameraGameGameMode::BeginPlay()
 	currentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	if (instance)
 	{
-		CheckObjects(instance);
+		CheckInstance(instance);
 
 		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
@@ -103,62 +104,14 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 	}
 }
 
-void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
+void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 {
 	if (objectWatcher)
 	{
 		if (instance->savedObjects.Contains(currentLevel))
 		{
-			//if they are the same size we must have saved the data at some point
-			if (objectWatcher->objects.data.Num() == instance->savedObjects[currentLevel].data.Num())
-			{
-				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
-				{
-					objectWatcher->objects.data[i].spawn = instance->savedObjects[currentLevel].data[i].spawn;
-					objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
-					objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
-					objectWatcher->objects.data[i].switched = instance->savedObjects[currentLevel].data[i].switched;
-				}
-
-				for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
-				{
-					auto object = objectWatcher->objects.data[i];
-					if (!object.spawn)
-					{
-						object.actor->Destroy();
-					}
-					else
-					{
-						if (!object.locked)
-						{
-							if (auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass()))
-							{
-								lock->DestroyComponent();
-							}
-						}
-					}
-					if (!object.active)
-					{
-						if (auto interactable = Cast<AFCInteractable>(object.actor))
-						{
-							interactable->active = false;
-						}
-					}
-					if (object.switched)
-					{
-						if (auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass())))
-						{
-							switchComponent->switchState = true;
-							switchComponent->SwitchOn.Broadcast();
-						}
-					}
-				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Error"));
-			}
-
+			CheckObjects(instance);
+			CheckEnemies(instance);
 		}
 		else
 		{
@@ -169,6 +122,82 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no object watcher"));
+	}
+}
+
+void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
+{
+	//if they are the same size we must have saved the data at some point
+	if (objectWatcher->objects.data.Num() == instance->savedObjects[currentLevel].data.Num())
+	{
+		for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
+		{
+			objectWatcher->objects.data[i].spawn = instance->savedObjects[currentLevel].data[i].spawn;
+			objectWatcher->objects.data[i].locked = instance->savedObjects[currentLevel].data[i].locked;
+			objectWatcher->objects.data[i].active = instance->savedObjects[currentLevel].data[i].active;
+			objectWatcher->objects.data[i].switched = instance->savedObjects[currentLevel].data[i].switched;
+		}
+
+		for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
+		{
+			auto object = objectWatcher->objects.data[i];
+			if (!object.spawn)
+			{
+				object.actor->Destroy();
+			}
+			else
+			{
+				if (!object.locked)
+				{
+					if (auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass()))
+					{
+						lock->DestroyComponent();
+					}
+				}
+			}
+			if (!object.active)
+			{
+				if (auto interactable = Cast<AFCInteractable>(object.actor))
+				{
+					interactable->active = false;
+				}
+			}
+			if (object.switched)
+			{
+				if (auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass())))
+				{
+					switchComponent->switchState = true;
+					switchComponent->SwitchOn.Broadcast();
+				}
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Error"));
+	}
+}
+
+void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
+{
+	if (objectWatcher->enemies.data.Num() == instance->savedEnemies[currentLevel].data.Num())
+	{
+		for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
+		{
+			objectWatcher->enemies.data[i].spawn = instance->savedEnemies[currentLevel].data[i].spawn;
+			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
+		}
+
+		for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
+		{
+			auto enemy = objectWatcher->enemies.data[i];
+			if (!enemy.spawn)
+			{
+				enemy.enemy->SetActorTransform(enemy.transform);
+				enemy.enemy->Kill();
+				//enemy.enemy->Destroy();
+			}
+		}
 	}
 }
 
@@ -253,10 +282,12 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 				if (instance->savedObjects.Contains(currentLevel))
 				{
 					instance->savedObjects[currentLevel].data = objectWatcher->objects.data;
+					instance->savedEnemies[currentLevel].data = objectWatcher->enemies.data;
 				}
 				else
 				{
 					instance->savedObjects.Add(currentLevel, objectWatcher->objects);
+					instance->savedEnemies.Add(currentLevel, objectWatcher->enemies);
 				}
 			}
 

@@ -6,6 +6,7 @@
 #include "FCInteractable.h"
 #include "FCSwitchInteractable.h"
 #include "FCSwitchComponent.h"
+#include "FCEnemy.h"
 
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
@@ -59,7 +60,16 @@ void AFCObjectWatcher::UpdateObjects()
 				objects.data[i].switched = switchComponent->switchState;
 			}
 		}
+	}
 
+	for (int i = 0; i < enemies.data.Num(); i++)
+	{
+		auto enemy = enemies.data[i];
+		if (enemy.enemy->dead)
+		{
+			enemies.data[i].spawn = false;
+			enemies.data[i].transform = enemy.enemy->GetTransform();
+		}
 	}
 }
 

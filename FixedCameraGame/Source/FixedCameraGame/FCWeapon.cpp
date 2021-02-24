@@ -5,6 +5,7 @@
 #include "FCPlayer.h"
 #include "Kismet/GameplayStatics.h" 
 #include "Particles/ParticleSystem.h" 
+#include "FCEnemy.h"
 
 #include "DrawDebugHelpers.h" 
 
@@ -67,9 +68,15 @@ void AFCWeapon::Fire()
 
 			//	SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 
-			float ActualDamage = 1.0f;
+			int32 damage = 5;
 
-			UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, shotDirection, Hit, player->GetInstigatorController(), this, DamageType);
+			if (auto enemy = Cast<AFCEnemy>(HitActor))
+			{
+				enemy->TakeDamage(damage);
+				//Just using this to play an effect in blueprint right now, will remove this later and move the effect playing to FCEnemy.cpp
+				UGameplayStatics::ApplyPointDamage(HitActor, damage, shotDirection, Hit, player->GetInstigatorController(), this, DamageType);
+			}
+
 
 		//	PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
 

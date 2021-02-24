@@ -33,6 +33,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TMap<FString, FDataArray> savedObjects;
 
+	//Use this to load enemy state
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	TMap<FString, FEnemyArray> savedEnemies;
+
 	//Using this for one way locks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TMap<FString, FPendingLocks> pendingLocks;

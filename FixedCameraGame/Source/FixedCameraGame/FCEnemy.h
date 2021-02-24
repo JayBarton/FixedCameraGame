@@ -37,6 +37,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void Attack();
 
+	void TakeDamage(int32 damageAmount);
+
+	void Kill();
+
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
 
@@ -52,17 +56,17 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool hasAttacked = false;
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
-		bool turning;
+	bool turning;
 
-	UPROPERTY(EditAnywhere, Category = "Attack")
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float attackDistance = 150.0f;
-	UPROPERTY(EditAnywhere, Category = "Attack")
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float attackRange = 200.0f;
-	UPROPERTY(EditAnywhere, Category = "Attack")
-	float attackLength = 1.7f;
-	float halfAttackLength = 0.0f;
-	float attackTime = 0.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+	int32 hp;
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	bool dead;
+	
 	FRotator rotatorDirection;
-
 };

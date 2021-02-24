@@ -20,9 +20,6 @@ AFCEnemy::AFCEnemy()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFCEnemy::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFCEnemy::OnNoiseHeard);
-
-	halfAttackLength = attackLength * 0.5f;
-	attackTime = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -49,7 +46,6 @@ void AFCEnemy::Tick(float DeltaTime)
 			hasNoticedPlayer = false;
 			if (AController* AI = GetController())
 			{
-
 				AI->StopMovement();
 			}
 			FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
@@ -82,23 +78,6 @@ void AFCEnemy::Tick(float DeltaTime)
 			isAttacking = true;
 		}
 	}
-/*	if (isAttacking)
-	{
-		attackTime += DeltaTime;
-		if (attackTime > halfAttackLength && !hasAttacked)
-		{
-			Attack();
-			hasAttacked = true;
-		}
-		if (attackTime > attackLength)
-		{
-			isAttacking = false;
-			hasAttacked = false;
-			NoticePlayer();
-			attackTime = 0.0f;
-		}
-	}*/
-
 }
 
 void AFCEnemy::SetUpAttack()
@@ -123,6 +102,8 @@ void AFCEnemy::NoticePlayer()
 {
 	if (!hasNoticedPlayer && !isAttacking)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("H2"));
+
 		hasNoticedPlayer = true;
 		UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 		UE_LOG(LogTemp, Warning, TEXT("Get up"));
@@ -143,4 +124,26 @@ void AFCEnemy::Attack()
 	auto shape = FCollisionShape::MakeBox(FVector(100, 100, 100));
 	DrawDebugBox(GetWorld(), Start, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
+}
+
+void AFCEnemy::TakeDamage(int32 damageAmount)
+{
+	UE_LOG(LogTemp, Warning, TEXT("H1"));
+	hp -= damageAmount;
+	if (hp <= 0)
+	{
+		if (AController* AI = GetController())
+		{
+			AI->StopMovement();
+		}
+		Kill();
+	}
+}
+
+void AFCEnemy::Kill()
+{
+	PawnSensingComp->SetSensingUpdatesEnabled(false);
+	PrimaryActorTick.bCanEverTick = false;
+	dead = true;
+	SetActorEnableCollision(false);
 }
