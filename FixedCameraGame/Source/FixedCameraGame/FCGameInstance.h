@@ -42,4 +42,7 @@ public:
 	TMap<FString, FPendingLocks> pendingLocks;
 
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flags")
+	TMap<FString, bool> flags;
+
 };

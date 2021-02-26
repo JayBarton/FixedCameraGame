@@ -34,12 +34,21 @@ struct FEnemiesToWatch
 {
     GENERATED_BODY()
 public:
-
+    UPROPERTY(EditAnywhere, Category = "Data")
+    TSubclassOf<AFCEnemy> enemyType;
+    UPROPERTY(EditAnywhere, Category = "Data")
+    AActor* spawnActor;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     AFCEnemy* enemy;
+    //if this enemy is in the scene, alive or dead
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool spawn = true;
-    UPROPERTY(BlueprintReadOnly, Category = "Data")
+    //if this enemy has been killed
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+    bool alive = true;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+    FString spawnFlag = "";
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
     FTransform transform;
 };
 
@@ -97,5 +106,8 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
         FEnemyArray enemies;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Flags")
+        TArray<FString> pendingFlags;
 
 };

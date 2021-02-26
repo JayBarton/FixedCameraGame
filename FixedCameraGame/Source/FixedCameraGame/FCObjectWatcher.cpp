@@ -20,9 +20,15 @@ AFCObjectWatcher::AFCObjectWatcher()
 void AFCObjectWatcher::BeginPlay()
 {
 	Super::BeginPlay();
-
+	for (int i = 0; i < enemies.data.Num(); i++)
+	{
+		FEnemiesToWatch& enemy = enemies.data[i];
+		if (enemy.spawn)
+		{
+			enemy.transform = enemy.spawnActor->GetActorTransform();
+		}
+	}
 }
-
 
 void AFCObjectWatcher::UpdateObjects()
 {
@@ -64,11 +70,12 @@ void AFCObjectWatcher::UpdateObjects()
 
 	for (int i = 0; i < enemies.data.Num(); i++)
 	{
-		auto enemy = enemies.data[i];
-		if (enemy.enemy->dead)
+		FEnemiesToWatch& enemy = enemies.data[i];
+		if (enemy.spawn && enemy.enemy->dead)
 		{
-			enemies.data[i].spawn = false;
-			enemies.data[i].transform = enemy.enemy->GetTransform();
+			//enemies.data[i].spawn = false;
+			enemy.alive = false;
+			enemy.transform = enemy.enemy->GetTransform();
 		}
 	}
 }

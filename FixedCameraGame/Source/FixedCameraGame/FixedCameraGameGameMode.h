@@ -38,6 +38,8 @@ public:
 
 	void CheckEnemies(UFCGameInstance* instance);
 
+	void SpawnEnemies(UFCGameInstance* instance);
+
 	void HandlePendingLocks(UFCGameInstance* instance);
 
 	void FindStart(UFCGameInstance* instance);
@@ -86,7 +88,7 @@ public:
 	FName nextLevel;
 
 	UPROPERTY(EditAnywhere, Category = "UI")
-		TSubclassOf<UFCInfoTextWidget> infoWidget;
+	TSubclassOf<UFCInfoTextWidget> infoWidget;
 };
 
 

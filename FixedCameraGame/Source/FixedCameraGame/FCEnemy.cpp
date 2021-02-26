@@ -105,6 +105,10 @@ void AFCEnemy::NoticePlayer()
 		UE_LOG(LogTemp, Warning, TEXT("H2"));
 
 		hasNoticedPlayer = true;
+		/*if (AAIController* AI = Cast<AAIController>(GetController()))
+		{
+			AI->MoveToActor(player);
+		}*/
 		UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 		UE_LOG(LogTemp, Warning, TEXT("Get up"));
 	}
@@ -142,6 +146,7 @@ void AFCEnemy::TakeDamage(int32 damageAmount)
 
 void AFCEnemy::Kill()
 {
+	//GetMesh()->GlobalAnimRateScale = 0.0f;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	PrimaryActorTick.bCanEverTick = false;
 	dead = true;

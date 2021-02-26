@@ -115,6 +115,7 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		}
 		else
 		{
+			SpawnEnemies(instance);
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
 		HandlePendingLocks(instance);
@@ -185,18 +186,50 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 		for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
 		{
 			objectWatcher->enemies.data[i].spawn = instance->savedEnemies[currentLevel].data[i].spawn;
+			objectWatcher->enemies.data[i].alive = instance->savedEnemies[currentLevel].data[i].alive;
 			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
 		}
 
-		for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
+		UE_LOG(LogTemp, Warning, TEXT("Should be here?"));
+
+		SpawnEnemies(instance);
+	}
+}
+
+void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
+{
+	for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
+	{
+		FEnemiesToWatch& enemy = objectWatcher->enemies.data[i];
+		if (enemy.spawnFlag == "")
 		{
-			auto enemy = objectWatcher->enemies.data[i];
-			if (!enemy.spawn)
+			enemy.spawn = true;
+		}
+		else
+		{
+			if (instance->flags.Contains(enemy.spawnFlag))
 			{
+				enemy.spawn = instance->flags[enemy.spawnFlag];
+			}
+			else
+			{
+				//Don't know that this else is needed, as it's not like I'll be creating flags on the fly
+				//keeping it around for now until I finalize this flag idea
+				enemy.spawn = false;
+			}
+		}
+		if (enemy.spawn)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.enemyType, enemy.transform, SpawnParams);
+			if (!enemy.alive)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Am I here?"));
 				enemy.enemy->SetActorTransform(enemy.transform);
 				enemy.enemy->Kill();
-				//enemy.enemy->Destroy();
 			}
+			//enemy.enemy->Destroy();
 		}
 	}
 }
@@ -279,6 +312,14 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			if (objectWatcher)
 			{
 				objectWatcher->UpdateObjects();
+				for (int i = 0; i < objectWatcher->pendingFlags.Num(); i++)
+				{
+					auto flag = objectWatcher->pendingFlags[i];
+					if (instance->flags.Contains(flag))
+					{
+						instance->flags[flag] = true;
+					}
+				}
 				if (instance->savedObjects.Contains(currentLevel))
 				{
 					instance->savedObjects[currentLevel].data = objectWatcher->objects.data;
