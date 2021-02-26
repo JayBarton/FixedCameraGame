@@ -68,11 +68,11 @@ void AFCWeapon::Fire()
 
 			//	SurfaceType = UPhysicalMaterial::DetermineSurfaceType(Hit.PhysMaterial.Get());
 
-			int32 damage = 5;
+			int32 damage = 1;
 
 			if (auto enemy = Cast<AFCEnemy>(HitActor))
 			{
-				enemy->TakeDamage(damage);
+				enemy->TakeDamage(damage, Hit);
 				//Just using this to play an effect in blueprint right now, will remove this later and move the effect playing to FCEnemy.cpp
 				UGameplayStatics::ApplyPointDamage(HitActor, damage, shotDirection, Hit, player->GetInstigatorController(), this, DamageType);
 			}

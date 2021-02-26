@@ -130,9 +130,34 @@ void AFCEnemy::Attack()
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 }
 
-void AFCEnemy::TakeDamage(int32 damageAmount)
+void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("H1"));
+
+	float dot = FVector::DotProduct(Hit.ImpactNormal, GetActorForwardVector());
+
+	if (dot == 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("front"));
+	}
+	else if (dot == -1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("back"));
+	}
+	else
+	{
+		dot = FVector::DotProduct(Hit.ImpactNormal, GetActorRightVector());
+		if (dot == 1)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("right"));
+		}
+		else if (dot == -1)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("left"));
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("dot %f"), dot);
+
+
 	hp -= damageAmount;
 	if (hp <= 0)
 	{

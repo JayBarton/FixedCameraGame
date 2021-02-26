@@ -37,7 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void Attack();
 
-	void TakeDamage(int32 damageAmount);
+	void TakeDamage(int32 damageAmount, FHitResult Hit);
 
 	void Kill();
 
