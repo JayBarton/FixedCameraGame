@@ -66,7 +66,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 		levelFadeIn = true;
 		playerCamera->SetMaterial(1.0f);
-	//	UGameplayStatics::SetGamePaused(GetWorld(), true);
 	}
 }
 
@@ -90,7 +89,6 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 		if (transitionTimer >= transitionTime)
 		{
 			transitionTimer = 0.0f;
-			//UGameplayStatics::SetGamePaused(GetWorld(), false);
 			levelFadeIn = false;
 		}
 	}
@@ -351,6 +349,8 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
+			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
 
 		}
 	}
