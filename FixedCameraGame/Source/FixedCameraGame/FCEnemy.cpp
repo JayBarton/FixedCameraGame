@@ -8,6 +8,8 @@
 #include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Particles/ParticleSystem.h"
+#include "Components/BoxComponent.h"
 #include "DrawDebugHelpers.h"
 
 
@@ -20,13 +22,18 @@ AFCEnemy::AFCEnemy()
 	PawnSensingComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("PawnSensingComp"));
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFCEnemy::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFCEnemy::OnNoiseHeard);
+
+	//BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	/*BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);*/
+	//BoxComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void AFCEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("heard it all  before"));
 
 	player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
@@ -35,48 +42,50 @@ void AFCEnemy::BeginPlay()
 void AFCEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (hasNoticedPlayer)
+	if (!staggered)
 	{
-		//check if in range for attack
-		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
-		float distance = (currentPosition - playerPosition).Size();
-		if (distance < attackDistance)
+		if (hasNoticedPlayer)
 		{
-			hasNoticedPlayer = false;
-			if (AController* AI = GetController())
+			//check if in range for attack
+			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+			float distance = (currentPosition - playerPosition).Size();
+			if (distance < attackDistance)
 			{
-				AI->StopMovement();
-			}
-			FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+				hasNoticedPlayer = false;
+				if (AController* AI = GetController())
+				{
+					AI->StopMovement();
+				}
+				FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
 
-			rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+				rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+				float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
+				if (abs(deltaYaw) >= 45.0f)
+				{
+					turning = true;
+				}
+				else
+				{
+					//UE_LOG(LogTemp, Warning, TEXT("Attack"));
+					//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
+					isAttacking = true;
+				}
+
+			}
+		}
+		if (turning)
+		{
 			float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
 			if (abs(deltaYaw) >= 45.0f)
 			{
-				turning = true;
+				SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Attack"));
-				UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
+				turning = false;
 				isAttacking = true;
 			}
-
-		}
-	}
-	if (turning)
-	{
-		float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-		if (abs(deltaYaw) >= 45.0f)
-		{
-			SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
-		}
-		else
-		{
-			turning = false;
-			isAttacking = true;
 		}
 	}
 }
@@ -101,9 +110,8 @@ void AFCEnemy::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, flo
 
 void AFCEnemy::NoticePlayer()
 {
-	if (!hasNoticedPlayer && !isAttacking)
+	if (!hasNoticedPlayer && !isAttacking && !staggered)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("H2"));
 		if (dead)
 		{
 			dead = false;
@@ -116,7 +124,6 @@ void AFCEnemy::NoticePlayer()
 				AI->MoveToActor(player);
 			}*/
 			UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
-			UE_LOG(LogTemp, Warning, TEXT("Get up"));
 		}
 	}
 }
@@ -137,35 +144,19 @@ void AFCEnemy::Attack()
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 }
 
+void AFCEnemy::RecoverFromStagger()
+{
+	staggered = false;
+	NoticePlayer();
+	hitDirection = HitDirection::NONE;
+	UE_LOG(LogTemp, Warning, TEXT("moving2"));
+
+}
+
 
 void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 {
-
-	float dot = FVector::DotProduct(Hit.ImpactNormal, GetActorForwardVector());
-
-	if (dot == 1)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("front"));
-	}
-	else if (dot == -1)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("back"));
-	}
-	else
-	{
-		dot = FVector::DotProduct(Hit.ImpactNormal, GetActorRightVector());
-		if (dot == 1)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("right"));
-		}
-		else if (dot == -1)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("left"));
-		}
-	}
-	UE_LOG(LogTemp, Warning, TEXT("dot %f"), dot);
-
-
+	DetermineImpactDirection(Hit);
 	hp -= damageAmount;
 	if (hp <= 0)
 	{
@@ -174,6 +165,78 @@ void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 			AI->StopMovement();
 		}
 		Kill();
+	}
+	else
+	{
+		if (!staggered)
+		{
+			staggerHits++;
+			if (staggerHits >= hitsToStagger)
+			{
+				Stagger();
+			}
+			GetWorld()->GetTimerManager().SetTimer(StaggerTimerHandle, this, &AFCEnemy::ResetStaggerHits, 0.6f, false);
+		}
+	}
+}
+
+void AFCEnemy::Stagger()
+{
+	if (AController* AI = GetController())
+	{
+		AI->StopMovement();
+	}
+	staggered = true;
+	isAttacking = false;
+	hasNoticedPlayer = false;
+
+	FTimerHandle StaggerRecoverTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(StaggerRecoverTimerHandle, this, &AFCEnemy::RecoverFromStagger, 0.97f, false);
+
+}
+
+void AFCEnemy::ResetStaggerHits()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Reset Stagger"));
+
+	staggerHits = 0;
+}
+
+void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
+{
+	int dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorForwardVector()));
+
+	if (dot == 1)
+	{
+		hitDirection = HitDirection::FRONT;
+		int32 index = FMath::RandRange(0, FrontImpactPoints.Num() - 1);
+		UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), FrontImpactPoints[index], FVector(0), FRotator(0));
+		//UE_LOG(LogTemp, Warning, TEXT("front"));
+	}
+	else if (dot == -1)
+	{
+		hitDirection = HitDirection::BACK;
+		int32 index = FMath::RandRange(0, BackImpactPoints.Num() - 1);
+		UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), BackImpactPoints[index], FVector(0), FRotator(0));
+		//UE_LOG(LogTemp, Warning, TEXT("back"));
+	}
+	else
+	{
+		dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorRightVector()));
+		if (dot == 1)
+		{
+			hitDirection = HitDirection::RIGHT;
+			int32 index = FMath::RandRange(0, RightImpactPoints.Num() - 1);
+			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), RightImpactPoints[index], FVector(0), FRotator(0));
+			//UE_LOG(LogTemp, Warning, TEXT("right"));
+		}
+		else if (dot == -1)
+		{
+			hitDirection = HitDirection::LEFT;
+			int32 index = FMath::RandRange(0, LeftImpactPoints.Num() - 1);
+			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), LeftImpactPoints[index], FVector(0), FRotator(0));
+		//	UE_LOG(LogTemp, Warning, TEXT("left"));
+		}
 	}
 }
 

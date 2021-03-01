@@ -173,7 +173,6 @@ void AFCPlayer::Fire()
 			weaponSlot.amount--;
 			currentWeapon->Fire();
 			MakeNoise(2.0f, this);
-			UE_LOG(LogTemp, Warning, TEXT("%i"), weaponSlot.amount);
 		}
 		else
 		{

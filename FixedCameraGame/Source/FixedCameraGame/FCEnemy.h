@@ -7,6 +7,18 @@
 #include "FCEnemy.generated.h"
 
 class UPawnSensingComponent;
+class UParticleSystem;
+class UBoxComponent;
+
+//direction enemy was hit from
+UENUM(BlueprintType)
+enum class HitDirection : uint8 {
+	NONE UMETA(DisplayName = "NONE"),
+	FRONT UMETA(DisplayName = "FRONT"),
+	BACK UMETA(DisplayName = "BACK"),
+	LEFT UMETA(DisplayName = "LEFT"),
+	RIGHT UMETA(DisplayName = "RIGHT"),
+};
 
 UCLASS()
 class FIXEDCAMERAGAME_API AFCEnemy : public ACharacter
@@ -36,13 +48,37 @@ public:
 	void NoticePlayer();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void Attack();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void RecoverFromStagger();
 
 	void TakeDamage(int32 damageAmount, FHitResult Hit);
+
+	void Stagger();
+
+	void ResetStaggerHits();
+
+	void DetermineImpactDirection(FHitResult& Hit);
 
 	void Kill();
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
+
+	//UPROPERTY(VisibleAnywhere, Category = "Components")
+		//UBoxComponent* BoxComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+	UParticleSystem* ImpactFX;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		TArray<FName> FrontImpactPoints;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		TArray<FName> BackImpactPoints;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		TArray<FName> LeftImpactPoints;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		TArray<FName> RightImpactPoints;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
+		HitDirection hitDirection;
 
 	APawn* player = nullptr;
 
@@ -58,6 +94,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning;
 
+	//distance from the player before attacking
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float attackDistance = 150.0f;
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
@@ -67,6 +104,14 @@ public:
 	int32 hp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	bool dead;
+	UPROPERTY(BlueprintReadOnly, Category = "Stagger")
+	bool staggered = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stagger")
+	int32 hitsToStagger = 4;
+	int32 staggerHits = 0;
 	
+	FTimerHandle StaggerTimerHandle;
+
 	FRotator rotatorDirection;
 };

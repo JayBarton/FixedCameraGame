@@ -73,25 +73,11 @@ void AFCWeapon::Fire()
 			if (auto enemy = Cast<AFCEnemy>(HitActor))
 			{
 				enemy->TakeDamage(damage, Hit);
-				//Just using this to play an effect in blueprint right now, will remove this later and move the effect playing to FCEnemy.cpp
-				UGameplayStatics::ApplyPointDamage(HitActor, damage, shotDirection, Hit, player->GetInstigatorController(), this, DamageType);
 			}
-
-
-		//	PlayImpactEffects(SurfaceType, Hit.ImpactPoint);
-
 			TracerEndpoint = Hit.ImpactPoint;
-
 		}
 
 		DrawDebugLine(GetWorld(), shotStart, TraceEnd, FColor::White, false, 1.0f, 0, 1.0f);
-
-		/*
-		impact effect
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactEffect, Hit.ImpactPoint, Hit.ImpactNormal.Rotation());
-
-		*/
-		UE_LOG(LogTemp, Warning, TEXT("BANG"));
 	}
 	MeshComp->PlayAnimation(fireAnimation, false);
 	canFire = false;
