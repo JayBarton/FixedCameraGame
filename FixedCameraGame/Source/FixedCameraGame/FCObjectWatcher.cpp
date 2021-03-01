@@ -71,11 +71,22 @@ void AFCObjectWatcher::UpdateObjects()
 	for (int i = 0; i < enemies.data.Num(); i++)
 	{
 		FEnemiesToWatch& enemy = enemies.data[i];
-		if (enemy.spawn && enemy.enemy->dead)
+		if (enemy.spawn)
 		{
-			//enemies.data[i].spawn = false;
-			enemy.alive = false;
-			enemy.transform = enemy.enemy->GetTransform();
+			if (enemy.enemy->dead)
+			{
+				enemy.alive = false;
+				enemy.transform = enemy.enemy->GetTransform();
+			}
+			else
+			{
+				enemy.alive = true;
+				enemy.transform = enemy.spawnActor->GetTransform();
+			}
+			if (enemy.spawnIn)
+			{
+				enemy.spawnIn = enemy.enemy->spawnIn;
+			}
 		}
 	}
 }

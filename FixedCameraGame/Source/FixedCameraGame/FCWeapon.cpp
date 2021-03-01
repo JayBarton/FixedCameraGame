@@ -36,10 +36,8 @@ void AFCWeapon::Tick(float DeltaTime)
 
 void AFCWeapon::Fire()
 {
-	
 	if (player)
 	{
-
 		FVector shotStart = player->GetActorLocation();
 		FVector shotDirection = player->GetActorForwardVector();
 

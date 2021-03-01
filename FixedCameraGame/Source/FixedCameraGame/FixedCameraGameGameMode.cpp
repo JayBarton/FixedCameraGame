@@ -187,6 +187,7 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 		{
 			objectWatcher->enemies.data[i].spawn = instance->savedEnemies[currentLevel].data[i].spawn;
 			objectWatcher->enemies.data[i].alive = instance->savedEnemies[currentLevel].data[i].alive;
+			objectWatcher->enemies.data[i].spawnIn = instance->savedEnemies[currentLevel].data[i].spawnIn;
 			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
 		}
 
@@ -228,11 +229,16 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.enemyType, enemy.transform, SpawnParams);
 			if (!enemy.alive)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Am I here?"));
 				enemy.enemy->SetActorTransform(enemy.transform);
-				enemy.enemy->dead = true;
+				//enemy.enemy->dead = true;
 				//enemy.enemy->Kill();
-			//	
+				enemy.enemy->StartDead();
+			}
+			else if (enemy.spawnIn)
+			{
+				enemy.enemy->spawnIn = true;
+				UE_LOG(LogTemp, Warning, TEXT("Least that we can do is stand for what we think is right"));
+				//waiting to spawn
 			}
 			//enemy.enemy->Destroy();
 		}

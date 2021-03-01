@@ -110,20 +110,30 @@ void AFCEnemy::OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, flo
 
 void AFCEnemy::NoticePlayer()
 {
-	if (!hasNoticedPlayer && !isAttacking && !staggered)
+	if (spawnIn)
 	{
-		if (dead)
+		spawnIn = false;
+		spawning = true;
+	}
+	else
+	{
+		if (!hasNoticedPlayer && !isAttacking && !staggered && !spawning)
 		{
-			dead = false;
-		}
-		else
-		{
-			hasNoticedPlayer = true;
-			/*if (AAIController* AI = Cast<AAIController>(GetController()))
+			if (dead)
 			{
-				AI->MoveToActor(player);
-			}*/
-			UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
+				
+
+				dead = false;
+			}
+			else
+			{
+				hasNoticedPlayer = true;
+				/*if (AAIController* AI = Cast<AAIController>(GetController()))
+				{
+					AI->MoveToActor(player);
+				}*/
+				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
+			}
 		}
 	}
 }
@@ -146,11 +156,12 @@ void AFCEnemy::Attack()
 
 void AFCEnemy::RecoverFromStagger()
 {
-	staggered = false;
-	NoticePlayer();
-	hitDirection = HitDirection::NONE;
-	UE_LOG(LogTemp, Warning, TEXT("moving2"));
-
+	if (!dead)
+	{
+		staggered = false;
+		NoticePlayer();
+		hitDirection = HitDirection::NONE;
+	}
 }
 
 
@@ -246,4 +257,22 @@ void AFCEnemy::Kill()
 	PrimaryActorTick.bCanEverTick = false;
 	dead = true;
 	SetActorEnableCollision(false);
+}
+
+void AFCEnemy::StartDead()
+{
+	int32 index = FMath::RandRange(0, 1);
+	dead = true;
+
+	if (index == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("revive"));
+	}
+	else
+	{
+		PawnSensingComp->SetSensingUpdatesEnabled(false);
+		PrimaryActorTick.bCanEverTick = false;
+		SetActorEnableCollision(false);
+		UE_LOG(LogTemp, Warning, TEXT("still dead"));
+	}
 }

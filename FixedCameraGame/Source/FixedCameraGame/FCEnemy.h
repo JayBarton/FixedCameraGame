@@ -61,6 +61,8 @@ public:
 
 	void Kill();
 
+	void StartDead();
+
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
 
@@ -106,6 +108,11 @@ public:
 	bool dead;
 	UPROPERTY(BlueprintReadOnly, Category = "Stagger")
 	bool staggered = false;
+	//not sure about these variables
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn")
+	bool spawnIn;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Spawn")
+	bool spawning = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stagger")
 	int32 hitsToStagger = 4;
