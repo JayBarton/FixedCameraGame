@@ -65,7 +65,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	int32 hp;
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	bool dead;
 	
 	FRotator rotatorDirection;

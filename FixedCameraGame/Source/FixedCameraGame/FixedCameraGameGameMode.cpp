@@ -198,6 +198,8 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 
 void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 {
+	UE_LOG(LogTemp, Warning, TEXT("spawn"));
+
 	for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
 	{
 		FEnemiesToWatch& enemy = objectWatcher->enemies.data[i];
@@ -220,6 +222,7 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 		}
 		if (enemy.spawn)
 		{
+
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.enemyType, enemy.transform, SpawnParams);
@@ -227,7 +230,9 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Am I here?"));
 				enemy.enemy->SetActorTransform(enemy.transform);
-				enemy.enemy->Kill();
+				enemy.enemy->dead = true;
+				//enemy.enemy->Kill();
+			//	
 			}
 			//enemy.enemy->Destroy();
 		}

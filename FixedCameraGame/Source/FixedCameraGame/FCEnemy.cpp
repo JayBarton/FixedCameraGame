@@ -26,7 +26,8 @@ AFCEnemy::AFCEnemy()
 void AFCEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UE_LOG(LogTemp, Warning, TEXT("heard it all  before"));
+
 	player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
 
@@ -103,14 +104,20 @@ void AFCEnemy::NoticePlayer()
 	if (!hasNoticedPlayer && !isAttacking)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("H2"));
-
-		hasNoticedPlayer = true;
-		/*if (AAIController* AI = Cast<AAIController>(GetController()))
+		if (dead)
 		{
-			AI->MoveToActor(player);
-		}*/
-		UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
-		UE_LOG(LogTemp, Warning, TEXT("Get up"));
+			dead = false;
+		}
+		else
+		{
+			hasNoticedPlayer = true;
+			/*if (AAIController* AI = Cast<AAIController>(GetController()))
+			{
+				AI->MoveToActor(player);
+			}*/
+			UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
+			UE_LOG(LogTemp, Warning, TEXT("Get up"));
+		}
 	}
 }
 
@@ -129,6 +136,7 @@ void AFCEnemy::Attack()
 	DrawDebugBox(GetWorld(), Start, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 }
+
 
 void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 {
@@ -171,7 +179,6 @@ void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 
 void AFCEnemy::Kill()
 {
-	//GetMesh()->GlobalAnimRateScale = 0.0f;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	PrimaryActorTick.bCanEverTick = false;
 	dead = true;
