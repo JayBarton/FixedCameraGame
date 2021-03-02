@@ -3,12 +3,19 @@
 
 #include "FCEnemyPathFollowingComponent.h"
 #include "GameFramework/CharacterMovementComponent.h" 
+#include "FCEnemy.h"
 
 void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
 {
+
     auto Owner = MovementComp->GetOwner();
     if (Owner)
     {
+        if (!enemy)
+        {
+            enemy = Cast<AFCEnemy>(Owner);
+        }
+
         FVector location = Owner->GetActorLocation();
         FVector target = Path->GetPathPoints()[GetNextPathIndex()].Location;;
         FVector direction = target - location;
@@ -17,7 +24,7 @@ void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
         FVector desired = direction.GetSafeNormal() * CharacterMoveComp->MaxWalkSpeed;
         FVector steer = desired - MoveVelocity;
 
-        float maxSteer = 2.5f;
+        float maxSteer = enemy->turnSpeed;
 
         if (steer.Size() > maxSteer)
         {

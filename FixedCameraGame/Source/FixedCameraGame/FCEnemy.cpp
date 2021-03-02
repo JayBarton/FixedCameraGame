@@ -10,8 +10,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Components/BoxComponent.h"
-#include "DrawDebugHelpers.h"
-
 
 // Sets default values
 AFCEnemy::AFCEnemy()
@@ -23,11 +21,12 @@ AFCEnemy::AFCEnemy()
 	PawnSensingComp->OnSeePawn.AddDynamic(this, &AFCEnemy::OnPawnSeen);
 	PawnSensingComp->OnHearNoise.AddDynamic(this, &AFCEnemy::OnNoiseHeard);
 
-	//BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
+	BoxComp->SetWorldScale3D(FVector(4.0f, 4.0f, 2.75f));
 	/*BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);*/
-	//BoxComp->SetupAttachment(RootComponent);
+	BoxComp->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -42,56 +41,6 @@ void AFCEnemy::BeginPlay()
 void AFCEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!staggered)
-	{
-		if (hasNoticedPlayer)
-		{
-			//check if in range for attack
-			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
-			float distance = (currentPosition - playerPosition).Size();
-			if (distance < attackDistance)
-			{
-				hasNoticedPlayer = false;
-				if (AController* AI = GetController())
-				{
-					AI->StopMovement();
-				}
-				FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
-
-				rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
-				float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-				if (abs(deltaYaw) >= 45.0f)
-				{
-					turning = true;
-				}
-				else
-				{
-					//UE_LOG(LogTemp, Warning, TEXT("Attack"));
-					//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
-					isAttacking = true;
-				}
-
-			}
-		}
-		if (turning)
-		{
-			float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-			if (abs(deltaYaw) >= 45.0f)
-			{
-				SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
-			}
-			else
-			{
-				turning = false;
-				isAttacking = true;
-			}
-		}
-	}
-}
-
-void AFCEnemy::SetUpAttack()
-{
 
 }
 
@@ -121,8 +70,6 @@ void AFCEnemy::NoticePlayer()
 		{
 			if (dead)
 			{
-				
-
 				dead = false;
 			}
 			else
@@ -140,18 +87,12 @@ void AFCEnemy::NoticePlayer()
 
 void AFCEnemy::Attack()
 {
-	FHitResult OutHit;
 
-	FVector ForwardVector = GetActorForwardVector();
-	FVector Start = GetActorLocation() + 80 * ForwardVector;
+}
 
-	FVector End = ((ForwardVector * attackRange) + Start);
-	FCollisionQueryParams CollisionParams;
-	CollisionParams.AddIgnoredActor(this);
-
-	auto shape = FCollisionShape::MakeBox(FVector(100, 100, 100));
-	DrawDebugBox(GetWorld(), Start, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
-	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
+void AFCEnemy::FinishAttack()
+{
+	isAttacking = false;
 }
 
 void AFCEnemy::RecoverFromStagger()
@@ -200,6 +141,7 @@ void AFCEnemy::Stagger()
 	staggered = true;
 	isAttacking = false;
 	hasNoticedPlayer = false;
+	UE_LOG(LogTemp, Warning, TEXT("Rstop here r"));
 
 	FTimerHandle StaggerRecoverTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(StaggerRecoverTimerHandle, this, &AFCEnemy::RecoverFromStagger, 0.97f, false);
@@ -215,38 +157,41 @@ void AFCEnemy::ResetStaggerHits()
 
 void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
 {
-	int dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorForwardVector()));
+	if (ImpactFX)
+	{
+		int dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorForwardVector()));
 
-	if (dot == 1)
-	{
-		hitDirection = HitDirection::FRONT;
-		int32 index = FMath::RandRange(0, FrontImpactPoints.Num() - 1);
-		UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), FrontImpactPoints[index], FVector(0), FRotator(0));
-		//UE_LOG(LogTemp, Warning, TEXT("front"));
-	}
-	else if (dot == -1)
-	{
-		hitDirection = HitDirection::BACK;
-		int32 index = FMath::RandRange(0, BackImpactPoints.Num() - 1);
-		UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), BackImpactPoints[index], FVector(0), FRotator(0));
-		//UE_LOG(LogTemp, Warning, TEXT("back"));
-	}
-	else
-	{
-		dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorRightVector()));
 		if (dot == 1)
 		{
-			hitDirection = HitDirection::RIGHT;
-			int32 index = FMath::RandRange(0, RightImpactPoints.Num() - 1);
-			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), RightImpactPoints[index], FVector(0), FRotator(0));
-			//UE_LOG(LogTemp, Warning, TEXT("right"));
+			hitDirection = HitDirection::FRONT;
+			int32 index = FMath::RandRange(0, FrontImpactPoints.Num() - 1);
+			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), FrontImpactPoints[index], FVector(0), FRotator(0));
+			//UE_LOG(LogTemp, Warning, TEXT("front"));
 		}
 		else if (dot == -1)
 		{
-			hitDirection = HitDirection::LEFT;
-			int32 index = FMath::RandRange(0, LeftImpactPoints.Num() - 1);
-			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), LeftImpactPoints[index], FVector(0), FRotator(0));
-		//	UE_LOG(LogTemp, Warning, TEXT("left"));
+			hitDirection = HitDirection::BACK;
+			int32 index = FMath::RandRange(0, BackImpactPoints.Num() - 1);
+			UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), BackImpactPoints[index], FVector(0), FRotator(0));
+			//UE_LOG(LogTemp, Warning, TEXT("back"));
+		}
+		else
+		{
+			dot = FMath::RoundToInt(FVector::DotProduct(Hit.ImpactNormal, GetActorRightVector()));
+			if (dot == 1)
+			{
+				hitDirection = HitDirection::RIGHT;
+				int32 index = FMath::RandRange(0, RightImpactPoints.Num() - 1);
+				UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), RightImpactPoints[index], FVector(0), FRotator(0));
+				//UE_LOG(LogTemp, Warning, TEXT("right"));
+			}
+			else if (dot == -1)
+			{
+				hitDirection = HitDirection::LEFT;
+				int32 index = FMath::RandRange(0, LeftImpactPoints.Num() - 1);
+				UGameplayStatics::SpawnEmitterAttached(ImpactFX, GetMesh(), LeftImpactPoints[index], FVector(0), FRotator(0));
+				//	UE_LOG(LogTemp, Warning, TEXT("left"));
+			}
 		}
 	}
 }

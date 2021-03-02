@@ -7,6 +7,7 @@
 #include "FCEnemyPathFollowingComponent.generated.h"
 
 class UCharacterMovementComponent;
+class AFCEnemy;
 /**
  * 
  */
@@ -22,4 +23,5 @@ protected:
 
 public:
 	UCharacterMovementComponent* CharacterMoveComp;
+	AFCEnemy* enemy;
 };

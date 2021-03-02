@@ -37,17 +37,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetUpAttack();
-
 	UFUNCTION()
 	void OnPawnSeen(APawn* SeenPawn);
 	UFUNCTION()
 	void OnNoiseHeard(APawn* NoiseInstigator, const FVector& Location, float Volumne);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void NoticePlayer();
+	virtual void NoticePlayer();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void Attack();
+	virtual void Attack();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	virtual void FinishAttack();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RecoverFromStagger();
 
@@ -61,13 +61,13 @@ public:
 
 	void Kill();
 
-	void StartDead();
+	void StartDead(); //
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
 
-	//UPROPERTY(VisibleAnywhere, Category = "Components")
-		//UBoxComponent* BoxComp;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UBoxComponent* BoxComp;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Effects")
 	UParticleSystem* ImpactFX;
@@ -94,7 +94,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool hasAttacked = false;
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
-	bool turning;
+	bool turning; //
 
 	//distance from the player before attacking
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
@@ -110,15 +110,18 @@ public:
 	bool staggered = false;
 	//not sure about these variables
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Spawn")
-	bool spawnIn;
+	bool spawnIn; //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Spawn")
-	bool spawning = false;
+	bool spawning = false; //
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stagger")
 	int32 hitsToStagger = 4;
 	int32 staggerHits = 0;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+		float turnSpeed = 2.5f;
 	
 	FTimerHandle StaggerTimerHandle;
 
-	FRotator rotatorDirection;
+	FRotator rotatorDirection; //
 };
