@@ -41,7 +41,14 @@ void AFCEnemy::BeginPlay()
 void AFCEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	if (dead)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("dead"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("alive"));
+	}
 }
 
 void AFCEnemy::OnPawnSeen(APawn* SeenPawn)
@@ -79,6 +86,7 @@ void AFCEnemy::NoticePlayer()
 				{
 					AI->MoveToActor(player);
 				}*/
+				UE_LOG(LogTemp, Warning, TEXT("M3"));
 				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 			}
 		}
@@ -199,9 +207,11 @@ void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
 void AFCEnemy::Kill()
 {
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
-	PrimaryActorTick.bCanEverTick = false;
+	SetActorTickEnabled(false);
 	dead = true;
 	SetActorEnableCollision(false);
+	UE_LOG(LogTemp, Warning, TEXT("stop moving, stop it!"));
+
 }
 
 void AFCEnemy::StartDead()

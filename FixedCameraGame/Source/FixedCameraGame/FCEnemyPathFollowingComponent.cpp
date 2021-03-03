@@ -44,7 +44,6 @@ void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
         }
         PostProcessMove.ExecuteIfBound(this, MoveVelocity);
         MovementComp->RequestDirectMove(MoveVelocity, bNotFollowingLastSegment);
-
      //   UE_LOG(LogTemp, Warning, TEXT("velocity %s"), *MovementComp->Velocity.ToString());
        // UE_LOG(LogTemp, Warning, TEXT("steer %s"), *steer.ToString());
        // UE_LOG(LogTemp, Warning, TEXT("walk speed %f"), CharacterMoveComp->MaxWalkSpeed);

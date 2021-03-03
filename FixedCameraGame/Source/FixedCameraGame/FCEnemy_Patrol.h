@@ -31,6 +31,8 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
+	void InitPath(TArray<ATargetPoint*> path);
+
 	void Follow();
 
 	void Patrol();

@@ -7,6 +7,7 @@
 #include "FCSwitchInteractable.h"
 #include "FCSwitchComponent.h"
 #include "FCEnemy.h"
+#include "FCEnemySpawn.h"
 
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
@@ -86,13 +87,22 @@ void AFCObjectWatcher::UpdateObjects()
 			if (enemy.enemy->dead)
 			{
 				enemy.alive = false;
-				enemy.transform = enemy.enemy->GetTransform();
+				if (!enemy.enemy->canRevive)
+				{
+					enemy.canSpawn = false;
+				}
+				else
+				{
+					enemy.transform = enemy.enemy->GetTransform();
+				}
 			}
 			else
 			{
+				//using this to reset enemy position after revive
 				enemy.alive = true;
 				enemy.transform = enemy.spawnActor->GetTransform();
 			}
+
 			if (enemy.spawnIn)
 			{
 				enemy.spawnIn = enemy.enemy->spawnIn;

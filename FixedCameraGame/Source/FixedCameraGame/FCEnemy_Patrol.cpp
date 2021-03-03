@@ -14,16 +14,6 @@ void AFCEnemy_Patrol::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = patrolSpeed;
-	if (patrolPoints.Num() > 0)
-	{
-		patrolState = PatrolState::PATROL;
-		currentTarget = 0;
-		UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), patrolPoints[currentTarget]);
-	}
-	else
-	{
-		patrolState = PatrolState::IDLE;
-	}
 }
 
 void AFCEnemy_Patrol::Tick(float DeltaTime)
@@ -42,8 +32,22 @@ void AFCEnemy_Patrol::Tick(float DeltaTime)
 		break;
 	case PatrolState::ATTACKING:
 		AddMovementInput(GetActorForwardVector(), 1.0f);
-
 		break;
+	}
+}
+
+void AFCEnemy_Patrol::InitPath(TArray<ATargetPoint*> path)
+{
+	patrolPoints = path;
+	if (patrolPoints.Num() > 0)
+	{
+		patrolState = PatrolState::PATROL;
+		currentTarget = 0;
+		UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), patrolPoints[currentTarget]);
+	}
+	else
+	{
+		patrolState = PatrolState::IDLE;
 	}
 }
 

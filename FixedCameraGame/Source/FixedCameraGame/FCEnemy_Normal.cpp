@@ -4,6 +4,11 @@
 #include "FCEnemy_Normal.h"
 #include "DrawDebugHelpers.h"
 
+AFCEnemy_Normal::AFCEnemy_Normal()
+{
+	canRevive = true;
+}
+
 void AFCEnemy_Normal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

@@ -8,6 +8,7 @@
 
 
 class AFCEnemy;
+class AFCEnemySpawn;
 
 //Struct of the data to keep track of
 USTRUCT(BlueprintType)
@@ -37,12 +38,14 @@ public:
     UPROPERTY(EditAnywhere, Category = "Data")
     TSubclassOf<AFCEnemy> enemyType;
     UPROPERTY(EditAnywhere, Category = "Data")
-    AActor* spawnActor;
+    AFCEnemySpawn* spawnActor;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
     AFCEnemy* enemy;
     //if this enemy is in the scene, alive or dead
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool spawn = true;
+    //if this enemy is spawnable. Dead enemies are not spawnable.
+    bool canSpawn = true;
     //if this enemy has been killed
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool alive = true;

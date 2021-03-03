@@ -18,6 +18,8 @@
 #include "FCSwitchComponent.h"
 #include "FCExit.h"
 #include "FCEnemy.h"
+#include "FCEnemy_Patrol.h"
+#include "FCEnemySpawn.h"
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
@@ -184,47 +186,58 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 		for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
 		{
 			objectWatcher->enemies.data[i].spawn = instance->savedEnemies[currentLevel].data[i].spawn;
+			objectWatcher->enemies.data[i].canSpawn = instance->savedEnemies[currentLevel].data[i].canSpawn;
 			objectWatcher->enemies.data[i].alive = instance->savedEnemies[currentLevel].data[i].alive;
 			objectWatcher->enemies.data[i].spawnIn = instance->savedEnemies[currentLevel].data[i].spawnIn;
 			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
 		}
-
-		UE_LOG(LogTemp, Warning, TEXT("Should be here?"));
-
 		SpawnEnemies(instance);
 	}
 }
 
 void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 {
-	UE_LOG(LogTemp, Warning, TEXT("spawn"));
-
 	for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
 	{
 		FEnemiesToWatch& enemy = objectWatcher->enemies.data[i];
+
 		if (enemy.spawnFlag == "")
 		{
-			enemy.spawn = true;
+			enemy.spawn = enemy.canSpawn;
+			//	canSpawn = true;
 		}
 		else
 		{
-			if (instance->flags.Contains(enemy.spawnFlag))
+			if (enemy.canSpawn)
 			{
-				enemy.spawn = instance->flags[enemy.spawnFlag];
+				if (instance->flags.Contains(enemy.spawnFlag))
+				{
+					enemy.spawn = instance->flags[enemy.spawnFlag];
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("you know"));
+					//Don't know that this else is needed, as it's not like I'll be creating flags on the fly
+					//keeping it around for now until I finalize this flag idea
+					enemy.spawn = false;
+				}
 			}
 			else
 			{
-				//Don't know that this else is needed, as it's not like I'll be creating flags on the fly
-				//keeping it around for now until I finalize this flag idea
 				enemy.spawn = false;
 			}
 		}
+
 		if (enemy.spawn)
 		{
-
+			//enemy.spawn = true;
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.enemyType, enemy.transform, SpawnParams);
+			if (auto patrolEnemy = Cast<AFCEnemy_Patrol>(enemy.enemy))
+			{
+				patrolEnemy->InitPath(enemy.spawnActor->patrolPoints);
+			}
 			if (!enemy.alive)
 			{
 				enemy.enemy->SetActorTransform(enemy.transform);
@@ -350,8 +363,6 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-
-
 		}
 	}
 }

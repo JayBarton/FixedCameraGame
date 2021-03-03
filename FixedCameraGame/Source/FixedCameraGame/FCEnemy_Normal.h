@@ -14,6 +14,7 @@ class FIXEDCAMERAGAME_API AFCEnemy_Normal : public AFCEnemy
 {
 	GENERATED_BODY()
 public:
+	AFCEnemy_Normal();
 	virtual void Tick(float DeltaTime) override;
 	virtual void Attack() override;
 	virtual void FinishAttack() override;
