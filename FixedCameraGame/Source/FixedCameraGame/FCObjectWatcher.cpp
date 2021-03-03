@@ -44,10 +44,20 @@ void AFCObjectWatcher::UpdateObjects()
 		}
 		if (object.locked)
 		{
-			auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass());
-			if (!lock)
+			//Since some pickups can be locked, need to make sure the pickup hasn't been destroyed(picked up) before
+			//checking if it is locked. Otherwise, there is a possibility of a crash
+			//To check this, we can just check if the object spawn was set to false above
+			if (objects.data[i].spawn == false)
 			{
 				objects.data[i].locked = false;
+			}
+			else
+			{
+				auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass());
+				if (!lock)
+				{
+					objects.data[i].locked = false;
+				}
 			}
 		}
 		if (object.active)
