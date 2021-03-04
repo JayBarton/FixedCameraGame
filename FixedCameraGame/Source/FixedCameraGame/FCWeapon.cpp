@@ -58,8 +58,7 @@ void AFCWeapon::Fire()
 		EPhysicalSurface SurfaceType = SurfaceType_Default;
 
 		FHitResult Hit;
-		//if (GetWorld()->LineTraceSingleByChannel(Hit, EyeLocation, TraceEnd, COLLISION_WEAPON, QueryParams))
-		if (GetWorld()->LineTraceSingleByChannel(Hit, shotStart, TraceEnd, ECC_Visibility, QueryParams))
+		if (GetWorld()->LineTraceSingleByChannel(Hit, shotStart, TraceEnd, COLLISION_WEAPON, QueryParams))
 		{
 			//Blocking hit, process damage
 			AActor* HitActor = Hit.GetActor();

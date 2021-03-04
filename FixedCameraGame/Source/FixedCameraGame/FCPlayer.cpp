@@ -25,6 +25,8 @@ AFCPlayer::AFCPlayer()
 {	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
+	GetCapsuleComponent()->SetCollisionResponseToChannel(COLLISION_PLAYER, ECollisionResponse::ECR_Block);
+
 
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
@@ -42,6 +44,8 @@ AFCPlayer::AFCPlayer()
 
 	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitterComponent"));
 
+	currentHealth = maxHealth;
+	OnTakeAnyDamage.AddDynamic(this, &AFCPlayer::HandleTakeAnyDamage);
 
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -474,6 +478,38 @@ void AFCPlayer::ReloadWeapon(int32 first, int32 second)
 		gameMode->DisplayText("Cannot combine these");
 	}
 
+}
+
+void AFCPlayer::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
+{
+	TakeHit(Damage);
+}
+
+void AFCPlayer::TakeHit(int32 damage)
+{
+	if (!staggered)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Ow!"));
+		staggered = true;
+		currentHealth -= damage;
+		//auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		DisableInput(Cast<APlayerController>(GetController()));
+		if (currentHealth <= 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("dead!"));
+		}
+		else
+		{
+			FTimerHandle StaggerTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(StaggerTimerHandle, this, &AFCPlayer::RecoverFromStagger, 0.5f, false);
+		}
+	}
+}
+
+void AFCPlayer::RecoverFromStagger()
+{
+	EnableInput(Cast<APlayerController>(GetController()));
+	staggered = false;
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)

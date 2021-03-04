@@ -36,8 +36,6 @@ struct FEnemiesToWatch
     GENERATED_BODY()
 public:
     UPROPERTY(EditAnywhere, Category = "Data")
-    TSubclassOf<AFCEnemy> enemyType;
-    UPROPERTY(EditAnywhere, Category = "Data")
     AFCEnemySpawn* spawnActor;
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
     AFCEnemy* enemy;

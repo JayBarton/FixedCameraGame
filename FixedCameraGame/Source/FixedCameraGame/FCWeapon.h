@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "FCWeapon.generated.h"
 
+#define COLLISION_WEAPON        ECC_GameTraceChannel1
+
 class AFCPlayer;
 class UAnimationAsset;
 class UDamageType;

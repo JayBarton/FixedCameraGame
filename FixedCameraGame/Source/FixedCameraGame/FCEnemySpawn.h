@@ -28,7 +28,8 @@ public:
 	UArrowComponent* ArrowComponent;
 	UCapsuleComponent* CapsuleComponent;
 	UBillboardComponent* ClickSprite;
-
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+		TSubclassOf<AFCEnemy> enemyType;
 	UPROPERTY(EditAnywhere, Category = "Patrol")
 	TArray<ATargetPoint*> patrolPoints;
 

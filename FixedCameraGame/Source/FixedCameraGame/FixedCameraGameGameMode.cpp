@@ -62,6 +62,7 @@ void AFixedCameraGameGameMode::BeginPlay()
 		{
 			pc->Inventory->inventory = instance->playerInventory;
 			pc->equipped = instance->equippedIndex;
+			pc->currentHealth = instance->playerHealth;
 		}
 
 		FindStart(instance);
@@ -233,7 +234,7 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			//enemy.spawn = true;
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.enemyType, enemy.transform, SpawnParams);
+			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.spawnActor->enemyType, enemy.transform, SpawnParams);
 			if (auto patrolEnemy = Cast<AFCEnemy_Patrol>(enemy.enemy))
 			{
 				patrolEnemy->InitPath(enemy.spawnActor->patrolPoints);
@@ -331,6 +332,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 			instance->startIndex = index;
 			instance->playerInventory = pc->Inventory->inventory;
 			instance->equippedIndex = pc->equipped;
+			instance->playerHealth = pc->currentHealth;
 			if (objectWatcher)
 			{
 				objectWatcher->UpdateObjects();

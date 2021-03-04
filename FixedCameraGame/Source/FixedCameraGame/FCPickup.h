@@ -7,7 +7,6 @@
 #include "Structs.h"
 #include "FCPickup.generated.h"
 
-
 class UDataTable;
 /**
  * 

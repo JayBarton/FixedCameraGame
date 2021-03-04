@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "FCEnemy.generated.h"
 
+#define COLLISION_PLAYER        ECC_GameTraceChannel2
+
+
 class UPawnSensingComponent;
 class UParticleSystem;
 class UBoxComponent;

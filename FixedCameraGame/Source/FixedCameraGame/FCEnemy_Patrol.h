@@ -29,6 +29,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	AFCEnemy_Patrol();
 	virtual void Tick(float DeltaTime) override;
 
 	void InitPath(TArray<ATargetPoint*> path);
@@ -46,6 +47,9 @@ public:
 	
 	void ResumeMovement();
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UPROPERTY(EditAnywhere)
 	TArray<ATargetPoint*> patrolPoints;
 
@@ -60,4 +64,7 @@ public:
 		float followSpeed = 300.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 		float followTurnSpeed = 5.0f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Damage")
+	UBoxComponent* hurtBox;
 };

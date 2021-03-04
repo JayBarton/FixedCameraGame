@@ -17,14 +17,14 @@ class FIXEDCAMERAGAME_API UFCGameInstance : public UGameInstance
 	GENERATED_BODY()
 public:
 	//Index of the player start and camera on entering a new level
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int startIndex = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 		int equippedIndex = -1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TArray<FItemStruct> playerInventory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+		int32 playerHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TArray<FItemStruct> containerInventory;

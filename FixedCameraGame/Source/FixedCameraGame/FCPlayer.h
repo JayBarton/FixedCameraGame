@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "FCPlayer.generated.h"
 
+#define COLLISION_PLAYER        ECC_GameTraceChannel2
+
 class UFCInventoryComponent;
 class AFCSwitchInteractable;
 class UDataTable;
@@ -71,33 +73,42 @@ public:
 	//Display non-interactable inventory
 	//May end up rewriting a lot of UI stuff
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-		void DisplayInventoryWidget();
+	void DisplayInventoryWidget();
 	//Definitely rewriting some of this
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-		void ClearInventoryWidget();
+	void ClearInventoryWidget();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-		void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);
+	void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		bool UseKey(int32 index, UFCLockComponent* lock);
+	bool UseKey(int32 index, UFCLockComponent* lock);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void SwapItems(int32 first, int32 second);
+	void SwapItems(int32 first, int32 second);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void SwapWithContainer(int32 first, int32 second, UFCInventoryComponent* containerInventory);
+	void SwapWithContainer(int32 first, int32 second, UFCInventoryComponent* containerInventory);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void Heal(int32 index);
+	void Heal(int32 index);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void CombineItems(int32 first, int32 second);
+	void CombineItems(int32 first, int32 second);
 
 	void Reload();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void ReloadWeapon(int32 first, int32 second);
+	void ReloadWeapon(int32 first, int32 second);
+	
+	//Not sure if this is needed, seems a little superfluous
+	//It works, I can simplify things later if I want
+	UFUNCTION()
+	void HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void TakeHit(int32 damage);
+
+	UFUNCTION()
+	void RecoverFromStagger();
 
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
@@ -119,16 +130,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 		float runSpeed = 500.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
 	int32 maxHealth = 100;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	int32 currentHealth;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Stagger")
+		bool staggered = false;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
 	int32 equipped = -1;
-
-	int32* ammo;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
 		FName WeaponAttachPoint;

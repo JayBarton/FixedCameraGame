@@ -4,6 +4,8 @@
 #include "FCEnemy_Normal.h"
 #include "DrawDebugHelpers.h"
 
+#include "Kismet/GameplayStatics.h"
+
 AFCEnemy_Normal::AFCEnemy_Normal()
 {
 	canRevive = true;
@@ -74,6 +76,14 @@ void AFCEnemy_Normal::Attack()
 	auto shape = FCollisionShape::MakeBox(FVector(100, 100, 100));
 	DrawDebugBox(GetWorld(), Start, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
+	if (GetWorld()->SweepSingleByChannel(OutHit, Start, End, FQuat::Identity, COLLISION_PLAYER, shape, CollisionParams))
+	{
+	//	UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), MyOwner, DamageType);
+
+		UGameplayStatics::ApplyDamage(player, 20, GetInstigatorController(), this, UDamageType::StaticClass());
+		//player->TakeDamage
+		//player-TakeHit(20);
+	}
 }
 
 void AFCEnemy_Normal::FinishAttack()

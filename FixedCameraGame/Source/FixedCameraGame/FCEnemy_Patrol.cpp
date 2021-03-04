@@ -9,11 +9,25 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/TargetPoint.h" 
+#include "Components/BoxComponent.h"
+#include "FCPlayer.h"
+
+AFCEnemy_Patrol::AFCEnemy_Patrol()
+{
+	hurtBox = CreateDefaultSubobject<UBoxComponent>(TEXT("HurtBox"));
+	//hurtBox->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
+	hurtBox->SetCollisionProfileName(TEXT("HurtBox"));
+	hurtBox->OnComponentBeginOverlap.AddDynamic(this, &AFCEnemy_Patrol::OnOverlapBegin);
+	hurtBox->SetupAttachment(RootComponent);
+	
+}
 
 void AFCEnemy_Patrol::BeginPlay()
 {
 	Super::BeginPlay();
 	GetCharacterMovement()->MaxWalkSpeed = patrolSpeed;
+	
+	hurtBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AFCEnemy_Patrol::Tick(float DeltaTime)
@@ -110,16 +124,16 @@ void AFCEnemy_Patrol::Attack()
 {
 	isAttacking = true;
 	patrolState = PatrolState::ATTACKING;
+	hurtBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	AddMovementInput(GetActorForwardVector(), 1.0f);
-
-
 }
 
 void AFCEnemy_Patrol::FinishAttack()
 {
 	isAttacking = false;
 	patrolState = PatrolState::FOLLOWING;
+	hurtBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Super::NoticePlayer();
 }
 
@@ -140,5 +154,13 @@ void AFCEnemy_Patrol::ResumeMovement()
 	{
 		patrolState = PatrolState::PATROL;
 		MoveToNextPatrolPoint();
+	}
+}
+
+void AFCEnemy_Patrol::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (player == OtherActor)
+	{
+		UGameplayStatics::ApplyDamage(player, 10, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
 }

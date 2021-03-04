@@ -23,6 +23,7 @@ AFCEnemy::AFCEnemy()
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
 	BoxComp->SetWorldScale3D(FVector(4.0f, 4.0f, 2.75f));
+	BoxComp->SetCollisionProfileName(TEXT("EnemyBox"));
 	/*BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);*/
@@ -41,14 +42,6 @@ void AFCEnemy::BeginPlay()
 void AFCEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (dead)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("dead"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("alive"));
-	}
 }
 
 void AFCEnemy::OnPawnSeen(APawn* SeenPawn)
@@ -86,7 +79,6 @@ void AFCEnemy::NoticePlayer()
 				{
 					AI->MoveToActor(player);
 				}*/
-				UE_LOG(LogTemp, Warning, TEXT("M3"));
 				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 			}
 		}
