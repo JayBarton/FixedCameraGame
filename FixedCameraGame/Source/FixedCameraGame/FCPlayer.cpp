@@ -490,16 +490,19 @@ void AFCPlayer::TakeHit(int32 damage)
 	if (!staggered)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Ow!"));
-		staggered = true;
 		currentHealth -= damage;
-		//auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		DisableInput(Cast<APlayerController>(GetController()));
 		if (currentHealth <= 0)
 		{
+			dead = true;
+			//Not sure how I want to handle death yet, this will work as a proof of concept
+			FTimerHandle ResetLevelTimer;
+			GetWorld()->GetTimerManager().SetTimer(ResetLevelTimer, this, &AFCPlayer::ResetLevel, 2.0f, false);
 			UE_LOG(LogTemp, Warning, TEXT("dead!"));
 		}
 		else
 		{
+			staggered = true;
 			FTimerHandle StaggerTimerHandle;
 			GetWorld()->GetTimerManager().SetTimer(StaggerTimerHandle, this, &AFCPlayer::RecoverFromStagger, 0.5f, false);
 		}
@@ -510,6 +513,12 @@ void AFCPlayer::RecoverFromStagger()
 {
 	EnableInput(Cast<APlayerController>(GetController()));
 	staggered = false;
+}
+
+void AFCPlayer::ResetLevel()
+{
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->ResetLevel();
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)

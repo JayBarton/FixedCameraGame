@@ -109,6 +109,8 @@ public:
 
 	UFUNCTION()
 	void RecoverFromStagger();
+	UFUNCTION()
+	void ResetLevel();
 
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
@@ -136,8 +138,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	int32 currentHealth;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Stagger")
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
 		bool staggered = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+		bool dead = false;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
 	int32 equipped = -1;

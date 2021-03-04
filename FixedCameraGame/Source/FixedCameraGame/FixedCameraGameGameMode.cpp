@@ -54,6 +54,7 @@ void AFixedCameraGameGameMode::BeginPlay()
 	currentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	if (instance)
 	{
+		currentIndex = instance->startIndex;
 		CheckInstance(instance);
 
 		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -329,13 +330,16 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 
 		if (pc)
 		{
-			instance->startIndex = index;
-			instance->playerInventory = pc->Inventory->inventory;
-			instance->equippedIndex = pc->equipped;
-			instance->playerHealth = pc->currentHealth;
 			if (objectWatcher)
 			{
-				objectWatcher->UpdateObjects();
+				if (newLevel)
+				{
+					instance->startIndex = index;
+					instance->playerInventory = pc->Inventory->inventory;
+					instance->equippedIndex = pc->equipped;
+					instance->playerHealth = pc->currentHealth;
+					objectWatcher->UpdateObjects();
+				}
 				for (int i = 0; i < objectWatcher->pendingFlags.Num(); i++)
 				{
 					auto flag = objectWatcher->pendingFlags[i];
@@ -372,6 +376,12 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 {
 	UGameplayStatics::OpenLevel(GetWorld(), levelName);
+}
+
+void AFixedCameraGameGameMode::ResetLevel()
+{
+	newLevel = false;
+	ChangeLevel(currentIndex, FName(*currentLevel));
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)

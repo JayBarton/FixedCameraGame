@@ -46,6 +46,7 @@ public:
 
 	void ChangeLevel(int index, FName levelName);
 	void MoveToLevel(FName levelName);
+	void ResetLevel();
 
 	void SetPendingLock(FString levelName, int32 index);
 
@@ -74,6 +75,8 @@ public:
 
 	FString currentLevel;
 
+	int32 currentIndex;
+
 	int32 interactKey;
 
 	float transitionTime = 1.0f;
@@ -81,6 +84,8 @@ public:
 
 	bool levelFadeOut = false;
 	bool levelFadeIn = false;
+
+	bool newLevel = true;
 
 	//Maybe temporary, using this to test out displaying text from the inventory
 	bool inMenu = false;
