@@ -18,5 +18,13 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void Attack() override;
 	virtual void FinishAttack() override;
+	virtual void Kill() override;
+
+	void StartDead(int32 currentReviveTime, int32 reviveCount);
+
+	UPROPERTY(VisibleAnywhere, Category = "Revive")
+		int32 reviveTime;
+	UPROPERTY(VisibleAnywhere, Category = "Revive")
+		int32 reviveCounter = 0;
 
 };

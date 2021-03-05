@@ -198,28 +198,8 @@ void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
 
 void AFCEnemy::Kill()
 {
+	dead = true;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	SetActorTickEnabled(false);
-	dead = true;
 	SetActorEnableCollision(false);
-	UE_LOG(LogTemp, Warning, TEXT("stop moving, stop it!"));
-
-}
-
-void AFCEnemy::StartDead()
-{
-	int32 index = FMath::RandRange(0, 1);
-	dead = true;
-
-	if (index == 0)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("revive"));
-	}
-	else
-	{
-		PawnSensingComp->SetSensingUpdatesEnabled(false);
-		PrimaryActorTick.bCanEverTick = false;
-		SetActorEnableCollision(false);
-		UE_LOG(LogTemp, Warning, TEXT("still dead"));
-	}
 }

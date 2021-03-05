@@ -62,9 +62,7 @@ public:
 
 	void DetermineImpactDirection(FHitResult& Hit);
 
-	void Kill();
-
-	void StartDead(); //
+	virtual void Kill();
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;

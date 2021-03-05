@@ -91,3 +91,29 @@ void AFCEnemy_Normal::FinishAttack()
 	Super::FinishAttack();
 	NoticePlayer();
 }
+
+void AFCEnemy_Normal::Kill()
+{
+	Super::Kill();
+	reviveTime = FMath::RandRange(3, 6); 
+}
+
+void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)
+{
+	dead = true;
+	reviveTime = currentReviveTime;
+	reviveCounter = reviveCount + 1;
+	if(reviveCounter >= reviveTime)
+	{
+		reviveCounter = 0;
+		UE_LOG(LogTemp, Warning, TEXT("revive"));
+	}
+	else
+	{
+		Super::Kill();
+		/*PawnSensingComp->SetSensingUpdatesEnabled(false);
+		PrimaryActorTick.bCanEverTick = false;
+		SetActorEnableCollision(false);*/
+		UE_LOG(LogTemp, Warning, TEXT("still dead"));
+	}
+}

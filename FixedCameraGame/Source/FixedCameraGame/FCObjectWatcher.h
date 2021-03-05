@@ -50,6 +50,10 @@ public:
     //If the enemy starts in their idle state or in a spawn in state
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool spawnIn = false;
+    UPROPERTY(VisibleAnywhere, Category = "Data")
+    int32 reviveCount = 0;
+    UPROPERTY(VisibleAnywhere, Category = "Data")
+    int32 reviveTime = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     FString spawnFlag = "";
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")

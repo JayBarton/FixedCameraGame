@@ -8,7 +8,7 @@
 #include "FCSwitchComponent.h"
 #include "FCEnemy.h"
 #include "FCEnemySpawn.h"
-
+#include "FCEnemy_Normal.h"
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
 {
@@ -93,7 +93,12 @@ void AFCObjectWatcher::UpdateObjects()
 				}
 				else
 				{
-					enemy.transform = enemy.enemy->GetTransform();
+					if (auto normalEnemy = Cast<AFCEnemy_Normal>(enemy.enemy))
+					{
+						enemy.transform = enemy.enemy->GetTransform();
+						enemy.reviveCount = normalEnemy->reviveCounter;
+						enemy.reviveTime = normalEnemy->reviveTime;
+					}
 				}
 			}
 			else

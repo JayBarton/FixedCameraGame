@@ -18,6 +18,7 @@
 #include "FCSwitchComponent.h"
 #include "FCExit.h"
 #include "FCEnemy.h"
+#include "FCEnemy_Normal.h"
 #include "FCEnemy_Patrol.h"
 #include "FCEnemySpawn.h"
 
@@ -191,6 +192,8 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 			objectWatcher->enemies.data[i].canSpawn = instance->savedEnemies[currentLevel].data[i].canSpawn;
 			objectWatcher->enemies.data[i].alive = instance->savedEnemies[currentLevel].data[i].alive;
 			objectWatcher->enemies.data[i].spawnIn = instance->savedEnemies[currentLevel].data[i].spawnIn;
+			objectWatcher->enemies.data[i].reviveCount = instance->savedEnemies[currentLevel].data[i].reviveCount;
+			objectWatcher->enemies.data[i].reviveTime = instance->savedEnemies[currentLevel].data[i].reviveTime;
 			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
 		}
 		SpawnEnemies(instance);
@@ -240,20 +243,18 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			{
 				patrolEnemy->InitPath(enemy.spawnActor->patrolPoints);
 			}
-			if (!enemy.alive)
+			else if (auto normalEnemy = Cast<AFCEnemy_Normal>(enemy.enemy))
 			{
-				enemy.enemy->SetActorTransform(enemy.transform);
-				//enemy.enemy->dead = true;
-				//enemy.enemy->Kill();
-				enemy.enemy->StartDead();
+				if (!enemy.alive)
+				{
+					enemy.enemy->SetActorTransform(enemy.transform);
+					normalEnemy->StartDead(enemy.reviveTime, enemy.reviveCount);
+				}
 			}
-			else if (enemy.spawnIn)
+			if (enemy.alive && enemy.spawnIn)
 			{
 				enemy.enemy->spawnIn = true;
-				UE_LOG(LogTemp, Warning, TEXT("Least that we can do is stand for what we think is right"));
-				//waiting to spawn
 			}
-			//enemy.enemy->Destroy();
 		}
 	}
 }
