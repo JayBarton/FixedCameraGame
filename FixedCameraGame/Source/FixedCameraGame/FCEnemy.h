@@ -94,8 +94,6 @@ public:
 	//for the actual attack damage
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool hasAttacked = false;
-	UPROPERTY(BlueprintReadOnly, Category = "AI")
-	bool turning; //
 
 	//distance from the player before attacking
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")

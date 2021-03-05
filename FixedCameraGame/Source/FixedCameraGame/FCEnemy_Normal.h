@@ -27,4 +27,7 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Revive")
 		int32 reviveCounter = 0;
 
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+		bool turning; 
+
 };

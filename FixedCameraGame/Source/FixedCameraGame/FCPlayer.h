@@ -62,6 +62,10 @@ public:
 
 	void OpenInventory();
 
+	void StartQuickTurn();
+
+	void StopQuickTurning();
+
 	void LookForInteractable();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
@@ -118,18 +122,28 @@ public:
 		bool inControl = true;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
-		bool inInventory = false;
-
+	bool inInventory = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Weapons")
-		bool isAiming = false;
-
+	bool isAiming = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
-		bool isReloading = false;
+	bool isReloading = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	bool staggered = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Health")
+	bool dead = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool walkingBackwards = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool quickTurn = false;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	bool sprinting = false;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	FRotator reversedDirection;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 		float walkSpeed = 125.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
 		float runSpeed = 500.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
@@ -137,12 +151,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	int32 currentHealth;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
-		bool staggered = false;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Health")
-		bool dead = false;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
 	int32 equipped = -1;

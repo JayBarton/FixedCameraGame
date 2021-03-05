@@ -80,8 +80,16 @@ void AFCPlayer::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (nearestInteractable)
+	if (quickTurn)
 	{
+		SetActorRotation(FMath::RInterpTo(GetActorRotation(), reversedDirection, DeltaTime, 10.0f));
+		//FRotator rotation = FRotator(0.0f, 5.0f, 0.0f);
+		//AddActorLocalRotation(rotation);
+		if (GetActorRotation().Equals(reversedDirection, 5.0f))
+		{
+			SetActorRotation(reversedDirection);
+			StopQuickTurning();
+		}
 	}
 }
 
@@ -113,10 +121,24 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AFCPlayer::MoveForward(float value)
 {
+	walkingBackwards = false;
+	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
 	if (!isAiming && !isReloading)
 	{
 		if (value != 0.0f)
 		{
+			if (value < 0)
+			{
+				walkingBackwards = true;
+			}
+			else
+			{
+				if (sprinting)
+				{
+					GetCharacterMovement()->MaxWalkSpeed = runSpeed;
+				}
+			}
 			AddMovementInput(GetActorForwardVector(), value);
 		}
 	}
@@ -138,12 +160,16 @@ void AFCPlayer::Turn(float value)
 
 void AFCPlayer::Sprint()
 {
-	GetCharacterMovement()->MaxWalkSpeed = runSpeed;
-
+	sprinting = true;
+	if (walkingBackwards)
+	{
+		StartQuickTurn();
+	}
 }
 
 void AFCPlayer::StopSprinting()
 {
+	sprinting = false;
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 }
 
@@ -258,6 +284,19 @@ void AFCPlayer::OpenInventory()
 		auto bedroomEyes = CreateWidget<UUserWidget>(GetWorld(), inventoryUI);
 		bedroomEyes->AddToViewport();
 	}*/
+}
+
+void AFCPlayer::StartQuickTurn()
+{
+	reversedDirection = (GetActorForwardVector() * -1).Rotation();
+	quickTurn = true;
+	DisableInput(Cast<APlayerController>(GetController()));
+}
+
+void AFCPlayer::StopQuickTurning()
+{
+	EnableInput(Cast<APlayerController>(GetController()));
+	quickTurn = false;
 }
 
 void AFCPlayer::LookForInteractable()
@@ -489,6 +528,7 @@ void AFCPlayer::TakeHit(int32 damage)
 {
 	if (!staggered)
 	{
+		quickTurn = false;
 		UE_LOG(LogTemp, Warning, TEXT("Ow!"));
 		currentHealth -= damage;
 		DisableInput(Cast<APlayerController>(GetController()));
