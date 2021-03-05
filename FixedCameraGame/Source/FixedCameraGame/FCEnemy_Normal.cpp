@@ -8,7 +8,6 @@
 
 AFCEnemy_Normal::AFCEnemy_Normal()
 {
-	canRevive = true;
 }
 
 void AFCEnemy_Normal::Tick(float DeltaTime)

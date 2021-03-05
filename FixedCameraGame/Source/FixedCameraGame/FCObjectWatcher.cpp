@@ -87,18 +87,15 @@ void AFCObjectWatcher::UpdateObjects()
 			if (enemy.enemy->dead)
 			{
 				enemy.alive = false;
-				if (!enemy.enemy->canRevive)
+				if (auto normalEnemy = Cast<AFCEnemy_Normal>(enemy.enemy))
 				{
-					enemy.canSpawn = false;
+					enemy.transform = enemy.enemy->GetTransform();
+					enemy.reviveCount = normalEnemy->reviveCounter;
+					enemy.reviveTime = normalEnemy->reviveTime;
 				}
 				else
 				{
-					if (auto normalEnemy = Cast<AFCEnemy_Normal>(enemy.enemy))
-					{
-						enemy.transform = enemy.enemy->GetTransform();
-						enemy.reviveCount = normalEnemy->reviveCounter;
-						enemy.reviveTime = normalEnemy->reviveTime;
-					}
+					enemy.canSpawn = false;
 				}
 			}
 			else

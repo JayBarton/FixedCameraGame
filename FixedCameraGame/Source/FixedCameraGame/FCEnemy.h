@@ -112,7 +112,6 @@ public:
 	bool spawnIn; //
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Spawn")
 	bool spawning = false; //
-	bool canRevive = false;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Stagger")
 	int32 hitsToStagger = 4;
