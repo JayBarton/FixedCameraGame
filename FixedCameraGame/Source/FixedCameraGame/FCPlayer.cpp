@@ -91,6 +91,15 @@ void AFCPlayer::Tick(float DeltaTime)
 			StopQuickTurning();
 		}
 	}
+	if (aimButtonDown)
+	{
+		isAiming = true;
+	}
+	else
+	{
+		isAiming = false;
+	}
+
 }
 
 // Called to bind functionality to input
@@ -121,56 +130,68 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AFCPlayer::MoveForward(float value)
 {
-	walkingBackwards = false;
-	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
-
-	if (!isAiming && !isReloading)
+	if (!BlockingInput())
 	{
-		if (value != 0.0f)
+		walkingBackwards = false;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+
+		if (!isAiming && !isReloading)
 		{
-			if (value < 0)
+			if (value != 0.0f)
 			{
-				walkingBackwards = true;
-			}
-			else
-			{
-				if (sprinting)
+				if (value < 0)
 				{
-					GetCharacterMovement()->MaxWalkSpeed = runSpeed;
+					walkingBackwards = true;
 				}
+				else
+				{
+					if (sprinting)
+					{
+						GetCharacterMovement()->MaxWalkSpeed = runSpeed;
+					}
+				}
+				AddMovementInput(GetActorForwardVector(), value);
 			}
-			AddMovementInput(GetActorForwardVector(), value);
 		}
 	}
 }
 
 void AFCPlayer::Turn(float value)
 {
-	if (value != 0.0f)
+	if (!BlockingInput())
 	{
-		//turnAmount = value;
-		//FRotator roton = FRotator(0.0f, turnAmount, 0.0f);
-		//FRotator rotation 
-		FRotator rotation = FRotator(0.0f, value, 0.0f);
-		AddActorLocalRotation(rotation);
+		if (value != 0.0f)
+		{
+			//turnAmount = value;
+			//FRotator roton = FRotator(0.0f, turnAmount, 0.0f);
+			//FRotator rotation 
+			FRotator rotation = FRotator(0.0f, value, 0.0f);
+			AddActorLocalRotation(rotation);
 
-		//AddControllerYawInput(value);
+			//AddControllerYawInput(value);
+		}
 	}
 }
 
 void AFCPlayer::Sprint()
 {
-	sprinting = true;
-	if (walkingBackwards)
+	if (!BlockingInput())
 	{
-		StartQuickTurn();
+		sprinting = true;
+		if (walkingBackwards)
+		{
+			StartQuickTurn();
+		}
 	}
 }
 
 void AFCPlayer::StopSprinting()
 {
-	sprinting = false;
-	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	if (!BlockingInput())
+	{
+		sprinting = false;
+		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
+	}
 }
 
 void AFCPlayer::Aim()
@@ -180,7 +201,8 @@ void AFCPlayer::Aim()
 		//Can't interact while aiming, so turn off the timer
 		nearestInteractable = nullptr;
 		GetWorld()->GetTimerManager().ClearTimer(LookTimerHandle);
-		isAiming = true;
+		aimButtonDown = true;	
+		//isAiming = true;
 	}
 }
 
@@ -189,25 +211,29 @@ void AFCPlayer::StopAiming()
 	if (equipped >= 0)
 	{
 		GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
-		isAiming = false;
+		aimButtonDown = false;
+		//isAiming = false;
 	}
 }
 
 void AFCPlayer::Fire()
 {
-	if (isAiming && !isReloading && currentWeapon->canFire)
+	if (!BlockingInput())
 	{
-		FItemStruct& weaponSlot = Inventory->inventory[equipped];
-		if (weaponSlot.amount > 0)
+		if (isAiming && !isReloading && currentWeapon->canFire)
 		{
-			weaponSlot.amount--;
-			currentWeapon->Fire();
-			MakeNoise(2.0f, this);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("reloading"));
-			Reload();
+			FItemStruct& weaponSlot = Inventory->inventory[equipped];
+			if (weaponSlot.amount > 0)
+			{
+				weaponSlot.amount--;
+				currentWeapon->Fire();
+				MakeNoise(2.0f, this);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("reloading"));
+				Reload();
+			}
 		}
 	}
 }
@@ -232,7 +258,7 @@ void AFCPlayer::UnEquipWeapon(int32 inventoryIndex)
 
 void AFCPlayer::Interact()
 {
-	if (!isAiming)
+	if (!BlockingInput() && !isAiming)
 	{
 		if (nearestInteractable)
 		{
@@ -290,12 +316,12 @@ void AFCPlayer::StartQuickTurn()
 {
 	reversedDirection = (GetActorForwardVector() * -1).Rotation();
 	quickTurn = true;
-	DisableInput(Cast<APlayerController>(GetController()));
+//	DisableInput(Cast<APlayerController>(GetController()));
 }
 
 void AFCPlayer::StopQuickTurning()
 {
-	EnableInput(Cast<APlayerController>(GetController()));
+//	EnableInput(Cast<APlayerController>(GetController()));
 	quickTurn = false;
 }
 
@@ -436,48 +462,59 @@ void AFCPlayer::Reload()
 	if (isAiming && !isReloading)
 	{
 		FItemStruct& weaponSlot = Inventory->inventory[equipped];
-
-		int toAdd = currentWeapon->maxAmmo - weaponSlot.amount;
-		UE_LOG(LogTemp, Warning, TEXT("to add %i"), toAdd);
-		UE_LOG(LogTemp, Warning, TEXT("ammo id %i"), currentWeapon->ammoID);
-		int canAdd = 0;
 		for (int i = 0; i < Inventory->inventory.Num(); i++)
 		{
 			FItemStruct& slot = Inventory->inventory[i];
 			if (slot.ID == currentWeapon->ammoID)
 			{
-				if (slot.amount <= toAdd)
-				{
-					canAdd += slot.amount;
-					slot = FItemStruct();
-				}
-				else
-				{
-					canAdd += toAdd;
-					slot.amount -= toAdd;
-				}
-				if (canAdd == toAdd)
-				{
-					//done
-					break;
-				}
-				else
-				{
-					toAdd -= canAdd;
-				}
+				isReloading = true;
+				break;
 			}
 		}
-		if (canAdd > 0)
-		{
-			weaponSlot.amount += canAdd;
-			isReloading = true;
-			//currentWeapon->Reload();
-		}
-		else
+		if(!isReloading)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("No ammo"));
 		}
 	}
+}
+
+void AFCPlayer::FinishReloading()
+{
+	FItemStruct& weaponSlot = Inventory->inventory[equipped];
+
+	int toAdd = currentWeapon->maxAmmo - weaponSlot.amount;
+	UE_LOG(LogTemp, Warning, TEXT("to add %i"), toAdd);
+	UE_LOG(LogTemp, Warning, TEXT("ammo id %i"), currentWeapon->ammoID);
+	int canAdd = 0;
+	for (int i = 0; i < Inventory->inventory.Num(); i++)
+	{
+		FItemStruct& slot = Inventory->inventory[i];
+		if (slot.ID == currentWeapon->ammoID)
+		{
+			if (slot.amount <= toAdd)
+			{
+				canAdd += slot.amount;
+				slot = FItemStruct();
+			}
+			else
+			{
+				canAdd += toAdd;
+				slot.amount -= toAdd;
+			}
+			if (canAdd == toAdd)
+			{
+				//done
+				break;
+			}
+			else
+			{
+				toAdd -= canAdd;
+			}
+		}
+	}
+	weaponSlot.amount += canAdd;
+	isReloading = false;
+
 }
 
 void AFCPlayer::ReloadWeapon(int32 first, int32 second)
@@ -529,11 +566,13 @@ void AFCPlayer::TakeHit(int32 damage)
 	if (!staggered)
 	{
 		quickTurn = false;
+		isReloading = false;
+		//StopAiming();
 		UE_LOG(LogTemp, Warning, TEXT("Ow!"));
 		currentHealth -= damage;
-		DisableInput(Cast<APlayerController>(GetController()));
 		if (currentHealth <= 0)
 		{
+			DisableInput(Cast<APlayerController>(GetController()));
 			dead = true;
 			//Not sure how I want to handle death yet, this will work as a proof of concept
 			FTimerHandle ResetLevelTimer;
@@ -551,7 +590,7 @@ void AFCPlayer::TakeHit(int32 damage)
 
 void AFCPlayer::RecoverFromStagger()
 {
-	EnableInput(Cast<APlayerController>(GetController()));
+	//EnableInput(Cast<APlayerController>(GetController()));
 	staggered = false;
 }
 
@@ -559,6 +598,11 @@ void AFCPlayer::ResetLevel()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->ResetLevel();
+}
+
+bool AFCPlayer::BlockingInput()
+{
+	return staggered || quickTurn;
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)

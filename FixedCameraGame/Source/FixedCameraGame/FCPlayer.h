@@ -101,6 +101,8 @@ public:
 	void CombineItems(int32 first, int32 second);
 
 	void Reload();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void FinishReloading();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void ReloadWeapon(int32 first, int32 second);
@@ -115,6 +117,8 @@ public:
 	void RecoverFromStagger();
 	UFUNCTION()
 	void ResetLevel();
+	UFUNCTION(BlueprintCallable, Category = "Functions")	
+	bool BlockingInput();
 
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
@@ -123,6 +127,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Inventory")
 	bool inInventory = false;
+	bool aimButtonDown = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Weapons")
 	bool isAiming = false;
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
@@ -137,6 +142,7 @@ public:
 	bool quickTurn = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool sprinting = false;
+	
 
 	FRotator reversedDirection;
 
