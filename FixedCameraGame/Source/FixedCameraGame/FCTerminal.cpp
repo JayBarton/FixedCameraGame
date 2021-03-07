@@ -28,10 +28,10 @@ void AFCTerminal::StartPuzzle()
 
 	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
 
-	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	playerPawn->SetActorHiddenInGame(true);
-	playerPawn->SetActorTickEnabled(false);
-	Cast<AFCPlayer>(playerPawn)->inControl = false;
+	auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	playerCharacter->GetMesh()->SetHiddenInGame(true, true);
+	playerCharacter->SetActorTickEnabled(false);
+	Cast<AFCPlayer>(playerCharacter)->inControl = false;
 
 	Widget->GetUserWidgetObject()->SetKeyboardFocus();
 	SendToWidget();
@@ -52,11 +52,12 @@ void AFCTerminal::ExitPuzzle()
 	pc->SetInputMode(FInputModeGameOnly());
 	pc->SetViewTargetWithBlend(playerCamera);
 	//pc->SetViewTargetWithBlend(playerCamera, 1.0f, VTBlend_EaseInOut, 3.0f);
-	auto playerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	playerPawn->SetActorHiddenInGame(false);
-	playerPawn->SetActorTickEnabled(true);
+	auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	//playerCharacter->SetActorHiddenInGame(false);
+	playerCharacter->GetMesh()->SetHiddenInGame(false, true);
+	playerCharacter->SetActorTickEnabled(true);
 
-	Cast<AFCPlayer>(playerPawn)->inControl = true;
+	Cast<AFCPlayer>(playerCharacter)->inControl = true;
 
 }
 

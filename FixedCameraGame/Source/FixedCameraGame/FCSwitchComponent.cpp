@@ -61,7 +61,7 @@ void UFCSwitchComponent::SetUpScene()
 void UFCSwitchComponent::EndScene()
 {
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	player->inControl = false;
+	player->inControl = true;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 	FViewTargetTransitionParams transitionParams;
