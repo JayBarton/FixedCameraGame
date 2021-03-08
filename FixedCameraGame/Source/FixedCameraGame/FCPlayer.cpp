@@ -19,7 +19,7 @@
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "Components/AudioComponent.h" 
 #include "PhysicalMaterials/PhysicalMaterial.h"
-
+#include "FCMultiLockComponent.h"
 
 #include "DrawDebugHelpers.h" 
 
@@ -287,6 +287,18 @@ void AFCPlayer::Interact()
 					gameMode->SetPendingLock(exit->levelName.ToString(), exit->index);
 					lock->Open(lock->ID);
 					gameMode->DisplayText("Unlocked");
+				}
+			}
+			else if (auto multiLock = Cast<UFCMultiLockComponent>(nearestInteractable->FindComponentByClass(UFCMultiLockComponent::StaticClass())))
+			{
+				if (multiLock->CheckLocks())
+				{
+					IFCInteractableInterface::Execute_Action(nearestInteractable);
+				}
+				else
+				{
+					auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+					gameMode->DisplayText("gotta unlock something...");
 				}
 			}
 			else

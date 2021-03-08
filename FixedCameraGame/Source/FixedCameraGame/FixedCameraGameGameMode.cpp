@@ -13,6 +13,7 @@
 #include "FCContainer.h"
 #include "FCInfoTextWidget.h"
 #include "FCLockComponent.h"
+#include "FCMultiLockComponent.h"
 #include "FCPuzzleInteractable.h"
 #include "FCSwitchInteractable.h"
 #include "FCSwitchComponent.h"
@@ -156,6 +157,10 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 					if (auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass()))
 					{
 						lock->DestroyComponent();
+					}
+					else if (auto multiLock = object.actor->FindComponentByClass(UFCMultiLockComponent::StaticClass()))
+					{
+						multiLock->DestroyComponent();
 					}
 				}
 			}

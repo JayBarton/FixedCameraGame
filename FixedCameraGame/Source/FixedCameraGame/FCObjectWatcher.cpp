@@ -9,6 +9,7 @@
 #include "FCEnemy.h"
 #include "FCEnemySpawn.h"
 #include "FCEnemy_Normal.h"
+#include "FCMultiLockComponent.h"
 // Sets default values
 AFCObjectWatcher::AFCObjectWatcher()
 {
@@ -57,7 +58,11 @@ void AFCObjectWatcher::UpdateObjects()
 				auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass());
 				if (!lock)
 				{
-					objects.data[i].locked = false;
+					auto multiLock = object.actor->FindComponentByClass(UFCMultiLockComponent::StaticClass());
+					if (!multiLock)
+					{
+						objects.data[i].locked = false;
+					}
 				}
 			}
 		}
