@@ -190,7 +190,7 @@ void AFCPlayer::Sprint()
 
 void AFCPlayer::StopSprinting()
 {
-	if (!BlockingInput())
+//	if (!BlockingInput())
 	{
 		sprinting = false;
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;

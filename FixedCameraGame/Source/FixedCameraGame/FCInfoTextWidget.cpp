@@ -54,29 +54,44 @@ bool UFCInfoTextWidget::IsSegmentFinished()
 void UFCInfoTextWidget::SetUpSegments()
 {
 	nextIndex = segmentLength;
-
-	numberOfSegments = ceil(float(text.Len()) / segmentLength);
+	UE_LOG(LogTemp, Warning, TEXT("HUH???"));
+	FindNextIndex(0);
 }
 
 void UFCInfoTextWidget::GetNextSegment()
 {
 	delay = normalDelay;
+	int startingIndex = nextIndex;
 	nextIndex += segmentLength;
-	//UE_LOG(LogTemp, Warning, TEXT("next index %i, current %i"), nextIndex, index);
-	if (nextIndex > text.Len())
+	FindNextIndex(startingIndex);
+
+	displayedText = "";
+
+}
+
+void UFCInfoTextWidget::FindNextIndex(int startingIndex)
+{
+	if (nextIndex >= text.Len())
 	{
 		nextIndex = text.Len();
 	}
 	else
 	{
-		while (text.Mid(nextIndex - 1, 1) != "")
+		//Don't want to cut off part of a word, so if the segment ends part way through a word,
+		//move back until we find a space
+		while (text.Mid(nextIndex - 1, 1) != " ")
 		{
-			UE_LOG(LogTemp, Warning, TEXT("next starts at %s"), *text.Mid(nextIndex, 1));
 			nextIndex--;
-			//UE_LOG(LogTemp, Warning, TEXT("while next %i"), nextIndex);
-
+		}
+		//Using ! as an escape key. If we find one in the string, we end the segment there.
+		for (int i = startingIndex; i < nextIndex; i++)
+		{
+			if ((text.Mid(i, 1) == "!"))
+			{
+				nextIndex = i;
+				text.RemoveAt(i, 1);
+				break;
+			}
 		}
 	}
-	displayedText = "";
-
 }

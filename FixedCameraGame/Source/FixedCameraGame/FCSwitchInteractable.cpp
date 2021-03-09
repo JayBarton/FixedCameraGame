@@ -9,7 +9,7 @@
 
 AFCSwitchInteractable::AFCSwitchInteractable()
 {
-	prompt = "turn on";
+	prompt = "Examine";
 	Switch = CreateDefaultSubobject<UFCSwitchComponent>(TEXT("Switch"));
 
 }

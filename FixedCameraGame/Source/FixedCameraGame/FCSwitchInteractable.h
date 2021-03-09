@@ -34,4 +34,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 		UFCSwitchComponent* Switch;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Interactable")
+		FString buttonPrompt = "ph";
+
 };

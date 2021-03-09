@@ -440,9 +440,6 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	display->advanceClear = advanceClear;
 	display->SetUpSegments();
 
-	UE_LOG(LogTemp, Warning, TEXT("segments %i"), display->numberOfSegments);
-
-
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	//	pc->SetInputMode(FInputModeGameAndUI());
 		//pc->SetInputMode(FInputModeUIOnly());
@@ -494,7 +491,6 @@ bool AFixedCameraGameGameMode::AdvanceText()
 		{
 			display->GetNextSegment();
 			UE_LOG(LogTemp, Warning, TEXT("where am i"));
-
 		}
 		else
 		{
