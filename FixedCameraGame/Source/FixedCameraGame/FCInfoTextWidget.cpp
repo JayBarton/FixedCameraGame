@@ -54,7 +54,6 @@ bool UFCInfoTextWidget::IsSegmentFinished()
 void UFCInfoTextWidget::SetUpSegments()
 {
 	nextIndex = segmentLength;
-	UE_LOG(LogTemp, Warning, TEXT("HUH???"));
 	FindNextIndex(0);
 }
 
@@ -66,7 +65,6 @@ void UFCInfoTextWidget::GetNextSegment()
 	FindNextIndex(startingIndex);
 
 	displayedText = "";
-
 }
 
 void UFCInfoTextWidget::FindNextIndex(int startingIndex)
