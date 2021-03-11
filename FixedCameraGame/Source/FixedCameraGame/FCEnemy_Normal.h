@@ -21,11 +21,14 @@ public:
 	virtual void Kill() override;
 
 	void StartDead(int32 currentReviveTime, int32 reviveCount);
+	void Revive();
 
 	int32 reviveTime;
 	int32 reviveCounter = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning; 
+
+	bool canRevive;
 
 };

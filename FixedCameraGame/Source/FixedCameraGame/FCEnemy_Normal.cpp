@@ -4,6 +4,7 @@
 #include "FCEnemy_Normal.h"
 #include "DrawDebugHelpers.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Perception/PawnSensingComponent.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -14,16 +15,50 @@ AFCEnemy_Normal::AFCEnemy_Normal()
 void AFCEnemy_Normal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (!staggered)
+	/*if (spawnIn)
+	{
+		//check conditions
+		spawnIn = false;
+		spawning = true;
+		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+		float distance = (currentPosition - playerPosition).Size();
+		if (distance < attackDistance)
+		{
+
+		}
+	}*/
+	if (canRevive)
+	{
+		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+		float distance = (currentPosition - playerPosition).Size();
+		if (distance < 300.0f)
+		{
+			canRevive = false;
+			dead = false;
+			SetActorEnableCollision(true);
+
+			FTimerHandle ReviveTimerHandle;
+			GetWorld()->GetTimerManager().SetTimer(ReviveTimerHandle, this, &AFCEnemy_Normal::Revive, 0.60f, false);
+
+			//Revive();
+		}
+	}
+	else if (!staggered)
 	{
 		if (hasNoticedPlayer)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("U2"));
+
 			//check if in range for attack
 			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
 			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
 			float distance = (currentPosition - playerPosition).Size();
 			if (distance < attackDistance)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("U3"));
+
 				hasNoticedPlayer = false;
 				if (AController* AI = GetController())
 				{
@@ -103,20 +138,32 @@ void AFCEnemy_Normal::Kill()
 
 void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)
 {
-	dead = true;
 	reviveTime = currentReviveTime;
 	reviveCounter = reviveCount + 1;
 	if(reviveCounter >= reviveTime)
 	{
-		reviveCounter = 0;
+		dead = true;
+		PawnSensingComp->SetSensingUpdatesEnabled(false);
+		SetActorEnableCollision(false);
+		canRevive = true;
 		UE_LOG(LogTemp, Warning, TEXT("revive"));
 	}
 	else
 	{
 		Super::Kill();
+
 		/*PawnSensingComp->SetSensingUpdatesEnabled(false);
 		PrimaryActorTick.bCanEverTick = false;
 		SetActorEnableCollision(false);*/
 		UE_LOG(LogTemp, Warning, TEXT("still dead"));
 	}
+}
+
+void AFCEnemy_Normal::Revive()
+{
+	UE_LOG(LogTemp, Warning, TEXT("reviving here"));
+	reviveCounter = 0;
+	PawnSensingComp->SetSensingUpdatesEnabled(true);
+	SetActorTickEnabled(true);
+	Super::NoticePlayer();
 }

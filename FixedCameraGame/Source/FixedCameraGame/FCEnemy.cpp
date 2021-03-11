@@ -74,6 +74,7 @@ void AFCEnemy::NoticePlayer()
 			}
 			else
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Are you there"));
 				hasNoticedPlayer = true;
 				/*if (AAIController* AI = Cast<AAIController>(GetController()))
 				{
