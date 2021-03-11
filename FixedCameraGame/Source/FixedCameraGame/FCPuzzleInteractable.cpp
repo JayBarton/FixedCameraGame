@@ -45,6 +45,8 @@ void AFCPuzzleInteractable::Action_Implementation()
 
 void AFCPuzzleInteractable::StartPuzzle()
 {
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->StopEnemies();
 }
 
 void AFCPuzzleInteractable::OpenLock()
@@ -66,7 +68,8 @@ void AFCPuzzleInteractable::OpenLock()
 
 void AFCPuzzleInteractable::ExitPuzzle()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base"));
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->ResumeEnemies();
 }
 
 

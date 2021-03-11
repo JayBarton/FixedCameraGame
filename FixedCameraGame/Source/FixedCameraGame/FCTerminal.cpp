@@ -21,6 +21,7 @@ AFCTerminal::AFCTerminal()
 
 void AFCTerminal::StartPuzzle()
 {
+	Super::StartPuzzle();
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
 	//	pc->SetInputMode(FInputModeUIOnly());

@@ -3,6 +3,7 @@
 
 #include "FCEnemy_Normal.h"
 #include "DrawDebugHelpers.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -42,7 +43,10 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
 					isAttacking = true;
 				}
-
+			}
+			else
+			{
+				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 			}
 		}
 		if (turning)

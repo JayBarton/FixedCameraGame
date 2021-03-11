@@ -6,6 +6,7 @@
 #include "Kismet/GameplayStatics.h" 
 #include "FCPlayer.h"
 #include "FCPlayerCamera.h"
+#include "FixedCameraGameGameMode.h"
 
 
 // Sets default values for this component's properties
@@ -54,6 +55,9 @@ void UFCSwitchComponent::SetUpScene()
 	FViewTargetTransitionParams transitionParams;
 	pc->SetViewTarget(sceneCamera, transitionParams);
 
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->StopEnemies();
+
 	FTimerHandle SceneTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
 }
@@ -64,6 +68,10 @@ void UFCSwitchComponent::EndScene()
 	player->inControl = true;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
+	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	gameMode->ResumeEnemies();
+
 	FViewTargetTransitionParams transitionParams;
 	pc->SetViewTarget(playerCamera, transitionParams);
 }

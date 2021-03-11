@@ -12,6 +12,8 @@ AFCPawnPossessor::AFCPawnPossessor()
 
 void AFCPawnPossessor::StartPuzzle()
 {
+	Super::StartPuzzle();
+
 	if (puzzlePawn)
 	{
 		if (newCamera)

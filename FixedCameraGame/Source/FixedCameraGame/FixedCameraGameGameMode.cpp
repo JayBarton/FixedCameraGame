@@ -23,6 +23,9 @@
 #include "FCEnemy_Patrol.h"
 #include "FCEnemySpawn.h"
 
+#include "Perception/PawnSensingComponent.h"
+
+
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
 {
@@ -407,6 +410,36 @@ void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
 			instance->pendingLocks.Add(levelName, newLock);
 		}
 
+	}
+}
+
+void AFixedCameraGameGameMode::StopEnemies()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCEnemy::StaticClass(), FoundActors);
+	for (int i = 0; i < FoundActors.Num(); i++)
+	{
+		auto enemy = Cast<AFCEnemy>(FoundActors[i]);
+		if (AController* AI = enemy->GetController())
+		{
+			AI->StopMovement();
+		}
+		enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
+		enemy->SetActorTickEnabled(false);
+		enemy->GetMesh()->bPauseAnims = true;
+	}
+}
+
+void AFixedCameraGameGameMode::ResumeEnemies()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCEnemy::StaticClass(), FoundActors);
+	for (int i = 0; i < FoundActors.Num(); i++)
+	{
+		auto enemy = Cast<AFCEnemy>(FoundActors[i]);
+		enemy->PawnSensingComp->SetSensingUpdatesEnabled(true);
+		enemy->SetActorTickEnabled(true);
+		enemy->GetMesh()->bPauseAnims = false;
 	}
 }
 

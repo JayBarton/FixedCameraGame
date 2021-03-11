@@ -50,6 +50,9 @@ public:
 
 	void SetPendingLock(FString levelName, int32 index);
 
+	void StopEnemies();
+	void ResumeEnemies();
+
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now
