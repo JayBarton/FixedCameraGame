@@ -21,6 +21,10 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "FCMultiLockComponent.h"
 
+
+
+
+#include "GameFramework/PlayerInput.h" 
 #include "DrawDebugHelpers.h" 
 
 // Sets default values
@@ -113,8 +117,8 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::Sprint);
-	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::QuickTurn);
+	//PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
 
 	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AFCPlayer::Aim);
 	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AFCPlayer::StopAiming);
@@ -129,6 +133,7 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFCPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Turn", this, &AFCPlayer::Turn);
+
 }
 
 void AFCPlayer::MoveForward(float value)
@@ -148,7 +153,12 @@ void AFCPlayer::MoveForward(float value)
 				}
 				else
 				{
-					if (sprinting)
+					//This is the only way I could find to see if a button is held down
+					//Clean up later. Will get the keys up in setup and save them
+					//Should only ever have 2 binds, for keyboard and controller.
+					auto pc = Cast<APlayerController>(GetController());
+					auto sprintButtons = pc->PlayerInput->GetKeysForAction("Sprint");
+					if(pc->IsInputKeyDown(sprintButtons[0].Key))
 					{
 						GetCharacterMovement()->MaxWalkSpeed = runSpeed;
 					}
@@ -176,11 +186,10 @@ void AFCPlayer::Turn(float value)
 	}
 }
 
-void AFCPlayer::Sprint()
+void AFCPlayer::QuickTurn()
 {
 	if (!BlockingInput())
 	{
-		sprinting = true;
 		if (walkingBackwards)
 		{
 			StartQuickTurn();
@@ -188,11 +197,12 @@ void AFCPlayer::Sprint()
 	}
 }
 
+//Don't think I'm using this anymore
 void AFCPlayer::StopSprinting()
 {
 //	if (!BlockingInput())
 	{
-		sprinting = false;
+		UE_LOG(LogTemp, Warning, TEXT("Hel"));
 		GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	}
 }

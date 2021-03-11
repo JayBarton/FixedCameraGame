@@ -44,7 +44,7 @@ public:
 
 	void Turn(float Value);
 
-	void Sprint();
+	void QuickTurn();
 
 	void StopSprinting();
 
@@ -143,10 +143,7 @@ public:
 	bool walkingBackwards = false;
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool quickTurn = false;
-	UPROPERTY(BlueprintReadOnly, Category = "Movement")
-	bool sprinting = false;
 	
-
 	FRotator reversedDirection;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement")
