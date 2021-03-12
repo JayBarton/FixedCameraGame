@@ -16,7 +16,6 @@ UFCSwitchComponent::UFCSwitchComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -32,21 +31,21 @@ void UFCSwitchComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-//	MyTimeline.TickTimeline(DeltaTime);
 }
 
-void UFCSwitchComponent::PressSwitch()
+void UFCSwitchComponent::PressSwitch(bool pauseAnimation)
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
 	if (playScene)
 	{
-		SetUpScene();
+		SetUpScene(pauseAnimation);
 	}
 }
 
-void UFCSwitchComponent::SetUpScene()
+void UFCSwitchComponent::SetUpScene(bool pauseAnimation)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Setup"));
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = false;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -56,7 +55,7 @@ void UFCSwitchComponent::SetUpScene()
 	pc->SetViewTarget(sceneCamera, transitionParams);
 
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->StopEnemies();
+	gameMode->StopEnemies(pauseAnimation);
 
 	FTimerHandle SceneTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
@@ -64,6 +63,8 @@ void UFCSwitchComponent::SetUpScene()
 
 void UFCSwitchComponent::EndScene()
 {
+	UE_LOG(LogTemp, Warning, TEXT("finish"));
+
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = true;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -74,5 +75,7 @@ void UFCSwitchComponent::EndScene()
 
 	FViewTargetTransitionParams transitionParams;
 	pc->SetViewTarget(playerCamera, transitionParams);
+
+	SwitchEnd.Broadcast();
 }
 

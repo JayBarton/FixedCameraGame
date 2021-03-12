@@ -50,7 +50,7 @@ public:
 
 	void SetPendingLock(FString levelName, int32 index);
 
-	void StopEnemies();
+	void StopEnemies(bool pauseAnimation = true);
 	void ResumeEnemies();
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;

@@ -9,6 +9,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchDelegate, bool, isOn);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchStartDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchEndDelegate);
 
 class ACameraActor;
 
@@ -30,8 +31,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void PressSwitch();
-	void SetUpScene();
+	void PressSwitch(bool pauseAnimation = true);
+	void SetUpScene(bool pauseAnimation);
 	//UFUNCTION()
 	//void PlayScene();
 	UFUNCTION()
@@ -42,6 +43,9 @@ public:
 	//Using this to make sure all attached objects can remain in their "on" state
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FSwitchStartDelegate SwitchOn;
+	//Fires after a scene ends;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FSwitchEndDelegate SwitchEnd;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Interactable")
 		bool switchState = false;

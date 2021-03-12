@@ -64,6 +64,10 @@ public:
 
 	virtual void Kill();
 
+	void SetUpSpawnIn();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void PlaySpawnIn();
+
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;
 

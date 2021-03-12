@@ -15,86 +15,73 @@ AFCEnemy_Normal::AFCEnemy_Normal()
 void AFCEnemy_Normal::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	/*if (spawnIn)
+	if (!spawnIn && !spawning)
 	{
-		//check conditions
-		spawnIn = false;
-		spawning = true;
-		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
-		float distance = (currentPosition - playerPosition).Size();
-		if (distance < attackDistance)
+		if (canRevive)
 		{
-
-		}
-	}*/
-	if (canRevive)
-	{
-		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
-		float distance = (currentPosition - playerPosition).Size();
-		if (distance < 300.0f)
-		{
-			canRevive = false;
-			dead = false;
-			SetActorEnableCollision(true);
-
-			FTimerHandle ReviveTimerHandle;
-			GetWorld()->GetTimerManager().SetTimer(ReviveTimerHandle, this, &AFCEnemy_Normal::Revive, 0.60f, false);
-
-			//Revive();
-		}
-	}
-	else if (!staggered)
-	{
-		if (hasNoticedPlayer)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("U2"));
-
-			//check if in range for attack
 			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
 			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
 			float distance = (currentPosition - playerPosition).Size();
-			if (distance < attackDistance)
+			if (distance < 300.0f)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("U3"));
+				canRevive = false;
+				dead = false;
+				SetActorEnableCollision(true);
 
-				hasNoticedPlayer = false;
-				if (AController* AI = GetController())
-				{
-					AI->StopMovement();
-				}
-				FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+				FTimerHandle ReviveTimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(ReviveTimerHandle, this, &AFCEnemy_Normal::Revive, 0.60f, false);
+			}
+		}
+		else if (!staggered)
+		{
+			if (hasNoticedPlayer)
+			{
 
-				rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
-				float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-				if (abs(deltaYaw) >= 45.0f)
+				//check if in range for attack
+				FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+				FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+				float distance = (currentPosition - playerPosition).Size();
+				if (distance < attackDistance)
 				{
-					turning = true;
+					UE_LOG(LogTemp, Warning, TEXT("U3"));
+
+					hasNoticedPlayer = false;
+					if (AController* AI = GetController())
+					{
+						AI->StopMovement();
+					}
+					FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+
+					rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+					float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
+					if (abs(deltaYaw) >= 45.0f)
+					{
+						turning = true;
+					}
+					else
+					{
+						//UE_LOG(LogTemp, Warning, TEXT("Attack"));
+						//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
+						isAttacking = true;
+					}
 				}
 				else
 				{
-					//UE_LOG(LogTemp, Warning, TEXT("Attack"));
-					//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
-					isAttacking = true;
+					UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 				}
 			}
-			else
+			if (turning)
 			{
-				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
-			}
-		}
-		if (turning)
-		{
-			float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-			if (abs(deltaYaw) >= 45.0f)
-			{
-				SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
-			}
-			else
-			{
-				turning = false;
-				isAttacking = true;
+				float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
+				if (abs(deltaYaw) >= 45.0f)
+				{
+					SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
+				}
+				else
+				{
+					turning = false;
+					isAttacking = true;
+				}
 			}
 		}
 	}

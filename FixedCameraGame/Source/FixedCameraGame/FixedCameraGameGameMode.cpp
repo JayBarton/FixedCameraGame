@@ -247,6 +247,7 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			FActorSpawnParameters SpawnParams;
 			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 			enemy.enemy = GetWorld()->SpawnActor<AFCEnemy>(enemy.spawnActor->enemyType, enemy.transform, SpawnParams);
+			enemy.spawnActor->spawnedEnemy = enemy.enemy;
 			if (auto patrolEnemy = Cast<AFCEnemy_Patrol>(enemy.enemy))
 			{
 				patrolEnemy->InitPath(enemy.spawnActor->patrolPoints);
@@ -261,7 +262,7 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 			}
 			if (enemy.alive && enemy.spawnIn)
 			{
-				enemy.enemy->spawnIn = true;
+				enemy.enemy->SetUpSpawnIn();
 			}
 		}
 	}
@@ -413,7 +414,7 @@ void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
 	}
 }
 
-void AFixedCameraGameGameMode::StopEnemies()
+void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation)
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCEnemy::StaticClass(), FoundActors);
@@ -426,7 +427,7 @@ void AFixedCameraGameGameMode::StopEnemies()
 		}
 		enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
 		enemy->SetActorTickEnabled(false);
-		enemy->GetMesh()->bPauseAnims = true;
+		enemy->GetMesh()->bPauseAnims = pauseAnimation;
 	}
 }
 

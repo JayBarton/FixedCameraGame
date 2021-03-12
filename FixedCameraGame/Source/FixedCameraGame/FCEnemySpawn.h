@@ -10,6 +10,7 @@ class UArrowComponent;
 class UCapsuleComponent;
 class UBillboardComponent;
 class ATargetPoint;
+class AFCEnemy;
 
 UCLASS()
 class FIXEDCAMERAGAME_API AFCEnemySpawn : public AActor
@@ -32,5 +33,7 @@ public:
 		TSubclassOf<AFCEnemy> enemyType;
 	UPROPERTY(EditAnywhere, Category = "Patrol")
 	TArray<ATargetPoint*> patrolPoints;
-
+	
+	UPROPERTY(BlueprintReadonly, Category = "Enemy")
+	AFCEnemy* spawnedEnemy;
 };

@@ -41,6 +41,18 @@ void AFCEnemy::BeginPlay()
 // Called every frame
 void AFCEnemy::Tick(float DeltaTime)
 {
+	/*if (spawnIn)
+	{
+		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+		float distance = (currentPosition - playerPosition).Size();
+		if (distance <= 1200.0f)
+		{
+			PlaySpawnIn();
+		}
+		UE_LOG(LogTemp, Warning, TEXT("E1"));
+	}*/
+
 	Super::Tick(DeltaTime);
 }
 
@@ -61,8 +73,7 @@ void AFCEnemy::NoticePlayer()
 {
 	if (spawnIn)
 	{
-		spawnIn = false;
-		spawning = true;
+		PlaySpawnIn();
 	}
 	else
 	{
@@ -203,4 +214,21 @@ void AFCEnemy::Kill()
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	SetActorTickEnabled(false);
 	SetActorEnableCollision(false);
+}
+
+void AFCEnemy::SetUpSpawnIn()
+{
+	spawnIn = true;
+	PawnSensingComp->SetSensingUpdatesEnabled(false);
+	SetActorEnableCollision(false);
+}
+
+void AFCEnemy::PlaySpawnIn()
+{
+	UE_LOG(LogTemp, Warning, TEXT("drip drip"));
+
+	spawnIn = false;
+	spawning = true;
+	PawnSensingComp->SetSensingUpdatesEnabled(true);
+	SetActorEnableCollision(true);
 }
