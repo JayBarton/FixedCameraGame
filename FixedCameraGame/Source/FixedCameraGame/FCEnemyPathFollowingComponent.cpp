@@ -7,7 +7,6 @@
 
 void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
 {
-
     auto Owner = MovementComp->GetOwner();
     if (Owner)
     {
@@ -17,7 +16,7 @@ void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
         }
 
         FVector location = Owner->GetActorLocation();
-        FVector target = Path->GetPathPoints()[GetNextPathIndex()].Location;;
+        FVector target = Path->GetPathPoints()[GetNextPathIndex()].Location;
         FVector direction = target - location;
         FVector MoveVelocity = Owner->GetActorForwardVector() * CharacterMoveComp->MaxWalkSpeed;
 

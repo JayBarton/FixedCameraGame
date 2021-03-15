@@ -63,7 +63,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 		float followSpeed = 300.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float followTurnSpeed = 5.0f;
+		float followTurnSpeed = 15.0f;
+	//Use this to turn faster when far from the player
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+		float fastTurnSpeed = 25.0f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+		float tooFarDistance = 800.0f;
 
 	UPROPERTY(VisibleAnywhere, Category = "Damage")
 	UBoxComponent* hurtBox;

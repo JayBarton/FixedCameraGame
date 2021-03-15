@@ -42,6 +42,7 @@ void AFCEnemy_Patrol::Tick(float DeltaTime)
 		Patrol();
 		break;
 	case PatrolState::FOLLOWING:
+
 		Follow();
 		break;
 	case PatrolState::ATTACKING:
@@ -72,6 +73,14 @@ void AFCEnemy_Patrol::Follow()
 		FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
 		FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
 		float distance = (currentPosition - playerPosition).Size();
+		if (distance > tooFarDistance)
+		{
+			turnSpeed = fastTurnSpeed;
+		}
+		else
+		{
+			turnSpeed = followTurnSpeed;
+		}
 		if (distance < attackDistance)
 		{
 			if (!isAttacking)

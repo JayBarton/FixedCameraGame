@@ -43,7 +43,6 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 				float distance = (currentPosition - playerPosition).Size();
 				if (distance < attackDistance)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("U3"));
 
 					hasNoticedPlayer = false;
 					if (AController* AI = GetController())
@@ -54,33 +53,48 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 
 					rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
 					float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-					if (abs(deltaYaw) >= 45.0f)
+					//SetActorRotation(rotatorDirection);
+					isAttacking = true;
+					turningAttack = true;
+					/*if (abs(deltaYaw) >= 45.0f)
 					{
+						UE_LOG(LogTemp, Warning, TEXT("turning1"));
+
 						turning = true;
 					}
 					else
 					{
-						//UE_LOG(LogTemp, Warning, TEXT("Attack"));
+						UE_LOG(LogTemp, Warning, TEXT("Attack1"));
 						//UE_LOG(LogTemp, Warning, TEXT("delat yaw %f"), abs(deltaYaw));
 						isAttacking = true;
-					}
+					}*/
 				}
 				else
 				{
 					UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
 				}
 			}
-			if (turning)
+			if (isAttacking)
+			{
+				if (turningAttack)
+				{
+					FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+					FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+					FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+
+					rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+					//SetActorRotation(rotatorDirection);
+					SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 4.0f));
+				}
+
+			}
+			else if (turning)
 			{
 				float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
-				if (abs(deltaYaw) >= 45.0f)
+				if (abs(deltaYaw) < 45.0f)
 				{
-					SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 10.0f));
-				}
-				else
-				{
+					turnSpeed = defaultTurnSpeed;
 					turning = false;
-					isAttacking = true;
 				}
 			}
 		}
@@ -89,6 +103,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 
 void AFCEnemy_Normal::Attack()
 {
+	turningAttack = false;
 	FHitResult OutHit;
 
 	FVector ForwardVector = GetActorForwardVector();
@@ -103,11 +118,7 @@ void AFCEnemy_Normal::Attack()
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	if (GetWorld()->SweepSingleByChannel(OutHit, Start, End, FQuat::Identity, COLLISION_PLAYER, shape, CollisionParams))
 	{
-	//	UGameplayStatics::ApplyPointDamage(HitActor, ActualDamage, ShotDirection, Hit, MyOwner->GetInstigatorController(), MyOwner, DamageType);
-
 		UGameplayStatics::ApplyDamage(player, 20, GetInstigatorController(), this, UDamageType::StaticClass());
-		//player->TakeDamage
-		//player-TakeHit(20);
 	}
 }
 
@@ -120,7 +131,29 @@ void AFCEnemy_Normal::FinishAttack()
 void AFCEnemy_Normal::Kill()
 {
 	Super::Kill();
-	reviveTime = FMath::RandRange(3, 6); 
+	reviveTime = FMath::RandRange(minReviveCount, maxReviveCount); 
+}
+
+void AFCEnemy_Normal::TakeDamage(int32 damageAmount, FHitResult Hit)
+{
+	Super::TakeDamage(damageAmount, Hit);
+	if (hitDirection == HitDirection::BACK)
+	{
+		//Random chance of the enemy turning around right away when hit in the back
+		int turnAround = FMath::RandRange(0, 1);
+		if (turnAround == 1)
+		{
+			//turn around
+			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+			FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+
+			rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
+			turnSpeed = fastTurnSpeed;
+
+			turning = true;
+		}
+	}
 }
 
 void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)

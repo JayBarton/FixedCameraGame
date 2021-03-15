@@ -20,14 +20,31 @@ public:
 	virtual void FinishAttack() override;
 	virtual void Kill() override;
 
+	virtual void TakeDamage(int32 damageAmount, FHitResult Hit) override;
+
 	void StartDead(int32 currentReviveTime, int32 reviveCount);
 	void Revive();
 
 	int32 reviveTime;
 	int32 reviveCounter = 0;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Revive")
+	int32 minReviveCount = 3;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Revive")
+	int32 maxReviveCount = 6;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+		float defaultTurnSpeed = 2.5f;
+
+	//use this to quickly turn around if hit in the back
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
+		float fastTurnSpeed = 2.5f;
+
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning; 
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+	bool turningAttack;
 
 	bool canRevive;
 

@@ -104,6 +104,8 @@ void AFCEnemy::Attack()
 
 void AFCEnemy::FinishAttack()
 {
+	UE_LOG(LogTemp, Warning, TEXT("finish attack"));
+
 	isAttacking = false;
 }
 
