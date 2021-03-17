@@ -366,17 +366,21 @@ void AFCPlayer::LookForInteractable()
 
 	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams))
 	{
-		if (OutHit.GetActor()->GetClass()->ImplementsInterface(UFCInteractableInterface::StaticClass()))
+		//Need to do this first getactor check because I get a crash when the line intersects with box brushes
+		//If/when I get rid of box brushes, I can get rid of this
+		if (OutHit.GetActor())
 		{
-			interactable = true;
-			if (!nearestInteractable)
+			if (OutHit.GetActor()->GetClass()->ImplementsInterface(UFCInteractableInterface::StaticClass()))
 			{
-				nearestInteractable = OutHit.GetActor();
-				NewInteractable.Broadcast();
+				interactable = true;
+				if (!nearestInteractable)
+				{
+					nearestInteractable = OutHit.GetActor();
+					NewInteractable.Broadcast();
 
+				}
 			}
 		}
-
 	}
 	if (!interactable)
 	{
