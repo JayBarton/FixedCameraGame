@@ -60,6 +60,11 @@ void AFixedCameraGameGameMode::BeginPlay()
 	if (instance)
 	{
 		currentIndex = instance->startIndex;
+		if (instance->cameraIndex == -1)
+		{
+			instance->cameraIndex = currentIndex;
+		}
+		currentCameraIndex = instance->cameraIndex;
 		CheckInstance(instance);
 
 		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -314,7 +319,7 @@ void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
 		playerCamera = Cast<AFCPlayerCamera>(FoundActors[i]);
 		if (playerCamera)
 		{
-			if (playerCamera->startIndex == instance->startIndex)
+			if (playerCamera->startIndex == instance->cameraIndex)
 			{
 				APlayerController* playerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 				if (playerController)
@@ -330,7 +335,7 @@ void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
 	UE_LOG(LogTemp, Warning, TEXT("start camera not found, view not set"))
 }
 
-void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
+void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName levelName)
 {
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -345,6 +350,14 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, FName levelName)
 				if (newLevel)
 				{
 					instance->startIndex = index;
+					if (cameraIndex == -1)
+					{
+						instance->cameraIndex = index;
+					}
+					else
+					{
+						instance->cameraIndex = cameraIndex;
+					}
 					instance->playerInventory = pc->Inventory->inventory;
 					instance->equippedIndex = pc->equipped;
 					instance->playerHealth = pc->currentHealth;
@@ -391,7 +404,7 @@ void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 void AFixedCameraGameGameMode::ResetLevel()
 {
 	newLevel = false;
-	ChangeLevel(currentIndex, FName(*currentLevel));
+	ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel));
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)

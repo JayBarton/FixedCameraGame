@@ -17,9 +17,12 @@ class FIXEDCAMERAGAME_API AFCExit : public AFCInteractable
 public:
 	AFCExit();
 	virtual void Action_Implementation() override;
-
+	//starting index of the next level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
 	int index;
+	//starting index of the next level
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
+	int cameraIndex = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
 	FName levelName;
 

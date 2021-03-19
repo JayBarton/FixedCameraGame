@@ -44,7 +44,7 @@ public:
 
 	void FindStart(UFCGameInstance* instance);
 
-	void ChangeLevel(int index, FName levelName);
+	void ChangeLevel(int index, int cameraIndex, FName levelName);
 	void MoveToLevel(FName levelName);
 	void ResetLevel();
 
@@ -79,6 +79,8 @@ public:
 	FString currentLevel;
 
 	int32 currentIndex;
+
+	int32 currentCameraIndex;
 
 	int32 interactKey;
 

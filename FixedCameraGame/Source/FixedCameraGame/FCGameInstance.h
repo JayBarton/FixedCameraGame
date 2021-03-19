@@ -19,6 +19,9 @@ public:
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int startIndex = 0;
+	//Index of the camera on entering a new level. If this = -1, it is the same as the start index above
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+		int cameraIndex = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 		int equippedIndex = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
