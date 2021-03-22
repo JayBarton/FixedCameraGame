@@ -97,11 +97,18 @@ void AFCLightsPuzzle::StartPuzzle()
 	grid = gridDefault;
 	index = 0;
 	FActorSpawnParameters SpawnParams;
+	FVector whatever = GetActorLocation();
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::Undefined;
 	for (int i = 0; i < grid.Num(); i++)
 	{
-		float X = startLocation.X - (i / size) * 110;
+		/*
+				float X = startLocation.X - (i / size) * 110;
 		float Y = startLocation.Y + (i % size) * 110;
+		*/
+		//Just testing using the object location as the start location
+		//This is the top left of the grid, so I would need move the camera, or use the actorlocation as the center and calculate the top left
+		float X = whatever.X - (i / size) * 110;
+		float Y = whatever.Y + (i % size) * 110;
 
 		FVector location(X, Y, startLocation.Z);
 
