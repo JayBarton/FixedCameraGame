@@ -4,25 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "FCPuzzlePawnBase.h"
-#include "FCLightsPuzzle.generated.h"
+#include "FCTowerPuzzle.generated.h"
 
 /**
  * 
  */
+
+USTRUCT(BlueprintType)
+struct FTowerArray
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+		TArray<int32> disk;
+};
+
+
 UCLASS()
-class FIXEDCAMERAGAME_API AFCLightsPuzzle : public AFCPuzzlePawnBase
+class FIXEDCAMERAGAME_API AFCTowerPuzzle : public AFCPuzzlePawnBase
 {
 	GENERATED_BODY()
 public:
-	AFCLightsPuzzle();
-
+	AFCTowerPuzzle();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void MoveRight();
 	void MoveLeft();
-	void MoveUp();
-	void MoveDown();
-	void ToggleLight();
+	void SelectDisk();
 
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;
@@ -37,18 +47,21 @@ public:
 		void SetUp();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void updateIndex();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
+		void MoveDisk();
 
+	int32 numberOfRods = 3;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-		TArray<bool> grid;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
-		TArray<bool> gridDefault;
+	int32 currentRod;
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
-		int32 index;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Setup")
-		int32 size = 5;
+	int32 selectedRod = -1;
+
+	int32 numberOfDisks = 4;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
-		FVector startLocation;
+	TArray<FTowerArray> towers;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
-		TArray<AActor*> boxes;
+		TArray<AActor*> rods;
 };

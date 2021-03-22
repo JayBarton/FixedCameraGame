@@ -48,7 +48,5 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		FVector startLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
-	TSubclassOf<AActor> prop;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> boxes;
 };

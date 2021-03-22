@@ -37,6 +37,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void SolvePuzzle();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+		TSubclassOf<AActor> prop;
+
 	APawn* playerPawn;
 	ACameraActor* playerCamera;
 	AFCPawnPossessor* parent;
