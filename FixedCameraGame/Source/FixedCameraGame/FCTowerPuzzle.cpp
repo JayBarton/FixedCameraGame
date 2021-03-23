@@ -5,6 +5,7 @@
 
 AFCTowerPuzzle::AFCTowerPuzzle()
 {
+	moveLocations.SetNum(3);
 }
 
 void AFCTowerPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -15,6 +16,56 @@ void AFCTowerPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCTowerPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCTowerPuzzle::SelectDisk);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCTowerPuzzle::CheckSolution);
+}
+
+
+/*
+		//move towards newLocation
+		movingBox->SetActorLocation(FMath::Lerp(boxStartLocation, newLocation, t));
+		t += DeltaTime * slideSpeed;
+		if (movingBox->GetActorLocation().Equals(newLocation, 0.5f))
+		{
+			t = 0;
+			movingBox->SetActorLocation(newLocation);
+			isAnimating = false;
+			EnableInput(Cast<APlayerController>(GetController()));
+		}
+	}*/
+
+void AFCTowerPuzzle::Tick(float DeltaTime)
+{
+	HandleAnimation(DeltaTime);
+}
+
+void AFCTowerPuzzle::HandleAnimation(float DeltaTime)
+{
+	if (isAnimating)
+	{
+		FVector P1;
+		if (currentMoveLocation == 0)
+		{
+			//Just using the initial start location when moving to the first point
+			P1 = diskStartLocation;
+		}
+		else
+		{
+			P1 = moveLocations[currentMoveLocation - 1];
+		}
+		FVector nextLocation = moveLocations[currentMoveLocation];
+		movingDisk->SetActorLocation(FMath::Lerp(P1, nextLocation, t));
+		t += DeltaTime * moveSpeed;
+		if (movingDisk->GetActorLocation().Equals(nextLocation, 5.0f))
+		{
+			movingDisk->SetActorLocation(nextLocation);
+			t = 0;
+			currentMoveLocation++;
+			if (currentMoveLocation >= 3)
+			{
+				isAnimating = false;
+				EnableInput(Cast<APlayerController>(GetController()));
+			}
+		}
+	}
 }
 
 void AFCTowerPuzzle::MoveRight()
@@ -65,10 +116,26 @@ void AFCTowerPuzzle::MoveDisk()
 	int currentDisk = towers[selectedRod].disk.Pop();
 	towers[currentRod].disk.Add(currentDisk);
 
+	SetupAnimation(currentDisk);
+}
+
+void AFCTowerPuzzle::SetupAnimation(int currentDisk)
+{
+	movingDisk = disks[currentDisk];
+
+	diskStartLocation = movingDisk->GetActorLocation();
+
 	float Y = startLocation.Y - 100 * currentRod;
 	float Z = startLocation.Z + 6.0f * (towers[currentRod].disk.Num() - 1);
 
-	disks[currentDisk]->SetActorLocation(FVector(startLocation.X, Y, Z));
+	moveLocations[0] = FVector(diskStartLocation.X, diskStartLocation.Y, startLocation.Z + 70);
+	moveLocations[1] = FVector(diskStartLocation.X, Y, startLocation.Z + 70);
+	moveLocations[2] = FVector(diskStartLocation.X, Y, Z);
+
+	isAnimating = true;
+	currentMoveLocation = 0;
+
+	DisableInput(Cast<APlayerController>(GetController()));
 }
 
 void AFCTowerPuzzle::StartPuzzle()

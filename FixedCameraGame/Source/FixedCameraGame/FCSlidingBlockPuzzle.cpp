@@ -113,8 +113,10 @@ void AFCSlidingBlockPuzzle::SetUpAnimation(int nextIndex)
 	float X = startLocation.X - (nextIndex / size) * 100;
 	float Y = startLocation.Y + (nextIndex % size) * 100;
 	newLocation = FVector(X, Y, startLocation.Z);
+
 	movingBox = boxes[grid[index] - 1];
 	boxStartLocation = movingBox->GetActorLocation();
+
 	isAnimating = true;
 	DisableInput(Cast<APlayerController>(GetController()));
 }

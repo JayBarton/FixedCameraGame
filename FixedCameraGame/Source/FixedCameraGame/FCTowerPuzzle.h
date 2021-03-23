@@ -30,11 +30,17 @@ public:
 	AFCTowerPuzzle();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Tick(float DeltaTime) override;
+
+	void HandleAnimation(float DeltaTime);
+
 	void MoveRight();
 	void MoveLeft();
 	void SelectDisk();
 
 	void MoveDisk();
+
+	void SetupAnimation(int currentDisk);
 
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;
@@ -74,4 +80,20 @@ public:
 	//Location of the first rod
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 	FVector startLocation;
+
+	AActor* movingDisk;
+
+	FVector diskStartLocation;
+
+	TArray<FVector> moveLocations;
+	int32 currentMoveLocation;
+	//location to move the disk to
+	FVector finalLocation;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Setup")
+		float moveSpeed = 4.0f;
+
+	float t = 0;
+
+	bool isAnimating;
 };
