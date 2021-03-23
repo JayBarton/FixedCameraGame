@@ -20,11 +20,14 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	void HandleAnimation(float& DeltaTime);
+
 	void MoveRight();
 	void MoveLeft();
 	void MoveUp();
 	void MoveDown();
 	void MoveBlock();
+	void SetUpAnimation(int nextIndex);
 	int32 FindAdjacent();
 	virtual void CheckSolution() override;
 	virtual void StartPuzzle() override;

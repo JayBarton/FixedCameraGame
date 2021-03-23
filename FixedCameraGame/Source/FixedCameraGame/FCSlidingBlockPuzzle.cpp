@@ -27,12 +27,17 @@ void AFCSlidingBlockPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 void AFCSlidingBlockPuzzle::Tick(float DeltaTime)
 {
+	HandleAnimation(DeltaTime);
+}
+
+void AFCSlidingBlockPuzzle::HandleAnimation(float& DeltaTime)
+{
 	if (isAnimating)
 	{
 		//move towards newLocation
 		movingBox->SetActorLocation(FMath::Lerp(boxStartLocation, newLocation, t));
 		t += DeltaTime * slideSpeed;
-		if(movingBox->GetActorLocation().Equals(newLocation, 0.5f))
+		if (movingBox->GetActorLocation().Equals(newLocation, 0.5f))
 		{
 			t = 0;
 			movingBox->SetActorLocation(newLocation);
@@ -92,14 +97,8 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 
 		grid[nextIndex] = grid[index];
 
-		float X = startLocation.X - (nextIndex / size) * 100;
-		float Y = startLocation.Y + (nextIndex % size) * 100;
-		newLocation = FVector(X, Y, startLocation.Z);
-		movingBox = boxes[grid[index] - 1];
-		boxStartLocation = movingBox->GetActorLocation();
-		isAnimating = true;
+		SetUpAnimation(nextIndex);
 
-		DisableInput(Cast<APlayerController>(GetController()));
 		grid[index] = -1;
 		updateIndex();
 	}
@@ -107,6 +106,17 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NOPE"));
 	}
+}
+
+void AFCSlidingBlockPuzzle::SetUpAnimation(int nextIndex)
+{
+	float X = startLocation.X - (nextIndex / size) * 100;
+	float Y = startLocation.Y + (nextIndex % size) * 100;
+	newLocation = FVector(X, Y, startLocation.Z);
+	movingBox = boxes[grid[index] - 1];
+	boxStartLocation = movingBox->GetActorLocation();
+	isAnimating = true;
+	DisableInput(Cast<APlayerController>(GetController()));
 }
 
 int32 AFCSlidingBlockPuzzle::FindAdjacent()
@@ -179,7 +189,7 @@ void AFCSlidingBlockPuzzle::StartPuzzle()
 	grid = gridDefault;
 	index = 1;
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::Undefined;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	for (int i = 0; i < grid.Num(); i++)
 	{
 		if (grid[i] >= 0)

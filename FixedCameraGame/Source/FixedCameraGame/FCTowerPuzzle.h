@@ -34,6 +34,8 @@ public:
 	void MoveLeft();
 	void SelectDisk();
 
+	void MoveDisk();
+
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;
 	virtual void CheckSolution() override;
@@ -47,8 +49,6 @@ public:
 		void SetUp();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void updateIndex();
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-		void MoveDisk();
 
 	int32 numberOfRods = 3;
 
@@ -60,8 +60,18 @@ public:
 	int32 numberOfDisks = 4;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+		TSubclassOf<AActor> diskProp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 	TArray<FTowerArray> towers;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> rods;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+		TArray<AActor*> disks;
+
+	//Location of the first rod
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
+	FVector startLocation;
 };
