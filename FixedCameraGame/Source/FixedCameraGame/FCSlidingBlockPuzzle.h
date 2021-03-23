@@ -18,6 +18,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	void MoveRight();
 	void MoveLeft();
 	void MoveUp();
@@ -25,7 +27,6 @@ public:
 	void MoveBlock();
 	int32 FindAdjacent();
 	virtual void CheckSolution() override;
-	
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;
 
@@ -49,4 +50,17 @@ public:
 		FVector startLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> boxes;
+
+	AActor* movingBox;
+
+	FVector boxStartLocation;
+	//location to move movingBox to
+	FVector newLocation;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Setup")
+		float slideSpeed = 4.0f;
+
+	float t = 0;
+
+	bool isAnimating;
 };

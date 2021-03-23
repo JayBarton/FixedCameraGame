@@ -25,6 +25,23 @@ void AFCSlidingBlockPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 }
 
+void AFCSlidingBlockPuzzle::Tick(float DeltaTime)
+{
+	if (isAnimating)
+	{
+		//move towards newLocation
+		movingBox->SetActorLocation(FMath::Lerp(boxStartLocation, newLocation, t));
+		t += DeltaTime * slideSpeed;
+		if(movingBox->GetActorLocation().Equals(newLocation, 0.5f))
+		{
+			t = 0;
+			movingBox->SetActorLocation(newLocation);
+			isAnimating = false;
+			EnableInput(Cast<APlayerController>(GetController()));
+		}
+	}
+}
+
 void AFCSlidingBlockPuzzle::MoveRight()
 {
 	index++;
@@ -75,10 +92,14 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 
 		grid[nextIndex] = grid[index];
 
-		float X = startLocation.X - (nextIndex / size) * 100 ;
-		float Y = startLocation.Y + (nextIndex % size) * 100 ;
-		FVector newLocation(X, Y, startLocation.Z);
-		boxes[grid[index] - 1]->SetActorLocation(newLocation);
+		float X = startLocation.X - (nextIndex / size) * 100;
+		float Y = startLocation.Y + (nextIndex % size) * 100;
+		newLocation = FVector(X, Y, startLocation.Z);
+		movingBox = boxes[grid[index] - 1];
+		boxStartLocation = movingBox->GetActorLocation();
+		isAnimating = true;
+
+		DisableInput(Cast<APlayerController>(GetController()));
 		grid[index] = -1;
 		updateIndex();
 	}
