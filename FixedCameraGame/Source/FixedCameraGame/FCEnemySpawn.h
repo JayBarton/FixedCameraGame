@@ -33,6 +33,10 @@ public:
 		TSubclassOf<AFCEnemy> enemyType;
 	UPROPERTY(EditAnywhere, Category = "Patrol")
 	TArray<ATargetPoint*> patrolPoints;
+
+	//Using this for enemies that start out dead
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+		int32 reviveCount = 0;
 	
 	UPROPERTY(BlueprintReadonly, Category = "Enemy")
 	AFCEnemy* spawnedEnemy;

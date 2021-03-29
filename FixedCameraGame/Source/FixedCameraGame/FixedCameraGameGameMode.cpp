@@ -127,7 +127,7 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		}
 		else
 		{
-			SpawnEnemies(instance);
+			SpawnEnemies(instance, true);
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
 		HandlePendingLocks(instance);
@@ -213,7 +213,7 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 	}
 }
 
-void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
+void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance, bool firstTime)
 {
 	for (int i = 0; i < objectWatcher->enemies.data.Num(); i++)
 	{
@@ -262,7 +262,18 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance)
 				if (!enemy.alive)
 				{
 					enemy.enemy->SetActorTransform(enemy.transform);
-					normalEnemy->StartDead(enemy.reviveTime, enemy.reviveCount);
+					int32 currentReviveTime;
+					if (firstTime)
+					{
+						currentReviveTime = enemy.spawnActor->reviveCount;
+						UE_LOG(LogTemp, Warning, TEXT("Hey man"));
+					}
+					else
+					{
+						currentReviveTime = enemy.reviveTime;
+					}
+
+					normalEnemy->StartDead(currentReviveTime, enemy.reviveCount);
 				}
 			}
 			if (enemy.alive && enemy.spawnIn)

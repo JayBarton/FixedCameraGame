@@ -38,7 +38,7 @@ public:
 
 	void CheckEnemies(UFCGameInstance* instance);
 
-	void SpawnEnemies(UFCGameInstance* instance);
+	void SpawnEnemies(UFCGameInstance* instance, bool firstTime = false);
 
 	void HandlePendingLocks(UFCGameInstance* instance);
 
