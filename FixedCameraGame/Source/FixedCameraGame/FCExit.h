@@ -26,6 +26,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
 	FName levelName;
 
+	//index of this exit. Used for one way locks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current Level")
 		int32 currentIndex = 0;
 };

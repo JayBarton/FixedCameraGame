@@ -19,8 +19,10 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 	{
 		if (canRevive)
 		{
-			FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-			FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+			//FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
+			//FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+			FVector currentPosition = GetActorLocation();
+			FVector playerPosition = player->GetActorLocation();
 			float distance = (currentPosition - playerPosition).Size();
 			if (distance < 300.0f)
 			{
@@ -36,10 +38,9 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 		{
 			if (hasNoticedPlayer)
 			{
-
 				//check if in range for attack
-				FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
-				FVector2D playerPosition(player->GetActorLocation().X, player->GetActorLocation().Y);
+				FVector currentPosition = GetActorLocation();
+				FVector playerPosition = player->GetActorLocation();
 				float distance = (currentPosition - playerPosition).Size();
 				if (distance < attackDistance)
 				{
@@ -49,7 +50,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					{
 						AI->StopMovement();
 					}
-					FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
+					FVector direction = playerPosition - currentPosition;
 
 					rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
 					float deltaYaw = (rotatorDirection - GetActorRotation()).Yaw;
