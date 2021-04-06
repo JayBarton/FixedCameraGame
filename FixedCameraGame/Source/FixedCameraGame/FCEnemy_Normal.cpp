@@ -163,11 +163,13 @@ void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)
 	reviveCounter = reviveCount + 1;
 	if(reviveCounter >= reviveTime)
 	{
+		SetActorTickEnabled(false);
 		dead = true;
 		PawnSensingComp->SetSensingUpdatesEnabled(false);
 		SetActorEnableCollision(false);
-		canRevive = true;
-		UE_LOG(LogTemp, Warning, TEXT("revive"));
+
+		FTimerHandle DelayReviveTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(DelayReviveTimerHandle, this, &AFCEnemy_Normal::DelayRevive, 0.1f, false);
 	}
 	else
 	{
@@ -185,6 +187,12 @@ void AFCEnemy_Normal::Revive()
 	UE_LOG(LogTemp, Warning, TEXT("reviving here"));
 	reviveCounter = 0;
 	PawnSensingComp->SetSensingUpdatesEnabled(true);
-	SetActorTickEnabled(true);
 	Super::NoticePlayer();
+}
+
+void AFCEnemy_Normal::DelayRevive()
+{
+	SetActorTickEnabled(true);
+	canRevive = true;
+	UE_LOG(LogTemp, Warning, TEXT("revive"));
 }

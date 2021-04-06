@@ -24,6 +24,9 @@ public:
 
 	void StartDead(int32 currentReviveTime, int32 reviveCount);
 	void Revive();
+	//Using a slight delay before reviving the enemy. This is to prevent the enemy from
+	//reviving too quickly if they revive near the entrance the player entered from
+	void DelayRevive();
 
 	int32 reviveTime;
 	int32 reviveCounter = 0;
