@@ -111,6 +111,10 @@ void AFCEnemy_Patrol::Patrol()
 		}
 		else
 		{
+			if (AController* AI = GetController())
+			{
+				AI->StopMovement();
+			}
 			patrolState = PatrolState::IDLE;
 			FTimerHandle IdleTimerHandle;
 			GetWorld()->GetTimerManager().SetTimer(IdleTimerHandle, this, &AFCEnemy_Patrol::ResumeMovement, 1.0f, false);
