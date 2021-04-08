@@ -17,21 +17,6 @@ void AFCTowerPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCTowerPuzzle::SelectDisk);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCTowerPuzzle::CheckSolution);
 }
-
-
-/*
-		//move towards newLocation
-		movingBox->SetActorLocation(FMath::Lerp(boxStartLocation, newLocation, t));
-		t += DeltaTime * slideSpeed;
-		if (movingBox->GetActorLocation().Equals(newLocation, 0.5f))
-		{
-			t = 0;
-			movingBox->SetActorLocation(newLocation);
-			isAnimating = false;
-			EnableInput(Cast<APlayerController>(GetController()));
-		}
-	}*/
-
 void AFCTowerPuzzle::Tick(float DeltaTime)
 {
 	HandleAnimation(DeltaTime);
