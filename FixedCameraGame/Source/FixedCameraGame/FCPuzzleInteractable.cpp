@@ -57,7 +57,7 @@ void AFCPuzzleInteractable::OpenLock()
 		linkedLock->Open(linkedLock->ID);
 	}
 	active = false;
-	ExitPuzzle();
+	//ExitPuzzle();
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));

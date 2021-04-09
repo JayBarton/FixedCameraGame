@@ -54,5 +54,7 @@ void AFCPuzzlePawnBase::ExitPuzzle()
 void AFCPuzzlePawnBase::SolvePuzzle()
 {
 	parent->OpenLock();
+	ExitPuzzle();
+
 }
 

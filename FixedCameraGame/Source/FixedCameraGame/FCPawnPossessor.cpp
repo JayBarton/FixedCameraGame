@@ -40,6 +40,7 @@ void AFCPawnPossessor::StartPuzzle()
 void AFCPawnPossessor::ExitPuzzle()
 {
 	Super::ExitPuzzle();
+
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	pc->Possess(playerPawn);
 	pc->SetViewTargetWithBlend(playerCamera);

@@ -101,9 +101,32 @@ void AFCDotPuzzle::SelectSlot()
 void AFCDotPuzzle::StartPuzzle()
 {
 	Super::StartPuzzle();
+	currentSlot = 0;
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::Undefined;
+	FVector startLocation = GetActorLocation();
+
 	for (int i = 0; i < numberOfRows; i++)
 	{
 		slots[i].row = slots[i].rowDefault;
+
+		float YStart = startLocation.Y;
+		if (i % 2 != 0)
+		{
+			YStart -= 100;
+		}
+
+		for (int c = 0; c < slots[i].row.Num(); c++)
+		{
+			float Y = YStart - (c * 200);
+			float Z = startLocation.Z - (i * 150);
+
+			FVector location(startLocation.X, Y, Z);
+
+			AActor* slot = GetWorld()->SpawnActor<AActor>(prop, location, FRotator::ZeroRotator, SpawnParams);
+
+			slots[i].prop[c] = slot;
+		}
 	}
 	Toggle();
 }
@@ -111,14 +134,13 @@ void AFCDotPuzzle::StartPuzzle()
 void AFCDotPuzzle::ExitPuzzle()
 {
 	Super::ExitPuzzle();
-	//implement later
-	/*for (int i = 0; i < numberOfRows; i++)
+	for (int i = 0; i < numberOfRows; i++)
 	{
 		for (int c = 0; c < slots[i].prop.Num(); c++)
 		{
 			slots[i].prop[c]->Destroy();
 		}
-	}*/
+	}
 }
 
 void AFCDotPuzzle::CheckSolution()
