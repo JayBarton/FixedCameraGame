@@ -23,6 +23,9 @@
 #include "FCEnemy_Patrol.h"
 #include "FCEnemySpawn.h"
 
+#include "FCSwitchComponent.h"
+
+
 #include "Perception/PawnSensingComponent.h"
 
 
@@ -490,7 +493,7 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, bool advanceClear)
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear)
 {
 	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
@@ -528,6 +531,10 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	else if (interactable)
 	{
 		inputComponent->BindAction<InputInteractDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInteractable, interactable).bExecuteWhenPaused = true;
+	}
+	else if (Switch)
+	{
+		inputComponent->BindAction<InputSceneDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToScene, Switch).bExecuteWhenPaused = true;
 	}
 	else
 	{
@@ -609,6 +616,37 @@ void AFixedCameraGameGameMode::HandleTextToInventory(UFCLockComponent* lock)
 		player->Toggle(2, lock, nullptr);
 	}
 }
+
+void AFixedCameraGameGameMode::HandleTextToScene(UFCSwitchComponent* Switch)
+{
+	if (AdvanceText())
+	{
+		ClearText();
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+		pc->SetInputMode(FInputModeGameOnly());
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		Switch->PressSwitch();
+	}
+}
+
+/*
+void AFixedCameraGameGameMode::HandleTextToScene(AFCInteractable* interactable)
+{
+	if (AdvanceText())
+	{
+		ClearText();
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		auto puzzle = Cast<AFCPuzzleInteractable>(interactable);
+		puzzle->StartPuzzle();
+
+		Switch
+	}
+}
+*/
 
 void AFixedCameraGameGameMode::ClearText()
 {

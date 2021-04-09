@@ -61,9 +61,19 @@ void AFCPuzzleInteractable::OpenLock()
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->DisplayText(puzzleCompleteText);
-	UE_LOG(LogTemp, Warning, TEXT("door unlocked"));
-	Switch->PressSwitch();
+	if(Switch->playScene)
+	{ 
+		UE_LOG(LogTemp, Warning, TEXT("playing scene"));
+
+		gameMode->DisplayText(puzzleCompleteText, nullptr, nullptr, Switch);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("no scene"));
+
+		gameMode->DisplayText(puzzleCompleteText);
+		Switch->PressSwitch();
+	}
 }
 
 void AFCPuzzleInteractable::ExitPuzzle()

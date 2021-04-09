@@ -39,6 +39,7 @@ void UFCSwitchComponent::PressSwitch(bool pauseAnimation)
 	Switch.Broadcast(switchState);
 	if (playScene)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Pass"));
 		SetUpScene(pauseAnimation);
 	}
 }
