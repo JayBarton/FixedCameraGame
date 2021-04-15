@@ -8,7 +8,6 @@
 #include "FCPlayerCamera.h"
 #include "FixedCameraGameGameMode.h"
 
-
 // Sets default values for this component's properties
 UFCSwitchComponent::UFCSwitchComponent()
 {
