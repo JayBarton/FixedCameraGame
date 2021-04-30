@@ -7,6 +7,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/BillboardComponent.h"
 
+
+#include "Kismet/GameplayStatics.h" 
+
 // Sets default values
 AFCEnemySpawn::AFCEnemySpawn()
 {
@@ -26,17 +29,26 @@ AFCEnemySpawn::AFCEnemySpawn()
 	RootComponent = CapsuleComponent;
 	bCollideWhenPlacing = true;
 	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
-
+	
+	#if WITH_EDITOR
 	ClickSprite = CreateEditorOnlyDefaultSubobject<UBillboardComponent>(TEXT("Sprite"));
-	ClickSprite->bHiddenInGame = true;
-	ClickSprite->SetupAttachment(CapsuleComponent);
+	if (ClickSprite)
+	{
+		ClickSprite->bHiddenInGame = true;
+		ClickSprite->SetupAttachment(CapsuleComponent);
+	}
 
 	ArrowComponent = CreateEditorOnlyDefaultSubobject<UArrowComponent>(TEXT("Arrow"));
-	ArrowComponent->ArrowColor = FColor(150, 200, 255);
-	ArrowComponent->ArrowSize = 1.0f;
-	ArrowComponent->bTreatAsASprite = true;
-	ArrowComponent->SetupAttachment(CapsuleComponent);
-	ArrowComponent->bIsScreenSizeScaled = true;
+	if (ArrowComponent)
+	{
+		ArrowComponent->ArrowColor = FColor(150, 200, 255);
+		ArrowComponent->ArrowSize = 1.0f;
+		ArrowComponent->bTreatAsASprite = true;
+		ArrowComponent->SetupAttachment(CapsuleComponent);
+		ArrowComponent->bIsScreenSizeScaled = true;
+	}
+	#endif
+
 }
 
 // Called when the game starts or when spawned

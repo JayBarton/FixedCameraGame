@@ -22,7 +22,9 @@ void AFCPickup::Action_Implementation()
 	{
 		//display "do you want to take [item]?" text
 		//create widget
+		UE_LOG(LogTemp, Warning, TEXT("P1"));
 		pc->CreatePickUpWidget(this);
+		UE_LOG(LogTemp, Warning, TEXT("P3"));
 	}
 	else
 	{

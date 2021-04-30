@@ -79,6 +79,8 @@ void AFCObjectWatcher::UpdateObjects()
 			auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass()));
 			if (switchComponent)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("switch component"));
+
 				objects.data[i].switched = switchComponent->switchState;
 			}
 		}

@@ -30,6 +30,10 @@
 
 
 
+#include "Engine/Engine.h" 
+
+
+
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
 {
 	PrimaryActorTick.bTickEvenWhenPaused = true;
@@ -74,7 +78,11 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 		if (pc)
 		{
-			pc->Inventory->inventory = instance->playerInventory;
+			//Need to check this in case this begin play is called after the player inventory beginplay
+			if (instance->playerInventory.Num() > 0)
+			{
+				pc->Inventory->inventory = instance->playerInventory;
+			}
 			pc->equipped = instance->equippedIndex;
 			pc->currentHealth = instance->playerHealth;
 		}
@@ -186,6 +194,8 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 			{
 				if (auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass())))
 				{
+					UE_LOG(LogTemp, Warning, TEXT("switch here"));
+
 					switchComponent->switchState = true;
 					switchComponent->SwitchOn.Broadcast();
 				}
@@ -404,6 +414,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			levelFadeOut = true;
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
+
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 		}

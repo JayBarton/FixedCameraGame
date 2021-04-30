@@ -176,9 +176,8 @@ void AFCPlayer::Turn(float value)
 		if (value != 0.0f)
 		{
 			//turnAmount = value;
-			//FRotator roton = FRotator(0.0f, turnAmount, 0.0f);
-			//FRotator rotation 
-			FRotator rotation = FRotator(0.0f, value, 0.0f);
+			FRotator rotation = FRotator(0.0f, value * GetWorld()->GetDeltaSeconds() * 100, 0.0f);
+			//FRotator rotation = FRotator(0.0f, value, 0.0f);
 			AddActorLocalRotation(rotation);
 
 			//AddControllerYawInput(value);

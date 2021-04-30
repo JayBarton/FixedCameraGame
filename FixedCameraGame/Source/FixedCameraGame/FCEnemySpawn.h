@@ -26,9 +26,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UArrowComponent* ArrowComponent;
 	UCapsuleComponent* CapsuleComponent;
-	UBillboardComponent* ClickSprite;
 	UPROPERTY(EditAnywhere, Category = "Enemy")
 		TSubclassOf<AFCEnemy> enemyType;
 	UPROPERTY(EditAnywhere, Category = "Patrol")
@@ -40,4 +38,13 @@ public:
 	
 	UPROPERTY(BlueprintReadonly, Category = "Enemy")
 	AFCEnemy* spawnedEnemy;
+
+private:
+#if WITH_EDITORONLY_DATA
+	UPROPERTY()
+		UBillboardComponent* ClickSprite;
+	UPROPERTY()
+		UArrowComponent* ArrowComponent;
+#endif
 };
+
