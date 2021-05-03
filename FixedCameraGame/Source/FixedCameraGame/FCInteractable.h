@@ -19,7 +19,8 @@ public:
 	// Sets default values for this actor's properties
 	AFCInteractable(); 
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
+	//Not sure if this needs to be blueprint readonly, using it for now until I know how I will be displaying items
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")

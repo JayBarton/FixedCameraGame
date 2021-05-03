@@ -10,6 +10,7 @@ class ACameraActor;
 class UFCLockComponent;
 
 class UFCSwitchComponent;
+class UFCUnlockComponent;
 
 UCLASS()
 class FIXEDCAMERAGAME_API AFCPuzzleInteractable : public AFCInteractable
@@ -30,7 +31,7 @@ public:
 
 	virtual void StartPuzzle();
 
-	UFUNCTION(BlueprintCallable, Category = "Functions") //override
+	UFUNCTION(BlueprintCallable, Category = "Functions") 
 		void OpenLock();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions") //override
@@ -45,11 +46,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player") //
 		ACameraActor* playerCamera;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level") 
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level") 
 		AFCInteractable* linkedInteractable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level") 
-		UFCLockComponent* linkedLock;
-
+		UFCLockComponent* linkedLock;*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+		UFCUnlockComponent* Unlocker;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 		UFCSwitchComponent* Switch;
 };

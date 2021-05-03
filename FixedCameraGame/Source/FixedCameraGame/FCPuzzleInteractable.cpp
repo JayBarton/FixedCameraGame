@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "FixedCameraGameGameMode.h"
 #include "FCSwitchComponent.h"
+#include "FCUnlockComponent.h"
 
 // Sets default values
 AFCPuzzleInteractable::AFCPuzzleInteractable()
@@ -16,17 +17,13 @@ AFCPuzzleInteractable::AFCPuzzleInteractable()
 	prompt = "Use";
 
 	Switch = CreateDefaultSubobject<UFCSwitchComponent>(TEXT("Switch"));
-
+	Unlocker = CreateDefaultSubobject<UFCUnlockComponent>(TEXT("Unlocker"));
 }
 
 // Called when the game starts or when spawned
 void AFCPuzzleInteractable::BeginPlay()
 {
 	Super::BeginPlay();
-	if (linkedInteractable)
-	{
-		linkedLock = Cast<UFCLockComponent>(linkedInteractable->FindComponentByClass(UFCLockComponent::StaticClass()));
-	}
 }
 
 
@@ -51,15 +48,9 @@ void AFCPuzzleInteractable::StartPuzzle()
 
 void AFCPuzzleInteractable::OpenLock()
 {
-	//Not sure if this is the best way to do this, it should work.
-	if (linkedLock)
-	{
-		linkedLock->Open(linkedLock->ID);
-	}
+	Unlocker->OpenLock();
 	active = false;
-	//ExitPuzzle();
-	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	
+	//ExitPuzzle();	
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if(Switch->playScene)
 	{ 

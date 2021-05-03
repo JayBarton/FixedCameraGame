@@ -11,6 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchDelegate, bool, isOn);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchStartDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchEndDelegate);
 
+
 class ACameraActor;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -41,7 +42,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 		FSwitchDelegate Switch;
 	//Using this to make sure all attached objects can remain in their "on" state
-	UPROPERTY(BlueprintAssignable, Category = "Events")
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Events")
 		FSwitchStartDelegate SwitchOn;
 	//Fires after a scene ends;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
