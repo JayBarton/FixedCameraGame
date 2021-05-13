@@ -33,22 +33,30 @@ void AFCEnemy_Patrol::BeginPlay()
 void AFCEnemy_Patrol::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	switch (patrolState)
+	if (!spawnIn && !spawning)
 	{
-	case PatrolState::IDLE:
-		break;
-	case PatrolState::PATROL:
-		Patrol();
-		break;
-	case PatrolState::FOLLOWING:
-
-		Follow();
-		break;
-	case PatrolState::ATTACKING:
-		AddMovementInput(GetActorForwardVector(), 1.0f);
-		break;
+		switch (patrolState)
+		{
+		case PatrolState::IDLE:
+			break;
+		case PatrolState::PATROL:
+			Patrol();
+			break;
+		case PatrolState::FOLLOWING:
+			Follow();
+			break;
+		case PatrolState::ATTACKING:
+			AddMovementInput(GetActorForwardVector(), 1.0f);
+			break;
+		}
 	}
+	//Don't know that this is the ideal way of handling this
+	//Trying it in the blueprint for now
+	/*else if (spawning)
+	{
+		FTimerHandle spawningTimer;
+		GetWorld()->GetTimerManager().SetTimer(SpawnTimerHandle, this, &AFCEnemy_Patrol::FinishSpawn, 4.0f, false);
+	}*/
 }
 
 void AFCEnemy_Patrol::InitPath(TArray<ATargetPoint*> path)

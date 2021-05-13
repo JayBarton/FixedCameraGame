@@ -23,6 +23,9 @@ enum class HitDirection : uint8 {
 	RIGHT UMETA(DisplayName = "RIGHT"),
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FEnemyKilledDelegate);
+
+
 UCLASS()
 class FIXEDCAMERAGAME_API AFCEnemy : public ACharacter
 {
@@ -127,4 +130,7 @@ public:
 	FTimerHandle StaggerTimerHandle;
 
 	FRotator rotatorDirection; //
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+		FEnemyKilledDelegate EnemyKilled;
 };

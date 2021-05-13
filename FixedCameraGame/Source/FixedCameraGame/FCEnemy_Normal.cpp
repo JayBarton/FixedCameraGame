@@ -17,6 +17,8 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (!spawnIn && !spawning)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("whyyy"));
+
 		if (canRevive)
 		{
 			//FVector2D currentPosition(GetActorLocation().X, GetActorLocation().Y);
@@ -99,6 +101,10 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 				}
 			}
 		}
+	}
+	if (spawning)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Pressure"));
 	}
 }
 

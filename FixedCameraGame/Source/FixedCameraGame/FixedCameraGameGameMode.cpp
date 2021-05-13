@@ -459,13 +459,16 @@ void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation)
 	for (int i = 0; i < FoundActors.Num(); i++)
 	{
 		auto enemy = Cast<AFCEnemy>(FoundActors[i]);
-		if (AController* AI = enemy->GetController())
+		if (!enemy->dead)
 		{
-			AI->StopMovement();
+			if (AController* AI = enemy->GetController())
+			{
+				AI->StopMovement();
+			}
+			enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
+			enemy->SetActorTickEnabled(false);
+			enemy->GetMesh()->bPauseAnims = pauseAnimation;
 		}
-		enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
-		enemy->SetActorTickEnabled(false);
-		enemy->GetMesh()->bPauseAnims = pauseAnimation;
 	}
 }
 
@@ -476,9 +479,12 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 	for (int i = 0; i < FoundActors.Num(); i++)
 	{
 		auto enemy = Cast<AFCEnemy>(FoundActors[i]);
-		enemy->PawnSensingComp->SetSensingUpdatesEnabled(true);
-		enemy->SetActorTickEnabled(true);
-		enemy->GetMesh()->bPauseAnims = false;
+		if (!enemy->dead)
+		{
+			enemy->PawnSensingComp->SetSensingUpdatesEnabled(true);
+			enemy->SetActorTickEnabled(true);
+			enemy->GetMesh()->bPauseAnims = false;
+		}
 	}
 }
 

@@ -131,6 +131,8 @@ void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 			AI->StopMovement();
 		}
 		Kill();
+		EnemyKilled.Broadcast();
+		//killed enemy
 	}
 	else
 	{
@@ -212,6 +214,7 @@ void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
 
 void AFCEnemy::Kill()
 {
+	UE_LOG(LogTemp, Warning, TEXT("K1"));
 	dead = true;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	SetActorTickEnabled(false);
@@ -227,8 +230,6 @@ void AFCEnemy::SetUpSpawnIn()
 
 void AFCEnemy::PlaySpawnIn()
 {
-	UE_LOG(LogTemp, Warning, TEXT("drip drip"));
-
 	spawnIn = false;
 	spawning = true;
 	PawnSensingComp->SetSensingUpdatesEnabled(true);
