@@ -100,11 +100,30 @@ void AFCPlayer::Tick(float DeltaTime)
 	}
 	if (aimButtonDown)
 	{
-		isAiming = true;
+		//Similar to sprinting, this is the best way I can find to do this.
+		auto pc = Cast<APlayerController>(GetController());
+		auto aimButtons = pc->PlayerInput->GetKeysForAction("Aim");
+		if (!pc->IsInputKeyDown(aimButtons[0].Key))
+		{
+			StopAiming();
+		}
+		else
+		{
+			isAiming = true;
+		}
 	}
 	else
 	{
-		isAiming = false;
+		auto pc = Cast<APlayerController>(GetController());
+		auto aimButtons = pc->PlayerInput->GetKeysForAction("Aim");
+		if (pc->IsInputKeyDown(aimButtons[0].Key))
+		{
+			Aim();
+		}
+		else
+		{
+			isAiming = false;
+		}
 	}
 
 }

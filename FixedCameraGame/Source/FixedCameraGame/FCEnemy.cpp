@@ -214,7 +214,6 @@ void AFCEnemy::DetermineImpactDirection(FHitResult& Hit)
 
 void AFCEnemy::Kill()
 {
-	UE_LOG(LogTemp, Warning, TEXT("K1"));
 	dead = true;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	SetActorTickEnabled(false);
