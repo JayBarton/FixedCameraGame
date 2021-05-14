@@ -32,8 +32,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void PressSwitch(bool pauseAnimation = true);
-	void SetUpScene(bool pauseAnimation);
+	void PressSwitch(bool pauseAnimation = true, bool hidePlayer = false);
+	void SetUpScene(bool pauseAnimation, bool hidePlayer);
 	//UFUNCTION()
 	//void PlayScene();
 	UFUNCTION()

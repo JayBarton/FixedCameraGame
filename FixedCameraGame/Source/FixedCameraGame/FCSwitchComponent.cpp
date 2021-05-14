@@ -32,20 +32,19 @@ void UFCSwitchComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 }
 
-void UFCSwitchComponent::PressSwitch(bool pauseAnimation)
+void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer)
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
 	if (playScene)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pass"));
-		SetUpScene(pauseAnimation);
+		SetUpScene(pauseAnimation, hidePlayer);
 	}
 }
 
-void UFCSwitchComponent::SetUpScene(bool pauseAnimation)
+void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Setup"));
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = false;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -53,6 +52,12 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation)
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
 	FViewTargetTransitionParams transitionParams;
 	pc->SetViewTarget(sceneCamera, transitionParams);
+
+	if (hidePlayer)
+	{
+		auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		playerCharacter->GetMesh()->SetHiddenInGame(true, true);
+	}
 
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->StopEnemies(pauseAnimation);
@@ -63,12 +68,13 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation)
 
 void UFCSwitchComponent::EndScene()
 {
-	UE_LOG(LogTemp, Warning, TEXT("finish"));
-
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = true;
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
+	auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	playerCharacter->GetMesh()->SetHiddenInGame(false, true);
 
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->ResumeEnemies();

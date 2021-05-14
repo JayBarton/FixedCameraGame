@@ -107,6 +107,10 @@ protected:
 public:	
     void UpdateObjects();
 
+    void CheckEnemies();
+
+    void CheckObjects();
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
         FDataArray objects;
 

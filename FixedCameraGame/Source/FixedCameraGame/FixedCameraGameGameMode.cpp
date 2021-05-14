@@ -22,13 +22,10 @@
 #include "FCEnemy_Normal.h"
 #include "FCEnemy_Patrol.h"
 #include "FCEnemySpawn.h"
-
+#include "FCPickup.h"
 #include "FCSwitchComponent.h"
 
-
 #include "Perception/PawnSensingComponent.h"
-
-
 
 #include "Engine/Engine.h" 
 
@@ -139,6 +136,24 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		else
 		{
 			SpawnEnemies(instance, true);
+			//check active objects
+			for (int i = 0; i < objectWatcher->objects.data.Num(); i++)
+			{
+				auto object = objectWatcher->objects.data[i];
+				if (!object.active)
+				{
+					if (auto pickup = Cast<AFCPickup>(object.actor))
+					{
+						pickup->active = false;
+						pickup->MeshComp->SetHiddenInGame(true, true);
+						pickup->SetActorEnableCollision(false);
+					}
+					else if (auto interactable = Cast<AFCInteractable>(object.actor))
+					{
+						interactable->active = false;
+					}
+				}
+			}
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
 		HandlePendingLocks(instance);
@@ -185,7 +200,16 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 			}
 			if (!object.active)
 			{
-				if (auto interactable = Cast<AFCInteractable>(object.actor))
+				UE_LOG(LogTemp, Warning, TEXT("A1"));
+
+				if (auto pickup = Cast<AFCPickup>(object.actor))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("A2"));
+					pickup->active = false;
+					pickup->MeshComp->SetHiddenInGame(true, true);
+					pickup->SetActorEnableCollision(false);
+				}
+				else if (auto interactable = Cast<AFCInteractable>(object.actor))
 				{
 					interactable->active = false;
 				}

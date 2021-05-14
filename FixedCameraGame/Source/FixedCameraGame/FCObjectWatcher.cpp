@@ -34,6 +34,13 @@ void AFCObjectWatcher::BeginPlay()
 
 void AFCObjectWatcher::UpdateObjects()
 {
+	CheckObjects();
+
+	CheckEnemies();
+}
+
+void AFCObjectWatcher::CheckObjects()
+{
 	for (int i = 0; i < objects.data.Num(); i++)
 	{
 		auto object = objects.data[i];
@@ -66,14 +73,14 @@ void AFCObjectWatcher::UpdateObjects()
 				}
 			}
 		}
-		if (object.active)
+		/*if (object.active)
 		{
-			auto interactable = Cast<AFCInteractable>(object.actor);
-			if (interactable && !interactable->active)
-			{
-				objects.data[i].active = interactable->active;
-			}
+		auto interactable = Cast<AFCInteractable>(object.actor);
+		if (interactable && !interactable->active)
+		{
+		objects.data[i].active = interactable->active;
 		}
+		}*/
 		if (object.switched)
 		{
 			auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass()));
@@ -84,8 +91,17 @@ void AFCObjectWatcher::UpdateObjects()
 				objects.data[i].switched = switchComponent->switchState;
 			}
 		}
+		//Have to check all objects for this, as some interactables can start as inactive
+		auto interactable = Cast<AFCInteractable>(object.actor);
+		if (interactable)
+		{
+			objects.data[i].active = interactable->active;
+		}
 	}
+}
 
+void AFCObjectWatcher::CheckEnemies()
+{
 	for (int i = 0; i < enemies.data.Num(); i++)
 	{
 		FEnemiesToWatch& enemy = enemies.data[i];
@@ -119,5 +135,3 @@ void AFCObjectWatcher::UpdateObjects()
 		}
 	}
 }
-
-
