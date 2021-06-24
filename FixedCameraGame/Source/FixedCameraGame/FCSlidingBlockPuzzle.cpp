@@ -37,7 +37,7 @@ void AFCSlidingBlockPuzzle::HandleAnimation(float& DeltaTime)
 		//move towards newLocation
 		movingBox->SetActorLocation(FMath::Lerp(boxStartLocation, newLocation, t));
 		t += DeltaTime * slideSpeed;
-		if (movingBox->GetActorLocation().Equals(newLocation, 0.5f))
+		if (movingBox->GetActorLocation().Equals(newLocation, slideSpeed))
 		{
 			t = 0;
 			movingBox->SetActorLocation(newLocation);
