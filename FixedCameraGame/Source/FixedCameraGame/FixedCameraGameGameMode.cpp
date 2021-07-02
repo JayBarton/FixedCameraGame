@@ -190,6 +190,7 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 				{
 					if (auto lock = object.actor->FindComponentByClass(UFCLockComponent::StaticClass()))
 					{
+						UE_LOG(LogTemp, Warning, TEXT("L1"));
 						lock->DestroyComponent();
 					}
 					else if (auto multiLock = object.actor->FindComponentByClass(UFCMultiLockComponent::StaticClass()))
@@ -200,7 +201,7 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 			}
 			if (!object.active)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("A1"));
+				UE_LOG(LogTemp, Warning, TEXT("L2"));
 
 				if (auto pickup = Cast<AFCPickup>(object.actor))
 				{
@@ -216,6 +217,7 @@ void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
 			}
 			if (object.switched)
 			{
+				UE_LOG(LogTemp, Warning, TEXT("L3"));
 				if (auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass())))
 				{
 					UE_LOG(LogTemp, Warning, TEXT("switch here"));

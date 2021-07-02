@@ -22,13 +22,22 @@ class FIXEDCAMERAGAME_API AFCTerminal : public AFCPuzzleInteractable
 public:
 	AFCTerminal();
 
+	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void CheckScreen();
+
 	virtual void StartPuzzle();
 
 	//Sends the password to the widget
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 		void SendToWidget();
 
+		virtual void OpenLock() override;
 	virtual void ExitPuzzle() override;
+
+	UFUNCTION()
+	void Unlocked();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
 	FString password;
@@ -38,4 +47,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
 	UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
+		UMaterialInterface* blankMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Terminal")
+		UMaterialInterface* onMaterial;
 };

@@ -14,6 +14,11 @@ enum class LockType : uint8 {
 	ONE_WAY_UNLOCK UMETA(DisplayName = "ONE WAY UNLOCK"),
 };
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLockDestroyedDelegate);
+
+
+
 //Used to handle interactables that can be locked, such as doors
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class FIXEDCAMERAGAME_API UFCLockComponent : public UActorComponent
@@ -42,5 +47,8 @@ public:
 		FString unlockDescription = "Door unlocked";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 		LockType type;
-		
+
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FLockDestroyedDelegate Unlocked;
+
 };

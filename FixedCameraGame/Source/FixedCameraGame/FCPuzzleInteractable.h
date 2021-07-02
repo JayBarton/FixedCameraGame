@@ -32,10 +32,10 @@ public:
 	virtual void StartPuzzle();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions") 
-		void OpenLock();
+	virtual void OpenLock();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions") //override
-		virtual void ExitPuzzle();
+	virtual void ExitPuzzle();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 		FString puzzleDescription = "ph";

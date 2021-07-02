@@ -81,7 +81,7 @@ void AFCObjectWatcher::CheckObjects()
 		objects.data[i].active = interactable->active;
 		}
 		}*/
-		if (object.switched)
+		//if (object.switched)
 		{
 			auto switchComponent = Cast<UFCSwitchComponent>(object.actor->FindComponentByClass(UFCSwitchComponent::StaticClass()));
 			if (switchComponent)

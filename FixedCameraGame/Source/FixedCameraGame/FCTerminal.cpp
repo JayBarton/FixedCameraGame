@@ -19,6 +19,38 @@ AFCTerminal::AFCTerminal()
 	Camera->SetupAttachment(RootComponent);
 }
 
+
+
+void AFCTerminal::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//I'm doing a short delay before checking the screen, as the gamemode handles clearing the lock and setting active, which may happen after begin play is called
+	FTimerHandle CheckScreenTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(CheckScreenTimerHandle, this, &AFCTerminal::CheckScreen, 0.2f, false);
+}
+
+void AFCTerminal::CheckScreen()
+{
+	auto lock = Cast<UFCLockComponent>(this->FindComponentByClass(UFCLockComponent::StaticClass()));
+	if (!active || lock)
+	{
+		MeshComp->SetMaterial(1, blankMaterial);
+		if (lock)
+		{
+			lock->Unlocked.AddDynamic(this, &AFCTerminal::Unlocked);
+		}
+		else if (!active)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Damn you Chaos"));
+		}
+	}
+	else
+	{
+		MeshComp->SetMaterial(1, onMaterial);
+	}
+}
+
 void AFCTerminal::StartPuzzle()
 {
 	Super::StartPuzzle();
@@ -42,6 +74,13 @@ void AFCTerminal::SendToWidget_Implementation()
 {
 }
 
+void AFCTerminal::OpenLock()
+{
+	Super::OpenLock();
+	MeshComp->SetMaterial(1, blankMaterial);
+
+}
+
 void AFCTerminal::ExitPuzzle()
 {
 	Super::ExitPuzzle();
@@ -60,5 +99,10 @@ void AFCTerminal::ExitPuzzle()
 
 	Cast<AFCPlayer>(playerCharacter)->inControl = true;
 
+}
+
+void AFCTerminal::Unlocked()
+{
+	MeshComp->SetMaterial(1, onMaterial);
 }
 

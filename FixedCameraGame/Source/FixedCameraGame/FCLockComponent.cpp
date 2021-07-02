@@ -18,7 +18,6 @@ UFCLockComponent::UFCLockComponent()
 void UFCLockComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
 	// ...
 	
 }
@@ -27,6 +26,7 @@ void UFCLockComponent::Open(int32 keyID)
 {
 	if (keyID == ID)
 	{
+		Unlocked.Broadcast();
 		DestroyComponent();
 	}
 	//pretty sure this isn't in use...
