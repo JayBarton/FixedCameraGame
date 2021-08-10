@@ -12,9 +12,10 @@ AFCInteractable::AFCInteractable()
 	RootComponent = MeshComp;
 
 	BoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
-	BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxComp->SetCollisionProfileName(TEXT("InteractBox"));
+	/*BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);*/
 	BoxComp->SetupAttachment(MeshComp);
 }
 

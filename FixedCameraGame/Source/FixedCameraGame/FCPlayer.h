@@ -7,6 +7,7 @@
 #include "FCPlayer.generated.h"
 
 #define COLLISION_PLAYER        ECC_GameTraceChannel2
+#define COLLISION_INTERACT      ECC_GameTraceChannel3
 
 class UFCInventoryComponent;
 class AFCSwitchInteractable;

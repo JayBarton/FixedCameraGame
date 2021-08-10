@@ -382,7 +382,7 @@ void AFCPlayer::LookForInteractable()
 
 	bool interactable = false;
 
-	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, CollisionParams))
+	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, COLLISION_INTERACT, CollisionParams))
 	{
 		//Need to do this first getactor check because I get a crash when the line intersects with box brushes
 		//If/when I get rid of box brushes, I can get rid of this
