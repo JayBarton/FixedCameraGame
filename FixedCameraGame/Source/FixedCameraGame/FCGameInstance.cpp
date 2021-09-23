@@ -2,4 +2,18 @@
 
 
 #include "FCGameInstance.h"
+#include "Kismet/GameplayStatics.h" 
+#include "Components/AudioComponent.h" 
 
+
+void UFCGameInstance::PlayMusic(USoundBase* bgm, float volume, bool persist)
+{
+	music = UGameplayStatics::SpawnSound2D(GetWorld(), bgm, 0.5f, 1.0f, 0.0f, (USoundConcurrency*)nullptr, true, false);
+	isPlayingMusic = true;
+	/*music = UGameplayStatics::CreateSound2D(GetWorld(), bgm, 0.5f, 1.0f, 0.0f, (USoundConcurrency*)nullptr, true, false);
+	if (!isPlayingMusic)
+	{
+		isPlayingMusic = true;
+		music->Play();
+	}*/
+}

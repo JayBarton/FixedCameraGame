@@ -17,6 +17,11 @@ class UFCLockComponent;
 class AFCInteractable;
 class UFCSwitchComponent;
 
+//Definitely temporary
+class USoundBase;
+class USoundWave;
+class UAudioComponent;
+
 DECLARE_DELEGATE_OneParam(InputLockDelegate, UFCLockComponent*);
 DECLARE_DELEGATE_OneParam(InputInteractDelegate, AFCInteractable*);
 DECLARE_DELEGATE_OneParam(InputSceneDelegate, UFCSwitchComponent*);
@@ -103,6 +108,14 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UFCInfoTextWidget> infoWidget;
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+		USoundBase* tempMusic;
+
+	UPROPERTY(VisibleAnywhere, Category = "Audio")
+	UAudioComponent* music = nullptr;
+
 };
 
 

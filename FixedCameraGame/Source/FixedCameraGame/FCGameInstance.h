@@ -8,6 +8,10 @@
 #include "FCObjectWatcher.h"
 #include "FCGameInstance.generated.h"
 
+
+class USoundBase;
+class UAudioComponent;
+
 /**
  * 
  */
@@ -44,8 +48,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TMap<FString, FPendingLocks> pendingLocks;
 
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flags")
 	TMap<FString, bool> flags;
+
+	bool isPlayingMusic = false;
+
+	UPROPERTY()
+	UAudioComponent* music = nullptr;
+	USoundBase* musicCue;
+
+
+	UFUNCTION(BlueprintCallable)
+	void PlayMusic(USoundBase* bgm, float volume = 1.0f, bool persist = true);
 
 };

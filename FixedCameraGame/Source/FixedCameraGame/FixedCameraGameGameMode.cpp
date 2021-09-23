@@ -29,6 +29,7 @@
 
 #include "Engine/Engine.h" 
 
+#include "Components/AudioComponent.h" 
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
@@ -85,6 +86,14 @@ void AFixedCameraGameGameMode::BeginPlay()
 		}
 
 		FindStart(instance);
+
+		if (tempMusic)
+		{
+			if (!instance->isPlayingMusic)
+			{
+				instance->PlayMusic(tempMusic);
+			}
+		}
 
 		levelFadeIn = true;
 		playerCamera->SetMaterial(1.0f);
@@ -437,6 +446,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			{
 				instance->containerInventory = container->Inventory->inventory;
 			}
+		//	instance->music = music;
 			levelFadeOut = true;
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
