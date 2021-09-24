@@ -26,7 +26,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
 	FName levelName;
 
+	//if the music of the current level continues in the next one
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Next Level")
+	bool continueMusic;
+
 	//index of this exit. Used for one way locks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current Level")
-		int32 currentIndex = 0;
+	int32 currentIndex = 0;
 };

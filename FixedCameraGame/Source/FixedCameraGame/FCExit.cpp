@@ -13,5 +13,5 @@ AFCExit::AFCExit()
 void AFCExit::Action_Implementation()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>( UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->ChangeLevel(index, cameraIndex, levelName);
+	gameMode->ChangeLevel(index, cameraIndex, levelName, continueMusic);
 }

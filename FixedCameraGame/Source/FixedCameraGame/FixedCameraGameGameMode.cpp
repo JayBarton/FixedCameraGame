@@ -87,14 +87,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 
 		FindStart(instance);
 
-		if (tempMusic)
-		{
-			if (!instance->isPlayingMusic)
-			{
-				instance->PlayMusic(tempMusic);
-			}
-		}
-
 		levelFadeIn = true;
 		playerCamera->SetMaterial(1.0f);
 	}
@@ -166,6 +158,14 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
 		HandlePendingLocks(instance);
+
+		if (!instance->isPlayingMusic)
+		{
+			if (objectWatcher->levelMusic)
+			{
+				instance->PlayMusic(objectWatcher->levelMusic, 0.5f);
+			}
+		}
 	}
 	else
 	{
@@ -394,7 +394,7 @@ void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
 	UE_LOG(LogTemp, Warning, TEXT("start camera not found, view not set"))
 }
 
-void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName levelName)
+void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName levelName, bool continueMusic)
 {
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -446,13 +446,17 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			{
 				instance->containerInventory = container->Inventory->inventory;
 			}
-		//	instance->music = music;
 			levelFadeOut = true;
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 
 			UGameplayStatics::SetGamePaused(GetWorld(), true);
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+
+			if (!continueMusic && instance->isPlayingMusic)
+			{
+				instance->StopMusic(transitionTime);
+			}
 		}
 	}
 }
@@ -465,7 +469,7 @@ void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 void AFixedCameraGameGameMode::ResetLevel()
 {
 	newLevel = false;
-	ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel));
+	ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)

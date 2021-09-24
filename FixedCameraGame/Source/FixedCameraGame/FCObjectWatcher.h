@@ -120,4 +120,7 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Flags")
         TArray<FString> pendingFlags;
 
+    UPROPERTY(EditAnywhere, Category = "Audio")
+        USoundBase* levelMusic = nullptr;
+
 };

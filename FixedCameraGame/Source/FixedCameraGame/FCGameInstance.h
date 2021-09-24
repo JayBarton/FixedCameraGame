@@ -61,4 +61,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void PlayMusic(USoundBase* bgm, float volume = 1.0f, bool persist = true);
 
+	void StopMusic(float transitionTime);
+
 };

@@ -51,7 +51,7 @@ public:
 
 	void FindStart(UFCGameInstance* instance);
 
-	void ChangeLevel(int index, int cameraIndex, FName levelName);
+	void ChangeLevel(int index, int cameraIndex, FName levelName, bool continueMusic);
 	void MoveToLevel(FName levelName);
 	void ResetLevel();
 
@@ -108,7 +108,6 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "UI")
 	TSubclassOf<UFCInfoTextWidget> infoWidget;
-
 
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
 		USoundBase* tempMusic;
