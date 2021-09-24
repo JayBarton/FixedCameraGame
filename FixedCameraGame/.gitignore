@@ -79,11 +79,14 @@ Content/StarterContent/HDRI
 Content/Textures
 Content/Font
 
-Content/MedievalDungeon/Textures
-Content/MedievalDungeon/Maps
-Content/DarkForest/Textures
-Content/DarkForest/Maps
-Content/FreeFurniturePack/Maps
-Content/FreeFurniturePack/Textures
-Content/ScienceLab/Textures
+Content/MedievalDungeon
+Content/DarkForest
+Content/FreeFurniturePack
+Content/ScienceLab
 Content/IDA_Music_Pack
+Content/QuadrapedCreatures
+Content/MilitaryWeapSilver
+Content/SkeletonCrew
+Content/AncientTreasures
+Content/ArchVis
+Content/StarterContent
