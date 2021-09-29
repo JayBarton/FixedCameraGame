@@ -41,6 +41,17 @@ public:
 
 	void CheckInstance(UFCGameInstance* instance);
 
+	void HandleMusic(UFCGameInstance* instance);
+
+	//Not sure about this function, but it should work for now
+	void PlayMusic(UFCGameInstance* instance);
+
+	//Called outside of BeginPlay
+	void StartNewMusic();
+
+	UFUNCTION(BlueprintCallable)
+	void StopMusic();
+
 	void CheckObjects(UFCGameInstance* instance);
 
 	void CheckEnemies(UFCGameInstance* instance);

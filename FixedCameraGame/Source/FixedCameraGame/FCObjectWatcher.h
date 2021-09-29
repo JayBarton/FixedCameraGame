@@ -90,6 +90,15 @@ public:
         TArray<int32> data;
 };
 
+USTRUCT(BlueprintType)
+struct FMusicPlaying
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        bool data;
+};
+
 //Use this class to keep track of objects after leaving a map
 UCLASS()
 class FIXEDCAMERAGAME_API AFCObjectWatcher : public AActor
@@ -122,5 +131,8 @@ public:
 
     UPROPERTY(EditAnywhere, Category = "Audio")
         USoundBase* levelMusic = nullptr;
+
+    UPROPERTY(EditAnywhere, Category = "Audio")
+        bool playingMusic = true;
 
 };

@@ -159,18 +159,47 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		}
 		HandlePendingLocks(instance);
 
-		if (!instance->isPlayingMusic)
-		{
-			if (objectWatcher->levelMusic)
-			{
-				instance->PlayMusic(objectWatcher->levelMusic, 0.5f);
-			}
-		}
+		HandleMusic(instance);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no object watcher"));
 	}
+}
+
+void AFixedCameraGameGameMode::HandleMusic(UFCGameInstance* instance)
+{
+	if (instance->levelMusicPlaying.Contains(currentLevel))
+	{
+		objectWatcher->playingMusic = instance->levelMusicPlaying[currentLevel];
+	}
+	if (!instance->isPlayingMusic)
+	{
+		if (objectWatcher->levelMusic && objectWatcher->playingMusic)
+		{
+			PlayMusic(instance);
+		}
+	}
+}
+
+void AFixedCameraGameGameMode::PlayMusic(UFCGameInstance* instance)
+{
+	instance->PlayMusic(objectWatcher->levelMusic, 0.5f);
+}
+
+void AFixedCameraGameGameMode::StartNewMusic()
+{
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	PlayMusic(instance);
+	objectWatcher->playingMusic = true;
+
+}
+
+void AFixedCameraGameGameMode::StopMusic()
+{
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	instance->StopMusic(transitionTime);
+	objectWatcher->playingMusic = false;
 }
 
 void AFixedCameraGameGameMode::CheckObjects(UFCGameInstance* instance)
@@ -439,6 +468,14 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 				{
 					instance->savedObjects.Add(currentLevel, objectWatcher->objects);
 					instance->savedEnemies.Add(currentLevel, objectWatcher->enemies);
+				}
+				if (instance->levelMusicPlaying.Contains(currentLevel))
+				{
+					instance->levelMusicPlaying[currentLevel] = objectWatcher->playingMusic;
+				}
+				else
+				{
+					instance->levelMusicPlaying.Add(currentLevel, objectWatcher->playingMusic);
 				}
 			}
 

@@ -32,18 +32,18 @@ void UFCSwitchComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 }
 
-void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer)
+void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool playMusic)
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
 	if (playScene)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pass"));
-		SetUpScene(pauseAnimation, hidePlayer);
+		SetUpScene(pauseAnimation, hidePlayer, playMusic);
 	}
 }
 
-void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer)
+void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool playMusic)
 {
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = false;
@@ -61,6 +61,14 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer)
 
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	gameMode->StopEnemies(pauseAnimation);
+
+	//I'm thinking I might be able to play a sort of chime, and I would probably want that to go here
+	//For right now, I'm using this to turn on the music in East2 using the SpawnArea Blueprint
+	//If I abandon the chime idea, I will remove this and call StartNewMusic directly in the SpawnArea blueprint
+	if (playMusic)
+	{
+		gameMode->StartNewMusic();
+	}
 
 	FTimerHandle SceneTimerHandle;
 	GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);

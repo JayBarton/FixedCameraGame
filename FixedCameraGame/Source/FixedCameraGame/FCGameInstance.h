@@ -48,6 +48,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TMap<FString, FPendingLocks> pendingLocks;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
+	TMap<FString, bool> levelMusicPlaying;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flags")
 	TMap<FString, bool> flags;
 
