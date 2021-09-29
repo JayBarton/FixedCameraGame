@@ -155,6 +155,10 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 					}
 				}
 			}
+
+			objectWatcher->instanceMusic = objectWatcher->playingMusic;
+
+
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
 		HandlePendingLocks(instance);
@@ -191,6 +195,7 @@ void AFixedCameraGameGameMode::StartNewMusic()
 {
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	PlayMusic(instance);
+	UE_LOG(LogTemp, Warning, TEXT("m1"));
 	objectWatcher->playingMusic = true;
 
 }
@@ -471,11 +476,11 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 				}
 				if (instance->levelMusicPlaying.Contains(currentLevel))
 				{
-					instance->levelMusicPlaying[currentLevel] = objectWatcher->playingMusic;
+					instance->levelMusicPlaying[currentLevel] = objectWatcher->instanceMusic;
 				}
 				else
 				{
-					instance->levelMusicPlaying.Add(currentLevel, objectWatcher->playingMusic);
+					instance->levelMusicPlaying.Add(currentLevel, objectWatcher->instanceMusic);
 				}
 			}
 

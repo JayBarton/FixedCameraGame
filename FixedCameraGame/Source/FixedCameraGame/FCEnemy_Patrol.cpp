@@ -182,6 +182,6 @@ void AFCEnemy_Patrol::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 {
 	if (player == OtherActor)
 	{
-		UGameplayStatics::ApplyDamage(player, 10, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(player, 50, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
 }

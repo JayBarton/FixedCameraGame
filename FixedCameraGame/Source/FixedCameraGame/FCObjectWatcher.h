@@ -135,4 +135,7 @@ public:
     UPROPERTY(EditAnywhere, Category = "Audio")
         bool playingMusic = true;
 
+    //Used for the persistent value
+    bool instanceMusic = true;
+
 };

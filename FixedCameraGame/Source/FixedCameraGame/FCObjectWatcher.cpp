@@ -37,6 +37,8 @@ void AFCObjectWatcher::UpdateObjects()
 	CheckObjects();
 
 	CheckEnemies();
+
+	instanceMusic = playingMusic;
 }
 
 void AFCObjectWatcher::CheckObjects()
