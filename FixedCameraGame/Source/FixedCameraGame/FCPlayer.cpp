@@ -103,7 +103,7 @@ void AFCPlayer::Tick(float DeltaTime)
 		//Similar to sprinting, this is the best way I can find to do this.
 		auto pc = Cast<APlayerController>(GetController());
 		auto aimButtons = pc->PlayerInput->GetKeysForAction("Aim");
-		if (!pc->IsInputKeyDown(aimButtons[0].Key))
+		if (!pc->IsInputKeyDown(aimButtons[0].Key) && !pc->IsInputKeyDown(aimButtons[1].Key))
 		{
 			StopAiming();
 		}
@@ -116,7 +116,7 @@ void AFCPlayer::Tick(float DeltaTime)
 	{
 		auto pc = Cast<APlayerController>(GetController());
 		auto aimButtons = pc->PlayerInput->GetKeysForAction("Aim");
-		if (pc->IsInputKeyDown(aimButtons[0].Key))
+		if (pc->IsInputKeyDown(aimButtons[0].Key) || pc->IsInputKeyDown(aimButtons[1].Key))
 		{
 			Aim();
 		}
@@ -133,14 +133,11 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+/*	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);*/
 
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::QuickTurn);
 	//PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AFCPlayer::StopSprinting);
-
-	PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AFCPlayer::Aim);
-	PlayerInputComponent->BindAction("Aim", IE_Released, this, &AFCPlayer::StopAiming);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFCPlayer::Fire);
 
@@ -177,7 +174,7 @@ void AFCPlayer::MoveForward(float value)
 					//Should only ever have 2 binds, for keyboard and controller.
 					auto pc = Cast<APlayerController>(GetController());
 					auto sprintButtons = pc->PlayerInput->GetKeysForAction("Sprint");
-					if(pc->IsInputKeyDown(sprintButtons[0].Key))
+					if(pc->IsInputKeyDown(sprintButtons[0].Key) || pc->IsInputKeyDown(sprintButtons[1].Key))
 					{
 						GetCharacterMovement()->MaxWalkSpeed = runSpeed;
 					}
