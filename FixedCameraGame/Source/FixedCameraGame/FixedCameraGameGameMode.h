@@ -71,6 +71,9 @@ public:
 	void StopEnemies(bool pauseAnimation = true);
 	void ResumeEnemies();
 
+	void SaveGame();
+	void LoadGame();
+
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now

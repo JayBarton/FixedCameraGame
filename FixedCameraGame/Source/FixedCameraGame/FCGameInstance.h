@@ -25,13 +25,13 @@ public:
 	int startIndex = 0;
 	//Index of the camera on entering a new level. If this = -1, it is the same as the start index above
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-		int cameraIndex = -1;
+	int cameraIndex = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-		int equippedIndex = -1;
+	int equippedIndex = -1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TArray<FItemStruct> playerInventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-		int32 playerHealth;
+	int32 playerHealth;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TArray<FItemStruct> containerInventory;
@@ -59,7 +59,6 @@ public:
 	UPROPERTY()
 	UAudioComponent* music = nullptr;
 	USoundBase* musicCue;
-
 
 	UFUNCTION(BlueprintCallable)
 	void PlayMusic(USoundBase* bgm, float volume = 1.0f, bool persist = true);

@@ -24,6 +24,7 @@
 #include "FCEnemySpawn.h"
 #include "FCPickup.h"
 #include "FCSwitchComponent.h"
+#include "FCSaveGame.h"
 
 #include "Perception/PawnSensingComponent.h"
 
@@ -567,6 +568,120 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 			enemy->SetActorTickEnabled(true);
 			enemy->GetMesh()->bPauseAnims = false;
 		}
+	}
+}
+
+void AFixedCameraGameGameMode::SaveGame()
+{
+	if (UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass())))
+	{
+		saveGameInstance->currentLevel = currentLevel;
+		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+		if (instance)
+		{
+			auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			if (pc)
+			{
+				if (objectWatcher)
+				{
+
+					saveGameInstance->startIndex = instance->startIndex;
+					saveGameInstance->cameraIndex = instance->cameraIndex;
+					saveGameInstance->playerInventory = pc->Inventory->inventory;
+					saveGameInstance->equippedIndex = pc->equipped;
+					saveGameInstance->playerHealth = pc->currentHealth;
+					objectWatcher->UpdateObjects();
+					for (int i = 0; i < objectWatcher->pendingFlags.Num(); i++)
+					{
+						auto flag = objectWatcher->pendingFlags[i];
+						if (instance->flags.Contains(flag))
+						{
+							instance->flags[flag] = true;
+						}
+					}
+					if (saveGameInstance->savedObjects.Contains(currentLevel))
+					{
+						instance->savedObjects[currentLevel].data = objectWatcher->objects.data;
+						instance->savedEnemies[currentLevel].data = objectWatcher->enemies.data;
+					}
+					else
+					{
+						instance->savedObjects.Add(currentLevel, objectWatcher->objects);
+						instance->savedEnemies.Add(currentLevel, objectWatcher->enemies);
+					}
+					saveGameInstance->flags = instance->flags;
+					saveGameInstance->savedObjects = instance->savedObjects;
+					saveGameInstance->savedEnemies = instance->savedEnemies;
+					//not sure about this.
+					/*if (saveGameInstance->levelMusicPlaying.Contains(currentLevel))
+					{
+						saveGameInstance->levelMusicPlaying[currentLevel] = objectWatcher->instanceMusic;
+					}
+					else
+					{
+						saveGameInstance->levelMusicPlaying.Add(currentLevel, objectWatcher->instanceMusic);
+					}*/
+				}
+				saveGameInstance->pendingLocks = instance->pendingLocks;
+				if (container)
+				{
+					saveGameInstance->containerInventory = container->Inventory->inventory;
+				}
+
+				if (UGameplayStatics::SaveGameToSlot(saveGameInstance, "slot1", 1))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("SAVED"));
+				}
+			}
+		}
+	}
+}
+
+void AFixedCameraGameGameMode::LoadGame()
+{
+	// Retrieve and cast the USaveGame object to UMySaveGame.
+	if (UFCSaveGame* loadedGame = Cast<UFCSaveGame>(UGameplayStatics::LoadGameFromSlot("slot1", 1)))
+	{
+
+		currentLevel = loadedGame->currentLevel;
+		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+		if (instance)
+		{
+			auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+
+			instance->startIndex = loadedGame->startIndex;
+			instance->cameraIndex = loadedGame->cameraIndex;
+			instance->playerInventory = loadedGame->playerInventory;
+			instance->equippedIndex = loadedGame->equippedIndex;
+			instance->playerHealth = loadedGame->playerHealth;
+			instance->flags = loadedGame->flags;
+			instance->savedObjects = loadedGame->savedObjects;
+			instance->savedEnemies = loadedGame->savedEnemies;
+			instance->containerInventory = loadedGame->containerInventory;
+			instance->pendingLocks = loadedGame->pendingLocks;
+			//not sure about this.
+			/*if (saveGameInstance->levelMusicPlaying.Contains(currentLevel))
+			{
+				saveGameInstance->levelMusicPlaying[currentLevel] = objectWatcher->instanceMusic;
+			}
+			else
+			{
+				saveGameInstance->levelMusicPlaying.Add(currentLevel, objectWatcher->instanceMusic);
+			}
+
+			if (container)
+			{
+				saveGameInstance->containerInventory = container->Inventory->inventory;
+			}*/
+
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("LOADED"));
+		MoveToLevel(FName(*currentLevel));
+
 	}
 }
 
