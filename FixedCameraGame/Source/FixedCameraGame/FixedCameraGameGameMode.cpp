@@ -292,6 +292,8 @@ void AFixedCameraGameGameMode::CheckEnemies(UFCGameInstance* instance)
 			objectWatcher->enemies.data[i].reviveTime = instance->savedEnemies[currentLevel].data[i].reviveTime;
 			objectWatcher->enemies.data[i].transform = instance->savedEnemies[currentLevel].data[i].transform;
 		}
+		UE_LOG(LogTemp, Warning, TEXT("CHECK 1"));
+
 		SpawnEnemies(instance);
 	}
 }
@@ -571,7 +573,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 	}
 }
 
-void AFixedCameraGameGameMode::SaveGame()
+void AFixedCameraGameGameMode::SaveGame(int slot)
 {
 	if (UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass())))
 	{
@@ -601,7 +603,7 @@ void AFixedCameraGameGameMode::SaveGame()
 							instance->flags[flag] = true;
 						}
 					}
-					if (saveGameInstance->savedObjects.Contains(currentLevel))
+					if (instance->savedObjects.Contains(currentLevel))
 					{
 						instance->savedObjects[currentLevel].data = objectWatcher->objects.data;
 						instance->savedEnemies[currentLevel].data = objectWatcher->enemies.data;
@@ -630,7 +632,8 @@ void AFixedCameraGameGameMode::SaveGame()
 					saveGameInstance->containerInventory = container->Inventory->inventory;
 				}
 
-				if (UGameplayStatics::SaveGameToSlot(saveGameInstance, "slot1", 1))
+				FString slotName = "slot" + FString::FromInt(slot);
+				if (UGameplayStatics::SaveGameToSlot(saveGameInstance, slotName, 1))
 				{
 					UE_LOG(LogTemp, Warning, TEXT("SAVED"));
 				}
@@ -639,12 +642,12 @@ void AFixedCameraGameGameMode::SaveGame()
 	}
 }
 
-void AFixedCameraGameGameMode::LoadGame()
+void AFixedCameraGameGameMode::LoadGame(int slot)
 {
 	// Retrieve and cast the USaveGame object to UMySaveGame.
-	if (UFCSaveGame* loadedGame = Cast<UFCSaveGame>(UGameplayStatics::LoadGameFromSlot("slot1", 1)))
+	FString slotName = "slot" + FString::FromInt(slot);
+	if (UFCSaveGame* loadedGame = Cast<UFCSaveGame>(UGameplayStatics::LoadGameFromSlot(slotName, 1)))
 	{
-
 		currentLevel = loadedGame->currentLevel;
 		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -682,6 +685,10 @@ void AFixedCameraGameGameMode::LoadGame()
 		UE_LOG(LogTemp, Warning, TEXT("LOADED"));
 		MoveToLevel(FName(*currentLevel));
 
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("no save in this slot %s"), *slotName);
 	}
 }
 

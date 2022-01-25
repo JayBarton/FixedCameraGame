@@ -71,8 +71,10 @@ public:
 	void StopEnemies(bool pauseAnimation = true);
 	void ResumeEnemies();
 
-	void SaveGame();
-	void LoadGame();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void SaveGame(int slot);
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void LoadGame(int slot);
 
 	virtual AActor* ChoosePlayerStart_Implementation(AController* Player) override;
 
