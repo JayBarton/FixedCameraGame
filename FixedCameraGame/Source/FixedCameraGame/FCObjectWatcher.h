@@ -43,6 +43,7 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool spawn = true;
     //if this enemy is spawnable. Dead enemies are not spawnable.
+    UPROPERTY()
     bool canSpawn = true;
     //if this enemy has been killed
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
@@ -50,7 +51,9 @@ public:
     //If the enemy starts in their idle state or in a spawn in state
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     bool spawnIn = false;
+    UPROPERTY()
     int32 reviveCount = 0;
+    UPROPERTY()
     int32 reviveTime = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     FString spawnFlag = "";

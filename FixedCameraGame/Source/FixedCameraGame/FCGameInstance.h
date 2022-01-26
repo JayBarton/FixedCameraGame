@@ -20,6 +20,9 @@ class FIXEDCAMERAGAME_API UFCGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
+	UPROPERTY()
+	FString currentLevel;
+
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int startIndex = 0;
@@ -64,5 +67,8 @@ public:
 	void PlayMusic(USoundBase* bgm, float volume = 1.0f, bool persist = true);
 
 	void StopMusic(float transitionTime);
+
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void LoadGame(int slot);
 
 };

@@ -108,6 +108,14 @@ void AFCObjectWatcher::CheckEnemies()
 	for (int i = 0; i < enemies.data.Num(); i++)
 	{
 		FEnemiesToWatch& enemy = enemies.data[i];
+		if (enemy.canSpawn)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can spawn???"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can't spawn???"));
+		}
 		if (enemy.spawn)
 		{
 			if (enemy.enemy->dead)

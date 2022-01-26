@@ -52,25 +52,18 @@ void AFixedCameraGameGameMode::BeginPlay()
 		objectWatcher = Cast<AFCObjectWatcher>(FoundActors[0]);
 	}
 
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCContainer::StaticClass(), FoundActors);
-	if (FoundActors.Num() > 0)
-	{
-		container = Cast<AFCContainer>(FoundActors[0]);
-		if (instance->containerInventory.Num() == container->Inventory->inventory.Num())
-		{
-			container->Inventory->inventory = instance->containerInventory;
-		}
-	}
-
-	currentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 	if (instance)
 	{
-		currentIndex = instance->startIndex;
-		if (instance->cameraIndex == -1)
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCContainer::StaticClass(), FoundActors);
+		if (FoundActors.Num() > 0)
 		{
-			instance->cameraIndex = currentIndex;
+			container = Cast<AFCContainer>(FoundActors[0]);
+			if (instance->containerInventory.Num() == container->Inventory->inventory.Num())
+			{
+				container->Inventory->inventory = instance->containerInventory;
+			}
 		}
-		currentCameraIndex = instance->cameraIndex;
+
 		CheckInstance(instance);
 
 		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -128,6 +121,16 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 
 void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 {
+	currentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
+	instance->currentLevel = currentLevel;
+
+	currentIndex = instance->startIndex;
+	if (instance->cameraIndex == -1)
+	{
+		instance->cameraIndex = currentIndex;
+	}
+	currentCameraIndex = instance->cameraIndex;
+
 	if (objectWatcher)
 	{
 		if (instance->savedObjects.Contains(currentLevel))
@@ -644,15 +647,20 @@ void AFixedCameraGameGameMode::SaveGame(int slot)
 
 void AFixedCameraGameGameMode::LoadGame(int slot)
 {
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	if (instance)
+	{
+		instance->LoadGame(slot);
+	}
 	// Retrieve and cast the USaveGame object to UMySaveGame.
-	FString slotName = "slot" + FString::FromInt(slot);
+/*	FString slotName = "slot" + FString::FromInt(slot);
 	if (UFCSaveGame* loadedGame = Cast<UFCSaveGame>(UGameplayStatics::LoadGameFromSlot(slotName, 1)))
 	{
-		currentLevel = loadedGame->currentLevel;
 		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-
 		if (instance)
 		{
+			instance->currentLevel = loadedGame->currentLevel;
 			auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 
 			instance->startIndex = loadedGame->startIndex;
@@ -665,31 +673,16 @@ void AFixedCameraGameGameMode::LoadGame(int slot)
 			instance->savedEnemies = loadedGame->savedEnemies;
 			instance->containerInventory = loadedGame->containerInventory;
 			instance->pendingLocks = loadedGame->pendingLocks;
-			//not sure about this.
-			/*if (saveGameInstance->levelMusicPlaying.Contains(currentLevel))
-			{
-				saveGameInstance->levelMusicPlaying[currentLevel] = objectWatcher->instanceMusic;
-			}
-			else
-			{
-				saveGameInstance->levelMusicPlaying.Add(currentLevel, objectWatcher->instanceMusic);
-			}
-
-			if (container)
-			{
-				saveGameInstance->containerInventory = container->Inventory->inventory;
-			}*/
-
 		}
 
-		UE_LOG(LogTemp, Warning, TEXT("LOADED"));
+		UE_LOG(LogTemp, Warning, TEXT("LOADED current level %s"), *currentLevel);
 		MoveToLevel(FName(*currentLevel));
 
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no save in this slot %s"), *slotName);
-	}
+	}*/
 }
 
 AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* Player)

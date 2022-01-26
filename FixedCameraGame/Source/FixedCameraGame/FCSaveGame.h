@@ -22,7 +22,7 @@ class FIXEDCAMERAGAME_API UFCSaveGame : public USaveGame
 
 public:
 
-	UPROPERTY(EditAnywhere, Category = "Save")
+	UPROPERTY()
 	FString currentLevel;
 
 	//Index of the player start and camera on entering a new level
