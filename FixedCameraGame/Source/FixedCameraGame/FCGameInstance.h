@@ -31,7 +31,7 @@ class FIXEDCAMERAGAME_API UFCGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
 	FString currentLevel;
 
 	//Index of the player start and camera on entering a new level
