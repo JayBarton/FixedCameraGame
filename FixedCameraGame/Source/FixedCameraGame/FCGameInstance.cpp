@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h" 
 #include "Components/AudioComponent.h" 
 #include "FCSaveGame.h"
-
+#include "FCSaveGameMinimal.h"
 
 void UFCGameInstance::PlayMusic(USoundBase* bgm, float volume, bool persist)
 {
@@ -27,7 +27,6 @@ void UFCGameInstance::LoadGame(int slot)
 	if (UFCSaveGame* loadedGame = Cast<UFCSaveGame>(UGameplayStatics::LoadGameFromSlot(slotName, 1)))
 	{
 		currentLevel = loadedGame->currentLevel;
-		UE_LOG(LogTemp, Warning, TEXT("what are you DOING %s"), *loadedGame->currentLevel);
 
 		/*FString level = "MainHallway";
 		for (auto& Elem : loadedGame->savedEnemies)
@@ -82,4 +81,22 @@ void UFCGameInstance::LoadGame(int slot)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no save in this slot %s"), *slotName);
 	}
+}
+
+FMinimalSaveStruct UFCGameInstance::LoadMinimal(int slot)
+{
+	FMinimalSaveStruct saveStruct;
+	FString slotName = "slotM" + FString::FromInt(slot);
+	if (UFCSaveGameMinimal* loadedGame = Cast<UFCSaveGameMinimal>(UGameplayStatics::LoadGameFromSlot(slotName, 1)))
+	{
+		saveStruct.level = loadedGame->currentLevel;
+		saveStruct.loaded = true;
+		return saveStruct;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("no save in this slot %s"), *slotName);
+	}
+	return saveStruct;
+
 }

@@ -25,6 +25,7 @@
 #include "FCPickup.h"
 #include "FCSwitchComponent.h"
 #include "FCSaveGame.h"
+#include "FCSaveGameMinimal.h"
 
 #include "Perception/PawnSensingComponent.h"
 
@@ -578,9 +579,13 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 
 void AFixedCameraGameGameMode::SaveGame(int slot)
 {
-	if (UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass())))
+	UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass()));
+	UFCSaveGameMinimal* saveGameMinimalInstance = Cast<UFCSaveGameMinimal>(UGameplayStatics::CreateSaveGameObject(UFCSaveGameMinimal::StaticClass()));
+	if (saveGameInstance && saveGameMinimalInstance)
 	{
 		saveGameInstance->currentLevel = currentLevel;
+		saveGameMinimalInstance->currentLevel = currentLevel;
+
 		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 		if (instance)
@@ -636,9 +641,13 @@ void AFixedCameraGameGameMode::SaveGame(int slot)
 				}
 
 				FString slotName = "slot" + FString::FromInt(slot);
+				FString slotMinimalName = "slotM" + FString::FromInt(slot);
 				if (UGameplayStatics::SaveGameToSlot(saveGameInstance, slotName, 1))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("SAVED"));
+					if (UGameplayStatics::SaveGameToSlot(saveGameMinimalInstance, slotMinimalName, 1))
+					{
+						UE_LOG(LogTemp, Warning, TEXT("SAVED"));
+					}
 				}
 			}
 		}

@@ -12,6 +12,17 @@
 class USoundBase;
 class UAudioComponent;
 
+USTRUCT(BlueprintType)
+struct FMinimalSaveStruct
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
+	FString level;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
+	bool loaded = false;
+};
+
 /**
  * 
  */
@@ -70,5 +81,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadGame(int slot);
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	FMinimalSaveStruct LoadMinimal(int slot);
 
 };
