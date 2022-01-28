@@ -3,6 +3,7 @@
 
 #include "FCGameInstance.h"
 #include "Kismet/GameplayStatics.h" 
+#include "Kismet/KismetStringLibrary.h"
 #include "Components/AudioComponent.h" 
 #include "FCSaveGame.h"
 #include "FCSaveGameMinimal.h"
@@ -89,7 +90,7 @@ FMinimalSaveStruct UFCGameInstance::LoadMinimal(int slot)
 	FString slotName = "slotM" + FString::FromInt(slot);
 	if (UFCSaveGameMinimal* loadedGame = Cast<UFCSaveGameMinimal>(UGameplayStatics::LoadGameFromSlot(slotName, 1)))
 	{
-		saveStruct.level = loadedGame->currentLevel;
+		saveStruct.level = FName::NameToDisplayString(loadedGame->currentLevel, false);
 		saveStruct.loaded = true;
 		return saveStruct;
 	}
