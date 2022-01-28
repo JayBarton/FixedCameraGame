@@ -21,9 +21,6 @@
 #include "PhysicalMaterials/PhysicalMaterial.h"
 #include "FCMultiLockComponent.h"
 
-
-
-
 #include "GameFramework/PlayerInput.h" 
 #include "DrawDebugHelpers.h" 
 
@@ -65,6 +62,16 @@ void AFCPlayer::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = walkSpeed;
 	GetWorld()->GetTimerManager().SetTimer(LookTimerHandle, this, &AFCPlayer::LookForInteractable, 0.2f, true);
 
+	//Init();
+	
+	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
+//	GetWorld()->GetTimerManager().
+	//LookTimerHandle.Invalidate
+	
+}
+
+void AFCPlayer::Init()
+{
 	FActorSpawnParameters SpawnInfo;
 	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	currentWeapon = GetWorld()->SpawnActor<AFCWeapon>(weapon, SpawnInfo);
@@ -75,11 +82,6 @@ void AFCPlayer::BeginPlay()
 	{
 		EquipWeapon(equipped);
 	}
-	
-	//GetWorld()->GetTimerManager().PauseTimer(LookTimerHandle);
-//	GetWorld()->GetTimerManager().
-	//LookTimerHandle.Invalidate
-	
 }
 
 // Called every frame

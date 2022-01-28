@@ -78,6 +78,8 @@ void AFixedCameraGameGameMode::BeginPlay()
 			}
 			pc->equipped = instance->equippedIndex;
 			pc->currentHealth = instance->playerHealth;
+
+			pc->Init();
 		}
 
 		FindStart(instance);
