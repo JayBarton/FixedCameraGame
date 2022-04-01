@@ -686,6 +686,7 @@ void AFCPlayer::FootstepSound()
 		surfaceIndex = surfaceStep[SurfaceType];
 	}
 	audioComponent->SetIntParameter("Surface", surfaceIndex);
+	UE_LOG(LogTemp, Warning, TEXT("%i"), surfaceIndex);
 	MakeNoise();
 }
 
