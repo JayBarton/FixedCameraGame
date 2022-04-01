@@ -12,6 +12,8 @@
 class UPawnSensingComponent;
 class UParticleSystem;
 class UBoxComponent;
+class UFCFootStepComponent;
+
 
 //direction enemy was hit from
 UENUM(BlueprintType)
@@ -70,6 +72,9 @@ public:
 	void SetUpSpawnIn();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void PlaySpawnIn();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		UFCFootStepComponent* FootStepComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	UPawnSensingComponent* PawnSensingComp;

@@ -10,6 +10,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Components/BoxComponent.h"
+#include "FCFootStepComponent.h"
 
 // Sets default values
 AFCEnemy::AFCEnemy()
@@ -28,6 +29,9 @@ AFCEnemy::AFCEnemy()
 	BoxComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	BoxComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);*/
 	BoxComp->SetupAttachment(RootComponent);
+
+	FootStepComponent = CreateDefaultSubobject<UFCFootStepComponent>(TEXT("FootStepComponent"));
+
 }
 
 // Called when the game starts or when spawned

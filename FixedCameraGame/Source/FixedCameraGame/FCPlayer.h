@@ -14,7 +14,7 @@ class AFCSwitchInteractable;
 class UDataTable;
 class UPawnNoiseEmitterComponent;
 class AFCWeapon;
-class USoundBase;
+class UFCFootStepComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
@@ -127,8 +127,6 @@ public:
 	void ResetLevel();
 	UFUNCTION(BlueprintCallable, Category = "Functions")	
 	bool BlockingInput();
-	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void FootstepSound();
 
 	//Just using this to test the text display, come up with a better solution later
 	//Still want a better solution
@@ -177,12 +175,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
 		TSubclassOf<AFCWeapon> weapon;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Audio")
-	USoundBase* footstep;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Audio")
-	TMap< TEnumAsByte<EPhysicalSurface>, int32> surfaceStep;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	UFCFootStepComponent* FootStepComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UFCInventoryComponent* Inventory;
 	//I don't know that it's a great solution to have a reference to the item data here,

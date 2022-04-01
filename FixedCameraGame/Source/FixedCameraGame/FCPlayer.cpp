@@ -17,9 +17,8 @@
 #include "FixedCameraGameGameMode.h"
 #include "Engine/DataTable.h" 
 #include "Components/PawnNoiseEmitterComponent.h"
-#include "Components/AudioComponent.h" 
-#include "PhysicalMaterials/PhysicalMaterial.h"
 #include "FCMultiLockComponent.h"
+#include "FCFootStepComponent.h"
 
 #include "GameFramework/PlayerInput.h" 
 #include "DrawDebugHelpers.h" 
@@ -47,6 +46,8 @@ AFCPlayer::AFCPlayer()
 	Inventory->capacity = 6;
 
 	NoiseEmitterComponent = CreateDefaultSubobject<UPawnNoiseEmitterComponent>(TEXT("NoiseEmitterComponent"));
+
+	FootStepComponent = CreateDefaultSubobject<UFCFootStepComponent>(TEXT("FootStepComponent"));
 
 	currentHealth = maxHealth;
 	OnTakeAnyDamage.AddDynamic(this, &AFCPlayer::HandleTakeAnyDamage);
@@ -660,34 +661,6 @@ void AFCPlayer::ResetLevel()
 bool AFCPlayer::BlockingInput()
 {
 	return staggered || quickTurn;
-}
-
-void AFCPlayer::FootstepSound()
-{
-	FHitResult OutHit;
-
-	FVector Start = GetActorLocation();
-
-	FVector End = Start - FVector(0.0f, 0.0f, 180.0f);
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this);
-	QueryParams.bReturnPhysicalMaterial = true;
-
-	EPhysicalSurface SurfaceType = SurfaceType_Default;
-
-	if (GetWorld()->LineTraceSingleByChannel(OutHit, Start, End, ECC_Visibility, QueryParams))
-	{
-		SurfaceType = UPhysicalMaterial::DetermineSurfaceType(OutHit.PhysMaterial.Get());
-	}
-	auto audioComponent = UGameplayStatics::SpawnSoundAtLocation(GetWorld(), footstep, GetActorLocation());
-	int surfaceIndex = 0;
-	if (surfaceStep.Contains(SurfaceType))
-	{
-		surfaceIndex = surfaceStep[SurfaceType];
-	}
-	audioComponent->SetIntParameter("Surface", surfaceIndex);
-	UE_LOG(LogTemp, Warning, TEXT("%i"), surfaceIndex);
-	MakeNoise();
 }
 
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
