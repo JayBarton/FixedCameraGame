@@ -3,7 +3,7 @@
 #include "FixedCameraGameGameMode.h"
 #include "FixedCameraGameCharacter.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Kismet/GameplayStatics.h" 
+#include "Kismet/GameplayStatics.h"
 #include "FCGameInstance.h"
 #include "FCPlayer.h"
 #include "FCInventoryComponent.h"
@@ -26,12 +26,9 @@
 #include "FCSwitchComponent.h"
 #include "FCSaveGame.h"
 #include "FCSaveGameMinimal.h"
-
 #include "Perception/PawnSensingComponent.h"
-
-#include "Engine/Engine.h" 
-
-#include "Components/AudioComponent.h" 
+#include "Engine/Engine.h"
+#include "Components/AudioComponent.h"
 
 
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
