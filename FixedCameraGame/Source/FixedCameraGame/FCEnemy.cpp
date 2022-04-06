@@ -101,7 +101,7 @@ void AFCEnemy::NoticePlayer()
 	}
 }
 
-void AFCEnemy::Attack()
+void AFCEnemy::Attack(int32 damage)
 {
 
 }

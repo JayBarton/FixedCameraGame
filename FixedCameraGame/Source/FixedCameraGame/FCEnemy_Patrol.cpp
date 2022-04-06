@@ -93,7 +93,7 @@ void AFCEnemy_Patrol::Follow()
 		{
 			if (!isAttacking)
 			{
-				Attack();
+				Attack(attackDamage);
 			}
 		}
 		else
@@ -141,7 +141,7 @@ void AFCEnemy_Patrol::NoticePlayer()
 
 }
 
-void AFCEnemy_Patrol::Attack()
+void AFCEnemy_Patrol::Attack(int32 damage)
 {
 	isAttacking = true;
 	patrolState = PatrolState::ATTACKING;
@@ -182,6 +182,6 @@ void AFCEnemy_Patrol::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 {
 	if (player == OtherActor)
 	{
-		UGameplayStatics::ApplyDamage(player, 50, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(player, attackDamage, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
 }

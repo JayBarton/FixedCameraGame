@@ -53,7 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	virtual void NoticePlayer();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	virtual void Attack();
+	virtual void Attack(int32 damage = 20);
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	virtual void FinishAttack();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
@@ -110,8 +110,11 @@ public:
 	//distance from the player before attacking
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float attackDistance = 150.0f;
+	//Range of the attack
 	UPROPERTY(EditDefaultsOnly, Category = "Attack")
 	float attackRange = 200.0f;
+	UPROPERTY(EditDefaultsOnly, Category = "Attack")
+	int32 attackDamage = 20;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	int32 hp;

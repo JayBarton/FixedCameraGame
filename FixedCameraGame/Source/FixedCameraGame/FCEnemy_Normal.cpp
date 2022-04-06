@@ -106,7 +106,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 	}
 }
 
-void AFCEnemy_Normal::Attack()
+void AFCEnemy_Normal::Attack(int32 damage)
 {
 	turningAttack = false;
 	FHitResult OutHit;
@@ -123,7 +123,7 @@ void AFCEnemy_Normal::Attack()
 	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	if (GetWorld()->SweepSingleByChannel(OutHit, Start, End, FQuat::Identity, COLLISION_PLAYER, shape, CollisionParams))
 	{
-		UGameplayStatics::ApplyDamage(player, 20, GetInstigatorController(), this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(player, damage, GetInstigatorController(), this, UDamageType::StaticClass());
 	}
 }
 

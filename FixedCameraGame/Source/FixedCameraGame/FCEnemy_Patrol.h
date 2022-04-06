@@ -40,7 +40,7 @@ public:
 
 	virtual void NoticePlayer() override;
 
-	virtual void Attack() override;
+	virtual void Attack(int32 attack) override;
 	virtual void FinishAttack() override;
 
 	void MoveToNextPatrolPoint();
