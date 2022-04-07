@@ -41,7 +41,7 @@ public:
 
 	//use this to quickly turn around if hit in the back
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float fastTurnSpeed = 2.5f;
+		float fastTurnSpeed = 7.5f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning; 
