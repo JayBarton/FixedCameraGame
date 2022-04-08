@@ -118,6 +118,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
 	int32 hp;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+	int32 hpMin = 0;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Health")
+	int32 hpMax = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Health")
 	bool dead;
 	UPROPERTY(BlueprintReadOnly, Category = "Stagger")

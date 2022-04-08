@@ -20,6 +20,8 @@ AFCEnemy_Patrol::AFCEnemy_Patrol()
 	hurtBox->OnComponentBeginOverlap.AddDynamic(this, &AFCEnemy_Patrol::OnOverlapBegin);
 	hurtBox->SetupAttachment(RootComponent);
 	
+	hpMin = 3;
+	hpMax = 5;
 }
 
 void AFCEnemy_Patrol::BeginPlay()

@@ -10,6 +10,8 @@
 
 AFCEnemy_Normal::AFCEnemy_Normal()
 {
+	hpMin = 5;
+	hpMax = 8;
 }
 
 void AFCEnemy_Normal::Tick(float DeltaTime)

@@ -40,6 +40,13 @@ void AFCEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
+	if (hpMin > 0 && hpMax > 0)
+	{
+		hp = FMath::RandRange(hpMin, hpMax);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("right here"));
 }
 
 // Called every frame
