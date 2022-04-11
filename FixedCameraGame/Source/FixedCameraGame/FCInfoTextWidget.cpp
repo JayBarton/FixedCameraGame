@@ -81,15 +81,15 @@ void UFCInfoTextWidget::FindNextIndex(int startingIndex)
 		{
 			nextIndex--;
 		}
-		//Using ! as an escape key. If we find one in the string, we end the segment there.
-		for (int i = startingIndex; i < nextIndex; i++)
+	}
+	//Using ! as an escape key. If we find one in the string, we end the segment there.
+	for (int i = startingIndex; i < nextIndex; i++)
+	{
+		if ((text.Mid(i, 1) == "!"))
 		{
-			if ((text.Mid(i, 1) == "!"))
-			{
-				nextIndex = i;
-				text.RemoveAt(i, 1);
-				break;
-			}
+			nextIndex = i;
+			text.RemoveAt(i, 1);
+			break;
 		}
 	}
 }
