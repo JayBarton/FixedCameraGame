@@ -72,7 +72,7 @@ public:
 	void ResumeEnemies();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void SaveGame(int slot);
+	void SaveGame(int slot, int token);
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadGame(int slot);
 
@@ -91,6 +91,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void ClearText();
+
+	//if there is a blue print version of FName::NameToDisplayString I can't find it
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	FString GetDisplayName(FString name);
 
 	UInputComponent* inputComponent;
 	AFCObjectWatcher* objectWatcher;

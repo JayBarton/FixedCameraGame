@@ -16,4 +16,10 @@ class FIXEDCAMERAGAME_API AFCSavePoint : public AFCInteractable
 	GENERATED_BODY()
 public:
 	AFCSavePoint();
+
+	virtual void Action_Implementation() override;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Save")
+	int32 saveID;
+
 };

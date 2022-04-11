@@ -157,13 +157,13 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AFCPlayer::SaveTest()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->SaveGame(1);
+	//gameMode->SaveGame(1);
 }
 
 void AFCPlayer::LoadTest()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->LoadGame(1);
+	//gameMode->LoadGame(1);
 }
 
 void AFCPlayer::MoveForward(float value)
@@ -422,22 +422,6 @@ void AFCPlayer::LookForInteractable()
 	}
 }
 
-void AFCPlayer::CreateSwitchWidget_Implementation(AFCSwitchInteractable* switchInteractable)
-{
-}
-
-void AFCPlayer::CreatePickUpWidget_Implementation(AActor* pickup)
-{
-}
-
-void AFCPlayer::DisplayInventoryWidget_Implementation()
-{
-}
-
-void AFCPlayer::ClearInventoryWidget_Implementation()
-{
-}
-
 bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 {
 	int32 ID = Inventory->inventory[index].ID;
@@ -663,7 +647,26 @@ bool AFCPlayer::BlockingInput()
 	return staggered || quickTurn;
 }
 
+void AFCPlayer::CreateSwitchWidget_Implementation(AFCSwitchInteractable* switchInteractable)
+{
+}
+
+void AFCPlayer::CreatePickUpWidget_Implementation(AActor* pickup)
+{
+}
+
+void AFCPlayer::DisplayInventoryWidget_Implementation()
+{
+}
+
+void AFCPlayer::ClearInventoryWidget_Implementation()
+{
+}
+
 void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory)
 {
 }
 
+void AFCPlayer::CreateSaveWidget_Implementation(int token)
+{
+}

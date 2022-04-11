@@ -576,7 +576,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 	}
 }
 
-void AFixedCameraGameGameMode::SaveGame(int slot)
+void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 {
 	UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass()));
 	UFCSaveGameMinimal* saveGameMinimalInstance = Cast<UFCSaveGameMinimal>(UGameplayStatics::CreateSaveGameObject(UFCSaveGameMinimal::StaticClass()));
@@ -646,6 +646,14 @@ void AFixedCameraGameGameMode::SaveGame(int slot)
 					if (UGameplayStatics::SaveGameToSlot(saveGameMinimalInstance, slotMinimalName, 1))
 					{
 						UE_LOG(LogTemp, Warning, TEXT("SAVED"));
+						auto Inventory = pc->Inventory;
+						FItemStruct& slot = Inventory->inventory[token];
+						slot.amount--;
+						if (slot.amount <= 0)
+						{
+							slot = FItemStruct();
+						}
+
 					}
 				}
 			}
@@ -875,4 +883,9 @@ void AFixedCameraGameGameMode::ClearText()
 	display->RemoveFromParent();
 	display = nullptr;
 	inputComponent->RemoveActionBinding(interactKey);
+}
+
+FString AFixedCameraGameGameMode::GetDisplayName(FString name)
+{
+	return FName::NameToDisplayString(name, false);
 }
