@@ -57,6 +57,8 @@ public:
     int32 reviveTime = 0;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
     FString spawnFlag = "";
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+    FString deSpawnFlag = "";
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
     FTransform transform;
 };

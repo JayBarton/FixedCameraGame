@@ -307,30 +307,37 @@ void AFixedCameraGameGameMode::SpawnEnemies(UFCGameInstance* instance, bool firs
 	{
 		FEnemiesToWatch& enemy = objectWatcher->enemies.data[i];
 
-		if (enemy.spawnFlag == "")
+		if (instance->flags.Contains(enemy.deSpawnFlag))
 		{
-			enemy.spawn = enemy.canSpawn;
-			//	canSpawn = true;
+			enemy.spawn = !instance->flags[enemy.deSpawnFlag];
 		}
 		else
 		{
-			if (enemy.canSpawn)
+			if (enemy.spawnFlag == "")
 			{
-				if (instance->flags.Contains(enemy.spawnFlag))
-				{
-					enemy.spawn = instance->flags[enemy.spawnFlag];
-				}
-				else
-				{
-					UE_LOG(LogTemp, Warning, TEXT("you know"));
-					//Don't know that this else is needed, as it's not like I'll be creating flags on the fly
-					//keeping it around for now until I finalize this flag idea
-					enemy.spawn = false;
-				}
+				enemy.spawn = enemy.canSpawn;
+				//	canSpawn = true;
 			}
 			else
 			{
-				enemy.spawn = false;
+				if (enemy.canSpawn)
+				{
+					if (instance->flags.Contains(enemy.spawnFlag))
+					{
+						enemy.spawn = instance->flags[enemy.spawnFlag];
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("you know"));
+						//Don't know that this else is needed, as it's not like I'll be creating flags on the fly
+						//keeping it around for now until I finalize this flag idea
+						enemy.spawn = false;
+					}
+				}
+				else
+				{
+					enemy.spawn = false;
+				}
 			}
 		}
 
