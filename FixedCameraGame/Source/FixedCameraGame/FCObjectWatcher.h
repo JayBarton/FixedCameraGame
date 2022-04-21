@@ -102,6 +102,19 @@ public:
         bool data;
 };
 
+USTRUCT(BlueprintType)
+struct FFlagWriter
+{
+    GENERATED_BODY()
+
+public:
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        FString name;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+        AActor* actor;
+};
+
 //Use this class to keep track of objects after leaving a map
 UCLASS()
 class FIXEDCAMERAGAME_API AFCObjectWatcher : public AActor
@@ -119,6 +132,8 @@ protected:
 public:	
     void UpdateObjects();
 
+    void CheckFlags();
+
     void CheckEnemies();
 
     void CheckObjects();
@@ -131,6 +146,9 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Flags")
         TArray<FString> pendingFlags;
+
+    UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Flags")
+        TArray<FFlagWriter> flagsToSet;
 
     UPROPERTY(EditAnywhere, Category = "Audio")
         USoundBase* levelMusic = nullptr;

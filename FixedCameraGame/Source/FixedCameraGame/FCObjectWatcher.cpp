@@ -38,7 +38,22 @@ void AFCObjectWatcher::UpdateObjects()
 
 	CheckEnemies();
 
+	CheckFlags();
+
 	instanceMusic = playingMusic;
+}
+
+//Would be improved if I could avoid checking already set flags, but that is a minor issue
+void AFCObjectWatcher::CheckFlags()
+{
+	for (int i = 0; i < flagsToSet.Num(); i++)
+	{
+		auto flag = flagsToSet[i];
+		if (!IsValid(flag.actor))
+		{
+			pendingFlags.Add(flag.name);
+		}
+	}
 }
 
 void AFCObjectWatcher::CheckObjects()
