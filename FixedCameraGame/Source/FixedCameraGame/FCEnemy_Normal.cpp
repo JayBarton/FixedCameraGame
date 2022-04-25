@@ -102,10 +102,6 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 			}
 		}
 	}
-	if (spawning)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pressure"));
-	}
 }
 
 void AFCEnemy_Normal::Attack(int32 damage)

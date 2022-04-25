@@ -17,30 +17,33 @@ void AFCEnemy_Boss::BeginPlay()
 void AFCEnemy_Boss::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector currentPosition = GetActorLocation();
-	FVector playerPosition = player->GetActorLocation();
-	float distance = (currentPosition - playerPosition).Size();
-	if (!attackCoolingDown && !isCharging)
+	if (!spawnIn && !spawning)
 	{
-		timeSinceLastAttack += DeltaTime;
-		if (timeSinceLastAttack >= chargeTime)
+		FVector currentPosition = GetActorLocation();
+		FVector playerPosition = player->GetActorLocation();
+		float distance = (currentPosition - playerPosition).Size();
+		if (!attackCoolingDown && !isCharging)
 		{
-			timeSinceLastAttack = 0.0f;
-			isCharging = true;
-			GetCharacterMovement()->MaxWalkSpeed = chargeSpeed;
-			turnSpeed = chargeTurnSpeed;
+			timeSinceLastAttack += DeltaTime;
+			if (timeSinceLastAttack >= chargeTime)
+			{
+				timeSinceLastAttack = 0.0f;
+				isCharging = true;
+				GetCharacterMovement()->MaxWalkSpeed = chargeSpeed;
+				turnSpeed = chargeTurnSpeed;
+			}
 		}
-	}
-	else if (attackCoolingDown)
-	{
-		if (beenHit)
+		else if (attackCoolingDown)
 		{
-			GetWorld()->GetTimerManager().ClearTimer(CoolDownTimerHandle);
-			ResumeAttack();
+			if (beenHit)
+			{
+				GetWorld()->GetTimerManager().ClearTimer(CoolDownTimerHandle);
+				ResumeAttack();
+			}
 		}
-	}
 
-	beenHit = false;
+		beenHit = false;
+	}
 }
 
 void AFCEnemy_Boss::Attack(int32 damage)
