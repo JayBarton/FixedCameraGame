@@ -45,6 +45,7 @@ void AFCPlayerCamera::SetMaterial(float alpha)
 	if (dynamicMaterial)
 	{
 		dynamicMaterial->SetScalarParameterValue("Alpha", alpha);
+	//	dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
 	}
 	else
 	{

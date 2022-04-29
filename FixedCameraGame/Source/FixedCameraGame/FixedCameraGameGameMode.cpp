@@ -524,7 +524,8 @@ void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 void AFixedCameraGameGameMode::ResetLevel()
 {
 	newLevel = false;
-	ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
+	//ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
+	ChangeLevel(currentIndex, currentCameraIndex, "MainMenu", false);
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
