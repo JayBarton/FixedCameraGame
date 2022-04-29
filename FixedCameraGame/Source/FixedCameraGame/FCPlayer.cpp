@@ -501,7 +501,7 @@ void AFCPlayer::CombineItems(int32 first, int32 second)
 
 void AFCPlayer::Reload()
 {
-	if (isAiming && !isReloading)
+	if (isAiming && !isReloading && Inventory->inventory[equipped].amount < currentWeapon->maxAmmo)
 	{
 		FItemStruct& weaponSlot = Inventory->inventory[equipped];
 		for (int i = 0; i < Inventory->inventory.Num(); i++)
