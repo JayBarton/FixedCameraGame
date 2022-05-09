@@ -169,7 +169,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Weapons")
 	int32 equipped = -1;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Weapons")
 		FName WeaponAttachPoint;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapons")

@@ -523,9 +523,15 @@ void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 
 void AFixedCameraGameGameMode::ResetLevel()
 {
+	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	instance->equippedIndex = pc->equipped;
+	//this works differently now, figure out how to refactor later
+	//I still want the fade out behavior, and updating the equip index, but don't need any object watcher stuff
 	newLevel = false;
+	playerCamera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
 	//ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
-	ChangeLevel(currentIndex, currentCameraIndex, "MainMenu", false);
+	ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
