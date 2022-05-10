@@ -8,6 +8,8 @@
 #include "Kismet/KismetMathLibrary.h" 
 #include "Engine/SpotLight.h" 
 #include "Components/SpotLightComponent.h" 
+#include "FCDeadPlayer.h"
+#include "FCDeadWeapon.h"
 
 // Sets default values
 AFCGameOverSequenceActor::AFCGameOverSequenceActor()
@@ -27,21 +29,21 @@ void AFCGameOverSequenceActor::BeginPlay()
 	fadeOutLight->SpotLightComponent->SetOuterConeAngle(currentCone);
 
 
-	//once I figure out how to get the weapon to appear that will be done here
-	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-	/*FActorSpawnParameters SpawnInfo;
-	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-	currentWeapon = GetWorld()->SpawnActor<AFCWeapon>(weapon, SpawnInfo);
-	currentWeapon->player = this;
-	currentWeapon->Hide();*/
+	CheckWeapon();
+}
 
+//If the player died with a weapon equipped, spawn it on them
+void AFCGameOverSequenceActor::CheckWeapon()
+{
+	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	if (instance->equippedIndex >= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("right here"))
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Nope"))
+		FActorSpawnParameters SpawnInfo;
+		SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		auto currentWeapon = GetWorld()->SpawnActor<AFCDeadWeapon>(weapon, SpawnInfo);
+
+		currentWeapon->MeshComp->AttachToComponent(player->MeshComp, FAttachmentTransformRules::KeepRelativeTransform, player->WeaponAttachPoint);
+
 	}
 }
 
@@ -50,19 +52,16 @@ void AFCGameOverSequenceActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	currentCone -= coneDescreaseSpeed * DeltaTime;
-	fadeOutLight->SpotLightComponent->SetOuterConeAngle(currentCone);
+	SpotLightFade(DeltaTime);
 
-	if (currentCone <= 0)
-	{
-		fadeOutLight->SetActorHiddenInGame(true);
-	}
+	OrbitCamera(DeltaTime);
 
-	currentRotation += rotationSpeed * DeltaTime;
-	FVector newLocation = FVector(distanceFromCenter * cos(currentRotation), distanceFromCenter * sin(currentRotation), 360);
-	camera->SetActorLocation(newLocation);
-	FRotator newRotation = UKismetMathLibrary::FindLookAtRotation(camera->GetActorLocation(), FVector(0));
-	camera->SetActorRotation(newRotation);
+	CameraFade(DeltaTime);
+
+}
+
+void AFCGameOverSequenceActor::CameraFade(float DeltaTime)
+{
 	if (levelFadeOut)
 	{
 		transitionTimer += DeltaTime;
@@ -86,7 +85,27 @@ void AFCGameOverSequenceActor::Tick(float DeltaTime)
 			GetWorld()->GetTimerManager().SetTimer(DisplayTestTimerHandle, this, &AFCGameOverSequenceActor::FadeOut, textDisplayTime, false);
 		}
 	}
+}
 
+void AFCGameOverSequenceActor::OrbitCamera(float DeltaTime)
+{
+	currentRotation += rotationSpeed * DeltaTime;
+	FVector newLocation = FVector(distanceFromCenter * cos(currentRotation), distanceFromCenter * sin(currentRotation), 360);
+	camera->SetActorLocation(newLocation);
+	FRotator newRotation = UKismetMathLibrary::FindLookAtRotation(camera->GetActorLocation(), FVector(0));
+	camera->SetActorRotation(newRotation);
+}
+
+//Handle fading out the main spotlight
+void AFCGameOverSequenceActor::SpotLightFade(float DeltaTime)
+{
+	currentCone -= coneDescreaseSpeed * DeltaTime;
+	fadeOutLight->SpotLightComponent->SetOuterConeAngle(currentCone);
+
+	if (currentCone <= 0)
+	{
+		fadeOutLight->SetActorHiddenInGame(true);
+	}
 }
 
 void AFCGameOverSequenceActor::FadeOut()

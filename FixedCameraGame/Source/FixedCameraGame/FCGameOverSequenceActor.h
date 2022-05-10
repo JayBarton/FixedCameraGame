@@ -7,6 +7,8 @@
 #include "FCGameOverSequenceActor.generated.h"
 class AFCPlayerCamera;
 class ASpotLight;
+class AFCDeadWeapon;
+class AFCDeadPlayer;
 UCLASS()
 class FIXEDCAMERAGAME_API AFCGameOverSequenceActor : public AActor
 {
@@ -20,9 +22,17 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void CheckWeapon();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void CameraFade(float DeltaTime);
+
+	void OrbitCamera(float DeltaTime);
+
+	void SpotLightFade(float DeltaTime);
 
 	void FadeOut();
 
@@ -50,6 +60,11 @@ public:
 	float coneDescreaseSpeed = 1.0f;
 	float currentCone;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Weapons")
+	TSubclassOf<AFCDeadWeapon> weapon;
+
+	UPROPERTY(EditAnywhere, Category = "Weapons")
+		AFCDeadPlayer* player;
 
 	bool levelFadeIn = false;
 	bool levelFadeOut = false;
