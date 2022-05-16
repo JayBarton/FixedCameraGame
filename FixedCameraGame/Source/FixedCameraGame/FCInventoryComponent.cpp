@@ -57,25 +57,28 @@ void UFCInventoryComponent::RemoveFromInventory(int index)
 
 void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherInventory, int second)
 {
-	FItemStruct& firstItem = inventory[first];
-	FItemStruct& secondItem = otherInventory->inventory[second];
 	bool added = false;
-	if (firstItem.ID == secondItem.ID)
+	if (first != second)
 	{
-		if (firstItem.amount < firstItem.maxCapacity && secondItem.amount < secondItem.maxCapacity)
+		FItemStruct& firstItem = inventory[first];
+		FItemStruct& secondItem = otherInventory->inventory[second];
+		if (firstItem.ID == secondItem.ID)
 		{
-			int32 toAdd = secondItem.maxCapacity - secondItem.amount;
-			if (firstItem.amount <= toAdd)
+			if (firstItem.amount < firstItem.maxCapacity && secondItem.amount < secondItem.maxCapacity)
 			{
-				secondItem.amount += firstItem.amount;
-				firstItem = FItemStruct();
+				int32 toAdd = secondItem.maxCapacity - secondItem.amount;
+				if (firstItem.amount <= toAdd)
+				{
+					secondItem.amount += firstItem.amount;
+					firstItem = FItemStruct();
+				}
+				else
+				{
+					secondItem.amount += toAdd;
+					firstItem.amount -= toAdd;
+				}
+				added = true;
 			}
-			else
-			{
-				secondItem.amount += toAdd;
-				firstItem.amount -= toAdd;
-			}
-			added = true;
 		}
 	}
 	if (!added)
