@@ -468,6 +468,8 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 					instance->equippedIndex = pc->equipped;
 					instance->playerHealth = pc->currentHealth;
 					objectWatcher->UpdateObjects();
+					UGameplayStatics::SetGamePaused(GetWorld(), true);
+
 				}
 				for (int i = 0; i < objectWatcher->pendingFlags.Num(); i++)
 				{
@@ -505,7 +507,6 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 
-			UGameplayStatics::SetGamePaused(GetWorld(), true);
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 			if (!continueMusic && instance->isPlayingMusic)
@@ -529,6 +530,7 @@ void AFixedCameraGameGameMode::ResetLevel()
 	//this works differently now, figure out how to refactor later
 	//I still want the fade out behavior, and updating the equip index, but don't need any object watcher stuff
 	newLevel = false;
+	playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 	playerCamera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
 	//ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
 	ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);

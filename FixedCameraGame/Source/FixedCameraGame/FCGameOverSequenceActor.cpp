@@ -76,7 +76,7 @@ void AFCGameOverSequenceActor::CameraFade(float DeltaTime)
 	else if (levelFadeIn)
 	{
 		transitionTimer += DeltaTime;
-		camera->UpdateMaterial(1.0f - transitionTimer, transitionTime);
+		camera->UpdateMaterial(transitionTime - transitionTimer, transitionTime);
 		if (transitionTimer >= transitionTime)
 		{
 			transitionTimer = 0.0f;
