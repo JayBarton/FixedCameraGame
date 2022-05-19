@@ -739,7 +739,7 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear)
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear, AFCPlayerCamera* descriptionCamera)
 {
 	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
 	display->AddToViewport();
@@ -781,6 +781,14 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	else if (Switch)
 	{
 		inputComponent->BindAction<InputSceneDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToScene, Switch).bExecuteWhenPaused = true;
+	}
+	else if (descriptionCamera)
+	{
+		playerCamera = Cast<AFCPlayerCamera>(pc->GetViewTarget());
+		FViewTargetTransitionParams transitionParams;
+		pc->SetViewTarget(descriptionCamera, transitionParams);
+		inputComponent->BindAction("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextFromCamera).bExecuteWhenPaused = true;
+
 	}
 	else
 	{
@@ -873,6 +881,22 @@ void AFixedCameraGameGameMode::HandleTextToScene(UFCSwitchComponent* Switch)
 		pc->SetInputMode(FInputModeGameOnly());
 		UGameplayStatics::SetGamePaused(GetWorld(), false);
 		Switch->PressSwitch();
+	}
+}
+
+void AFixedCameraGameGameMode::HandleTextFromCamera()
+{
+	if (AdvanceText() && display->advanceClear)
+	{
+		ClearText();
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
+
+		FViewTargetTransitionParams transitionParams;
+		pc->SetViewTarget(playerCamera, transitionParams);
+
+		pc->SetInputMode(FInputModeGameOnly());
+		UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
 }
 

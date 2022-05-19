@@ -10,6 +10,7 @@
  * 
  */
 class UFCInfoTextWidget;
+class AFCPlayerCamera;
 UCLASS()
 class FIXEDCAMERAGAME_API AFCDescription : public AFCInteractable
 {
@@ -22,4 +23,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	FString description;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	AFCPlayerCamera* descriptionCamera = nullptr;
 };
