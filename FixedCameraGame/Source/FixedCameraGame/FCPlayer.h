@@ -17,8 +17,6 @@ class AFCWeapon;
 class UFCFootStepComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInteractableDelegate);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNewInteractableDelegate);
-
 
 UCLASS()
 class FIXEDCAMERAGAME_API AFCPlayer : public ACharacter
@@ -203,8 +201,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FInteractableDelegate Interacted;
-	UPROPERTY(BlueprintAssignable, Category = "Events")
-	FNewInteractableDelegate NewInteractable;
 
 	//UPROPERTY(EditDefaultsOnly, Category = "UI")
 //	TSubclassOf<UUserWidget> inventoryUI = nullptr;

@@ -399,14 +399,27 @@ void AFCPlayer::LookForInteractable()
 		//If/when I get rid of box brushes, I can get rid of this
 		if (OutHit.GetActor())
 		{
-			if (OutHit.GetActor()->GetClass()->ImplementsInterface(UFCInteractableInterface::StaticClass()))
+			AActor* hitActor = OutHit.GetActor();
+
+			if (hitActor->GetClass()->ImplementsInterface(UFCInteractableInterface::StaticClass()))
 			{
 				interactable = true;
 				if (!nearestInteractable)
 				{
-					nearestInteractable = OutHit.GetActor();
-					NewInteractable.Broadcast();
+					nearestInteractable = hitActor;
+				}
+				else
+				{
+					if (hitActor != nearestInteractable)
+					{
 
+						float d1 = (Start - hitActor->GetActorLocation()).Size();
+						float d2 = (Start - nearestInteractable->GetActorLocation()).Size();
+						if (d1 < d2)
+						{
+							nearestInteractable = hitActor;
+						}
+					}
 				}
 			}
 		}
@@ -416,8 +429,6 @@ void AFCPlayer::LookForInteractable()
 		if (nearestInteractable)
 		{
 			nearestInteractable = nullptr;
-			NewInteractable.Broadcast();
-
 		}
 	}
 }
