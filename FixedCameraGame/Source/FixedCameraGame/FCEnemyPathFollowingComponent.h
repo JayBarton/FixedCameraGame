@@ -24,4 +24,6 @@ protected:
 public:
 	UCharacterMovementComponent* CharacterMoveComp;
 	AFCEnemy* enemy;
+
+	float counter = 0.0f;
 };
