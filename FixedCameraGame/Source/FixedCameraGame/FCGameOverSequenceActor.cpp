@@ -22,8 +22,6 @@ AFCGameOverSequenceActor::AFCGameOverSequenceActor()
 void AFCGameOverSequenceActor::BeginPlay()
 {
 	Super::BeginPlay();
-	camera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
-	camera->SetMaterial(1.0f);
 	levelFadeIn = true;
 	currentCone = coneDefault;
 	fadeOutLight->SpotLightComponent->SetOuterConeAngle(currentCone);

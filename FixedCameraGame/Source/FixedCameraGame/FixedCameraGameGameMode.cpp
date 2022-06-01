@@ -611,6 +611,13 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 			{
 				if (objectWatcher)
 				{
+					auto Inventory = pc->Inventory;
+					FItemStruct& slot = Inventory->inventory[token];
+					slot.amount--;
+					if (slot.amount <= 0)
+					{
+						slot = FItemStruct();
+					}
 
 					saveGameInstance->startIndex = instance->startIndex;
 					saveGameInstance->cameraIndex = instance->cameraIndex;
@@ -662,13 +669,6 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 					if (UGameplayStatics::SaveGameToSlot(saveGameMinimalInstance, slotMinimalName, 1))
 					{
 						UE_LOG(LogTemp, Warning, TEXT("SAVED"));
-						auto Inventory = pc->Inventory;
-						FItemStruct& slot = Inventory->inventory[token];
-						slot.amount--;
-						if (slot.amount <= 0)
-						{
-							slot = FItemStruct();
-						}
 
 					}
 				}
