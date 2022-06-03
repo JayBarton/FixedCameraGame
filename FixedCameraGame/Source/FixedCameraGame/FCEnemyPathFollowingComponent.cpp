@@ -41,12 +41,6 @@ void UFCEnemyPathFollowingComponent::FollowPathSegment(float DeltaTime)
             MoveVelocity.Normalize();
             MoveVelocity *= CharacterMoveComp->MaxWalkSpeed;
         }
-        if (GEngine)
-        {
-            counter += 1.0;
-            FString TheFloatStr = FString::SanitizeFloat(DeltaTime);
-            GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, *TheFloatStr);
-        }
         PostProcessMove.ExecuteIfBound(this, MoveVelocity);
         MovementComp->RequestDirectMove(MoveVelocity, bNotFollowingLastSegment);
      //   UE_LOG(LogTemp, Warning, TEXT("velocity %s"), *MovementComp->Velocity.ToString());

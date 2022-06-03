@@ -556,7 +556,7 @@ void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
 	}
 }
 
-void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation)
+void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation, bool hideEnemy)
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCEnemy::StaticClass(), FoundActors);
@@ -572,6 +572,7 @@ void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation)
 			enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
 			enemy->SetActorTickEnabled(false);
 			enemy->GetMesh()->bPauseAnims = pauseAnimation;
+			enemy->GetMesh()->SetHiddenInGame(hideEnemy, true);
 		}
 	}
 }
@@ -588,6 +589,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 			enemy->PawnSensingComp->SetSensingUpdatesEnabled(true);
 			enemy->SetActorTickEnabled(true);
 			enemy->GetMesh()->bPauseAnims = false;
+			enemy->GetMesh()->SetHiddenInGame(false, true);
 		}
 	}
 }
@@ -759,8 +761,18 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	}
 	if (!inMenu)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("paused here"));
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		if (descriptionCamera)
+		{
+			StopEnemies(true, true);
+			playerCharacter->GetMesh()->SetHiddenInGame(true, true);
+			playerCharacter->SetActorTickEnabled(false);
+			playerCharacter->inControl = false;
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("paused here"));
+			UGameplayStatics::SetGamePaused(GetWorld(), true);
+		}
 	}
 	else
 	{
@@ -892,11 +904,18 @@ void AFixedCameraGameGameMode::HandleTextFromCamera()
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 
+		auto playerCharacter = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+		playerCharacter->GetMesh()->SetHiddenInGame(false, true);
+		playerCharacter->SetActorTickEnabled(true);
+		playerCharacter->inControl = true;
+
+
 		FViewTargetTransitionParams transitionParams;
 		pc->SetViewTarget(playerCamera, transitionParams);
 
 		pc->SetInputMode(FInputModeGameOnly());
-		UGameplayStatics::SetGamePaused(GetWorld(), false);
+		ResumeEnemies();
+		//UGameplayStatics::SetGamePaused(GetWorld(), false);
 	}
 }
 

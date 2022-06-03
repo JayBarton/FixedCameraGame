@@ -68,7 +68,7 @@ public:
 
 	void SetPendingLock(FString levelName, int32 index);
 
-	void StopEnemies(bool pauseAnimation = true);
+	void StopEnemies(bool pauseAnimation = true, bool hideEnemy = false);
 	void ResumeEnemies();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
