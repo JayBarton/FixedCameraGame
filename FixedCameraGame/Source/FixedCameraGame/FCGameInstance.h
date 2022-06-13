@@ -20,6 +20,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
 	FString level;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
+	FString playTime;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
 	bool loaded = false;
 };
 
@@ -49,6 +51,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TArray<FItemStruct> containerInventory;
+
+	UPROPERTY(EditAnywhere, Category = "Start")
+	float gameTime = 0.0f;
 
 	//Use this to load objects that have data that can change, such as picked up items and locked doors
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")

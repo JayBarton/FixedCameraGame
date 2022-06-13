@@ -59,6 +59,9 @@ void UFCGameInstance::LoadGame(int slot)
 		savedEnemies = loadedGame->savedEnemies;
 		containerInventory = loadedGame->containerInventory;
 		pendingLocks = loadedGame->pendingLocks;
+		gameTime = loadedGame->gameTime;
+
+		UE_LOG(LogTemp, Warning, TEXT("load time %f"), loadedGame->gameTime);
 		//not sure about this.
 		/*if (saveGamelevelMusicPlaying.Contains(currentLevel))
 		{
@@ -92,6 +95,7 @@ FMinimalSaveStruct UFCGameInstance::LoadMinimal(int slot)
 	{
 		saveStruct.level = FName::NameToDisplayString(loadedGame->currentLevel, false);
 		saveStruct.loaded = true;
+		saveStruct.playTime = loadedGame->gameTime;
 		return saveStruct;
 	}
 	else

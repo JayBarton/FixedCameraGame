@@ -18,4 +18,7 @@ public:
 
 	UPROPERTY()
 	FString currentLevel;
+
+	UPROPERTY()
+	FString gameTime;
 };

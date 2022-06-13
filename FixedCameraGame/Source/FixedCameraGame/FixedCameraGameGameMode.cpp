@@ -117,6 +117,13 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		pc->UpdateCameraManager(DeltaTime);
 	}
+	else
+	{
+		if (!fakePause)
+		{
+			gameTime += DeltaTime;
+		}
+	}
 }
 
 void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
@@ -168,6 +175,9 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		HandlePendingLocks(instance);
 
 		HandleMusic(instance);
+
+		gameTime = instance->gameTime;
+
 	}
 	else
 	{
@@ -509,6 +519,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
+			instance->gameTime = gameTime;
 			if (!continueMusic && instance->isPlayingMusic)
 			{
 				instance->StopMusic(transitionTime);
@@ -602,6 +613,10 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 	{
 		saveGameInstance->currentLevel = currentLevel;
 		saveGameMinimalInstance->currentLevel = currentLevel;
+		int seconds = fmod(gameTime, 60);
+		int minutes = gameTime / 60;
+		int hours = gameTime / 3600;
+		saveGameMinimalInstance->gameTime = GetTime();
 
 		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
@@ -626,6 +641,10 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 					saveGameInstance->playerInventory = pc->Inventory->inventory;
 					saveGameInstance->equippedIndex = pc->equipped;
 					saveGameInstance->playerHealth = pc->currentHealth;
+
+					saveGameInstance->gameTime = gameTime;
+					UE_LOG(LogTemp, Warning, TEXT("save time %f"), saveGameInstance->gameTime);
+
 					objectWatcher->UpdateObjects();
 					for (int i = 0; i < objectWatcher->pendingFlags.Num(); i++)
 					{
@@ -767,6 +786,7 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 			playerCharacter->GetMesh()->SetHiddenInGame(true, true);
 			playerCharacter->SetActorTickEnabled(false);
 			playerCharacter->inControl = false;
+			fakePause = true;
 		}
 		else
 		{
@@ -909,6 +929,7 @@ void AFixedCameraGameGameMode::HandleTextFromCamera()
 		playerCharacter->SetActorTickEnabled(true);
 		playerCharacter->inControl = true;
 
+		fakePause = false;
 
 		FViewTargetTransitionParams transitionParams;
 		pc->SetViewTarget(playerCamera, transitionParams);
@@ -947,4 +968,12 @@ void AFixedCameraGameGameMode::ClearText()
 FString AFixedCameraGameGameMode::GetDisplayName(FString name)
 {
 	return FName::NameToDisplayString(name, false);
+}
+
+FString AFixedCameraGameGameMode::GetTime()
+{
+	int seconds = fmod(gameTime, 60);
+	int minutes = gameTime / 60;
+	int hours = gameTime / 3600;
+	return FString::Printf(TEXT("%02d:%02d:%02d"), hours, minutes, seconds);
 }

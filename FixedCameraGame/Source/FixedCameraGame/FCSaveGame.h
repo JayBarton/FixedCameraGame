@@ -61,6 +61,9 @@ public:
 
 	bool isPlayingMusic = false;
 
+	UPROPERTY(EditAnywhere, Category = "Start")
+	float gameTime;
+
 	UPROPERTY()
 	UAudioComponent* music = nullptr;
 	USoundBase* musicCue;

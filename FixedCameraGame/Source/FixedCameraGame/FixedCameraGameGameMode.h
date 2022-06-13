@@ -97,6 +97,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	FString GetDisplayName(FString name);
 
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	FString GetTime();
+
 	UInputComponent* inputComponent;
 	AFCObjectWatcher* objectWatcher;
 	AFCContainer* container;
@@ -117,6 +120,8 @@ public:
 	float transitionTime = 1.0f;
 	float transitionTimer = 0.0f;
 
+	float gameTime = 0.0f;
+
 	bool levelFadeOut = false;
 	bool levelFadeIn = false;
 
@@ -124,6 +129,8 @@ public:
 
 	//Maybe temporary, using this to test out displaying text from the inventory
 	bool inMenu = false;
+
+	bool fakePause = false;
 
 	FName nextLevel;
 
