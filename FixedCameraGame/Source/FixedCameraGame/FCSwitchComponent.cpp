@@ -50,6 +50,7 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool p
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
 	UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(pc);
+	UE_LOG(LogTemp, Warning, TEXT("HEY HEY"));
 	FViewTargetTransitionParams transitionParams;
 	pc->SetViewTarget(sceneCamera, transitionParams);
 
@@ -69,9 +70,11 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool p
 	{
 		gameMode->StartNewMusic();
 	}
-
-	FTimerHandle SceneTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
+	if (sceneLength > 0)
+	{
+		FTimerHandle SceneTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
+	}
 }
 
 void UFCSwitchComponent::EndScene()

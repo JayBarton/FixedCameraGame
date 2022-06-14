@@ -25,6 +25,9 @@ public:
 	UPROPERTY()
 	FString currentLevel;
 
+	UPROPERTY(EditAnywhere, Category = "Stats")
+		int numberOfSaves;
+
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, Category = "Player")
 	int startIndex = 0;
@@ -61,8 +64,10 @@ public:
 
 	bool isPlayingMusic = false;
 
-	UPROPERTY(EditAnywhere, Category = "Start")
+	UPROPERTY(EditAnywhere, Category = "Stats")
 	float gameTime;
+
+
 
 	UPROPERTY()
 	UAudioComponent* music = nullptr;

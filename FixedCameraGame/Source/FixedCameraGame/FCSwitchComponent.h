@@ -58,7 +58,7 @@ public:
 	ACameraActor* sceneCamera;
 	//might be able to remove this
 	ACameraActor* playerCamera;
-	//How long the scene lasts in seconds
+	//How long the scene lasts in seconds. A length of 0 or less will not end.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
-		float sceneLength;
+	float sceneLength;
 };

@@ -122,6 +122,7 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 		if (!fakePause)
 		{
 			gameTime += DeltaTime;
+			//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetTime())
 		}
 	}
 }
@@ -533,7 +534,7 @@ void AFixedCameraGameGameMode::MoveToLevel(FName levelName)
 	UGameplayStatics::OpenLevel(GetWorld(), levelName);
 }
 
-void AFixedCameraGameGameMode::ResetLevel()
+void AFixedCameraGameGameMode::EndGame(bool dead)
 {
 	auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
@@ -542,9 +543,21 @@ void AFixedCameraGameGameMode::ResetLevel()
 	//I still want the fade out behavior, and updating the equip index, but don't need any object watcher stuff
 	newLevel = false;
 	playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
-	playerCamera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
-	//ChangeLevel(currentIndex, currentCameraIndex, FName(*currentLevel), false);
-	ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);
+	if (playerCamera)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("cam"));
+	}
+	
+	if (dead)
+	{
+		playerCamera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
+		ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);
+	}
+	else
+	{
+		//will be results screen
+		ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);
+	}
 }
 
 void AFixedCameraGameGameMode::SetPendingLock(FString levelName, int32 index)
@@ -682,6 +695,9 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 				{
 					saveGameInstance->containerInventory = container->Inventory->inventory;
 				}
+
+				instance->numberOfSaves++;
+				saveGameInstance->numberOfSaves = instance->numberOfSaves;
 
 				FString slotName = "slot" + FString::FromInt(slot);
 				FString slotMinimalName = "slotM" + FString::FromInt(slot);

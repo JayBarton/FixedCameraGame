@@ -60,8 +60,10 @@ void UFCGameInstance::LoadGame(int slot)
 		containerInventory = loadedGame->containerInventory;
 		pendingLocks = loadedGame->pendingLocks;
 		gameTime = loadedGame->gameTime;
+		numberOfSaves = loadedGame->numberOfSaves;
 
 		UE_LOG(LogTemp, Warning, TEXT("load time %f"), loadedGame->gameTime);
+		UE_LOG(LogTemp, Warning, TEXT("saves %i"), numberOfSaves);
 		//not sure about this.
 		/*if (saveGamelevelMusicPlaying.Contains(currentLevel))
 		{

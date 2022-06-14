@@ -628,8 +628,8 @@ void AFCPlayer::TakeHit(int32 damage)
 			DisableInput(Cast<APlayerController>(GetController()));
 			dead = true;
 			//Not sure how I want to handle death yet, this will work as a proof of concept
-			FTimerHandle ResetLevelTimer;
-			GetWorld()->GetTimerManager().SetTimer(ResetLevelTimer, this, &AFCPlayer::ResetLevel, 2.0f, false);
+			FTimerHandle GameOverTimer;
+			GetWorld()->GetTimerManager().SetTimer(GameOverTimer, this, &AFCPlayer::GameOver, 2.0f, false);
 			UE_LOG(LogTemp, Warning, TEXT("dead!"));
 		}
 		else
@@ -647,10 +647,10 @@ void AFCPlayer::RecoverFromStagger()
 	staggered = false;
 }
 
-void AFCPlayer::ResetLevel()
+void AFCPlayer::GameOver()
 {
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	gameMode->ResetLevel();
+	gameMode->EndGame();
 }
 
 bool AFCPlayer::BlockingInput()

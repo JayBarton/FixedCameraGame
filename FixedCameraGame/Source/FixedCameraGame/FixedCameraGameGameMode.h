@@ -64,7 +64,8 @@ public:
 
 	void ChangeLevel(int index, int cameraIndex, FName levelName, bool continueMusic);
 	void MoveToLevel(FName levelName);
-	void ResetLevel();
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	void EndGame(bool dead = true);
 
 	void SetPendingLock(FString levelName, int32 index);
 
@@ -130,6 +131,7 @@ public:
 	//Maybe temporary, using this to test out displaying text from the inventory
 	bool inMenu = false;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Timer")
 	bool fakePause = false;
 
 	FName nextLevel;

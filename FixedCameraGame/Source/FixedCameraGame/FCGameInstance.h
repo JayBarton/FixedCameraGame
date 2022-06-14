@@ -36,6 +36,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
 	FString currentLevel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	int numberOfSaves = 0;
+
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	int startIndex = 0;

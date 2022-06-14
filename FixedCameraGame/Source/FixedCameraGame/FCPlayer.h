@@ -125,7 +125,7 @@ public:
 	UFUNCTION()
 	void RecoverFromStagger();
 	UFUNCTION()
-	void ResetLevel();
+	void GameOver();
 	UFUNCTION(BlueprintCallable, Category = "Functions")	
 	bool BlockingInput();
 
