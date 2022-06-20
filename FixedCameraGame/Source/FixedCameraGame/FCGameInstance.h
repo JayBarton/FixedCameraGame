@@ -36,7 +36,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Save")
 	FString currentLevel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	int numberOfSaves = 0;
 
 	//Index of the player start and camera on entering a new level
@@ -55,7 +55,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 	TArray<FItemStruct> containerInventory;
 
-	UPROPERTY(EditAnywhere, Category = "Start")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	float gameTime = 0.0f;
 
 	//Use this to load objects that have data that can change, such as picked up items and locked doors

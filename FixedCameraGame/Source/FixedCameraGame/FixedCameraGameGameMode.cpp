@@ -34,6 +34,7 @@
 AFixedCameraGameGameMode::AFixedCameraGameGameMode()
 {
 	PrimaryActorTick.bTickEvenWhenPaused = true;
+	PrimaryActorTick.bCanEverTick = true;
 
 }
 
@@ -41,13 +42,13 @@ void AFixedCameraGameGameMode::BeginPlay()
 {
 
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
-
 	TArray<AActor*> FoundActors;
 
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AFCObjectWatcher::StaticClass(), FoundActors);
 	if (FoundActors.Num() > 0)
 	{
 		objectWatcher = Cast<AFCObjectWatcher>(FoundActors[0]);
+
 	}
 
 	if (instance)
@@ -61,7 +62,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 				container->Inventory->inventory = instance->containerInventory;
 			}
 		}
-
 		CheckInstance(instance);
 
 		auto pc = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -80,7 +80,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 		}
 
 		FindStart(instance);
-
 		levelFadeIn = true;
 		playerCamera->SetMaterial(1.0f);
 	}
@@ -122,7 +121,7 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 		if (!fakePause)
 		{
 			gameTime += DeltaTime;
-			//UE_LOG(LogTemp, Warning, TEXT("%s"), *GetTime())
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *GetTime())
 		}
 	}
 }
@@ -543,10 +542,6 @@ void AFixedCameraGameGameMode::EndGame(bool dead)
 	//I still want the fade out behavior, and updating the equip index, but don't need any object watcher stuff
 	newLevel = false;
 	playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
-	if (playerCamera)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("cam"));
-	}
 	
 	if (dead)
 	{
@@ -556,7 +551,7 @@ void AFixedCameraGameGameMode::EndGame(bool dead)
 	else
 	{
 		//will be results screen
-		ChangeLevel(currentIndex, currentCameraIndex, "GameOverScene", false);
+		ChangeLevel(currentIndex, currentCameraIndex, "EndGameResults", false);
 	}
 }
 
