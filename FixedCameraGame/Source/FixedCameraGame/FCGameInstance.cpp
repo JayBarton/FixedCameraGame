@@ -107,3 +107,11 @@ FMinimalSaveStruct UFCGameInstance::LoadMinimal(int slot)
 	return saveStruct;
 
 }
+
+FString UFCGameInstance::GetTime()
+{
+	int seconds = fmod(gameTime, 60);
+	int minutes = gameTime / 60;
+	int hours = gameTime / 3600;
+	return FString::Printf(TEXT("%02d:%02d:%02d"), hours, minutes, seconds);
+}

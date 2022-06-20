@@ -92,4 +92,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	FMinimalSaveStruct LoadMinimal(int slot);
 
+	//Copied from game mode
+	UFUNCTION(BlueprintCallable, Category = "Functions")
+	FString GetTime();
+
 };
