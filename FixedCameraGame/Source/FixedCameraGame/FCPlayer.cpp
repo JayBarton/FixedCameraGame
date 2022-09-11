@@ -136,9 +136,6 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFCPlayer::SaveTest);
-	PlayerInputComponent->BindAction("Load", IE_Pressed, this, &AFCPlayer::LoadTest);
-
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AFCPlayer::QuickTurn);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AFCPlayer::Fire);
@@ -152,18 +149,6 @@ void AFCPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFCPlayer::MoveForward);
 	PlayerInputComponent->BindAxis("Turn", this, &AFCPlayer::Turn);
 
-}
-
-void AFCPlayer::SaveTest()
-{
-	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	//gameMode->SaveGame(1);
-}
-
-void AFCPlayer::LoadTest()
-{
-	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	//gameMode->LoadGame(1);
 }
 
 void AFCPlayer::MoveForward(float value)

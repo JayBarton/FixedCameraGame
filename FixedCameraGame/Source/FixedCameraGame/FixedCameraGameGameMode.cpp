@@ -177,7 +177,7 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 		HandleMusic(instance);
 
 		gameTime = instance->gameTime;
-
+		enemyKills = instance->enemyKills;
 	}
 	else
 	{
@@ -520,6 +520,7 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 			instance->gameTime = gameTime;
+			instance->enemyKills = enemyKills;
 			if (!continueMusic && instance->isPlayingMusic)
 			{
 				instance->StopMusic(transitionTime);
@@ -651,6 +652,7 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 					saveGameInstance->playerHealth = pc->currentHealth;
 
 					saveGameInstance->gameTime = gameTime;
+					saveGameInstance->enemyKills = enemyKills;
 					UE_LOG(LogTemp, Warning, TEXT("save time %f"), saveGameInstance->gameTime);
 
 					objectWatcher->UpdateObjects();

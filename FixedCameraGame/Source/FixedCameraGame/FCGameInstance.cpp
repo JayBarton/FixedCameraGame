@@ -61,6 +61,7 @@ void UFCGameInstance::LoadGame(int slot)
 		pendingLocks = loadedGame->pendingLocks;
 		gameTime = loadedGame->gameTime;
 		numberOfSaves = loadedGame->numberOfSaves;
+		enemyKills = loadedGame->enemyKills;
 
 		UE_LOG(LogTemp, Warning, TEXT("load time %f"), loadedGame->gameTime);
 		UE_LOG(LogTemp, Warning, TEXT("saves %i"), numberOfSaves);

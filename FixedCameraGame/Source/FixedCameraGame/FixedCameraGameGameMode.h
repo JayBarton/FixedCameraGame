@@ -118,6 +118,8 @@ public:
 
 	int32 interactKey;
 
+	int32 enemyKills;
+
 	float transitionTime = 1.0f;
 	float transitionTimer = 0.0f;
 

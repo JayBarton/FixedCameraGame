@@ -11,6 +11,7 @@
 #include "Particles/ParticleSystem.h"
 #include "Components/BoxComponent.h"
 #include "FCFootStepComponent.h"
+#include "FixedCameraGameGameMode.h"
 
 // Sets default values
 AFCEnemy::AFCEnemy()
@@ -142,8 +143,10 @@ void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 			AI->StopMovement();
 		}
 		Kill();
+		//being listened to by bpenemydeathwatcher
 		EnemyKilled.Broadcast();
-		//killed enemy
+		auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+		gameMode->enemyKills++;
 	}
 	else
 	{

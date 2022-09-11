@@ -27,6 +27,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Stats")
 		int numberOfSaves;
+	UPROPERTY(EditAnywhere, Category = "Stats")
+		int enemyKills;
 
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, Category = "Player")

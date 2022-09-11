@@ -38,6 +38,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
 	int numberOfSaves = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stats")
+	int enemyKills = 0;
 
 	//Index of the player start and camera on entering a new level
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
