@@ -105,4 +105,3 @@ void AFCTerminal::Unlocked()
 {
 	MeshComp->SetMaterial(1, onMaterial);
 }
-

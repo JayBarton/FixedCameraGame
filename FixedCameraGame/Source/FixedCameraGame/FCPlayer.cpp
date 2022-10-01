@@ -640,7 +640,7 @@ void AFCPlayer::GameOver()
 
 bool AFCPlayer::BlockingInput()
 {
-	return staggered || quickTurn;
+	return staggered || quickTurn || !inControl;
 }
 
 void AFCPlayer::CreateSwitchWidget_Implementation(AFCSwitchInteractable* switchInteractable)
