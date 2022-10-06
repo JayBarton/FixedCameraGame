@@ -9,6 +9,8 @@
  */
 
 class UWidgetComponent;
+class ACameraActor;
+
 UCLASS()
 class FIXEDCAMERAGAME_API AFCNumpad : public AFCPuzzleInteractable
 {
@@ -34,5 +36,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pad")
 		UWidgetComponent* Widget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pawn")
+		ACameraActor* newCamera;
 
 };

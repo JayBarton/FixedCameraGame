@@ -31,9 +31,9 @@ public:
 
 	//Sends the password to the widget
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-		void SendToWidget();
+	void SendToWidget();
 
-		virtual void OpenLock() override;
+	virtual void OpenLock() override;
 	virtual void ExitPuzzle() override;
 
 	UFUNCTION()

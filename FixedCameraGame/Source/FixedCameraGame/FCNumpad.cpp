@@ -26,20 +26,24 @@ void AFCNumpad::BeginPlay()
 void AFCNumpad::StartPuzzle()
 {
 	Super::StartPuzzle();
-	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
-	//	pc->SetInputMode(FInputModeUIOnly());
-		//pc->SetShowMouseCursor(false);
+	if (newCamera)
+	{
+		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
+		pc->SetViewTargetWithBlend(newCamera);
+		//	pc->SetInputMode(FInputModeUIOnly());
+			//pc->SetShowMouseCursor(false);
 
-//	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
+	//	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
 
-	auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	playerCharacter->GetMesh()->SetHiddenInGame(true, true);
-	playerCharacter->SetActorTickEnabled(false);
-	Cast<AFCPlayer>(playerCharacter)->inControl = false;
+		auto playerCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		playerCharacter->GetMesh()->SetHiddenInGame(true, true);
+		playerCharacter->SetActorTickEnabled(false);
+		Cast<AFCPlayer>(playerCharacter)->inControl = false;
 
-//	Widget->GetUserWidgetObject()->SetKeyboardFocus();
-	SendToWidget();
+		//	Widget->GetUserWidgetObject()->SetKeyboardFocus();
+		SendToWidget();
+	}
 }
 
 void AFCNumpad::SendToWidget_Implementation()
