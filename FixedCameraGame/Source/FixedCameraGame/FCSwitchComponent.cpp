@@ -36,6 +36,12 @@ void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool 
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
+
+	if (pressSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), pressSound);
+	}
+
 	if (playScene)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pass"));
@@ -74,6 +80,11 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool p
 	{
 		FTimerHandle SceneTimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(SceneTimerHandle, this, &UFCSwitchComponent::EndScene, sceneLength, false);
+	}
+
+	if (sceneSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), sceneSound);
 	}
 }
 

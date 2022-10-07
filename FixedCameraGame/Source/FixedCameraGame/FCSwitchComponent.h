@@ -40,16 +40,16 @@ public:
 	void EndScene();
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-		FSwitchDelegate Switch;
+	FSwitchDelegate Switch;
 	//Using this to make sure all attached objects can remain in their "on" state
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Events")
-		FSwitchStartDelegate SwitchOn;
+	FSwitchStartDelegate SwitchOn;
 	//Fires after a scene ends;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-		FSwitchEndDelegate SwitchEnd;
+	FSwitchEndDelegate SwitchEnd;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Interactable")
-		bool switchState = false;
+	bool switchState = false;
 
 	//If we move the camera to show an effect, we don't want to return input until that effect is finished
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
@@ -61,4 +61,10 @@ public:
 	//How long the scene lasts in seconds. A length of 0 or less will not end.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
 	float sceneLength;
+	//Sound that plays when pressing the switch. Can be null.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	USoundBase* pressSound = nullptr;
+	//Sound that plays on playing a scene. Can be null.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	USoundBase* sceneSound = nullptr;
 };

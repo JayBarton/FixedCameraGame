@@ -69,8 +69,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Stats")
 	float gameTime;
 
-
-
 	UPROPERTY()
 	UAudioComponent* music = nullptr;
 	USoundBase* musicCue;
