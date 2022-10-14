@@ -2,6 +2,8 @@
 
 
 #include "FCLockComponent.h"
+#include "FCInteractable.h"
+#include "Kismet/GameplayStatics.h" 
 
 // Sets default values for this component's properties
 UFCLockComponent::UFCLockComponent()
@@ -27,6 +29,13 @@ void UFCLockComponent::Open(int32 keyID)
 	if (keyID == ID)
 	{
 		Unlocked.Broadcast();
+		if (auto owner = Cast<AFCInteractable>(GetOwner()))
+		{
+			if (owner->unlockSound)
+			{
+				UGameplayStatics::PlaySound2D(GetWorld(), owner->unlockSound);
+			}
+		}
 		DestroyComponent();
 	}
 	//pretty sure this isn't in use...

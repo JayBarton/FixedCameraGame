@@ -26,11 +26,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UBoxComponent* BoxComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Sound")
+		USoundBase* unlockSound = nullptr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	bool active = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
-		FString prompt = "";
+	FString prompt = "";
 
 protected:
 	// Called when the game starts or when spawned

@@ -25,6 +25,9 @@ void AFCNumpad::BeginPlay()
 
 void AFCNumpad::StartPuzzle()
 {
+	UGameInstance* GameInst = GetGameInstance();
+	UGameViewportClient* ViewportClient = GameInst->GetGameViewportClient();
+	FViewport* Viewport = ViewportClient->Viewport;
 	Super::StartPuzzle();
 	if (newCamera)
 	{
