@@ -48,7 +48,6 @@ void AFixedCameraGameGameMode::BeginPlay()
 	if (FoundActors.Num() > 0)
 	{
 		objectWatcher = Cast<AFCObjectWatcher>(FoundActors[0]);
-
 	}
 
 	if (instance)
@@ -82,6 +81,13 @@ void AFixedCameraGameGameMode::BeginPlay()
 		FindStart(instance);
 		levelFadeIn = true;
 		playerCamera->SetMaterial(1.0f);
+
+		if (instance->entranceSoundIndex >= 0 && enterSound[instance->entranceSoundIndex])
+		{
+			UGameplayStatics::PlaySound2D(GetWorld(), enterSound[instance->entranceSoundIndex]);
+			instance->entranceSoundIndex = -1;
+		}
+		
 	}
 }
 
@@ -453,6 +459,9 @@ void AFixedCameraGameGameMode::FindStart(UFCGameInstance* instance)
 
 void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName levelName, bool continueMusic)
 {
+	//Want to play the door sound effect. Can either be done here or in a separate funciton called from FCExit
+	//Benefit of a separate function is it would make passing a variable for door sounds a bit cleaner
+	//Easiest thing would either be in FCExit or in the if newLevel condition
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 
 	if (instance)
@@ -513,10 +522,10 @@ void AFixedCameraGameGameMode::ChangeLevel(int index, int cameraIndex, FName lev
 			{
 				instance->containerInventory = container->Inventory->inventory;
 			}
+
 			levelFadeOut = true;
 			nextLevel = levelName;
 			playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
-
 			UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 
 			instance->gameTime = gameTime;
@@ -544,6 +553,7 @@ void AFixedCameraGameGameMode::EndGame(bool dead)
 	newLevel = false;
 	playerCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
 	
+	//Need a new function for change level. I don't need anything except for the fade out when dead, and I just need to update some instance data(not all) on complete
 	if (dead)
 	{
 		playerCamera->dynamicMaterial->SetVectorParameterValue("Color", FLinearColor(1.0f, 1.0f, 1.0f, 1.0f));
@@ -976,6 +986,16 @@ void AFixedCameraGameGameMode::ClearText()
 	display->RemoveFromParent();
 	display = nullptr;
 	inputComponent->RemoveActionBinding(interactKey);
+}
+
+void AFixedCameraGameGameMode::LevelChangeSound(int32 index)
+{
+	if (exitSound[index])
+	{
+		auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+		instance->entranceSoundIndex = index;
+		UGameplayStatics::PlaySound2D(GetWorld(), exitSound[index]);
+	}
 }
 
 FString AFixedCameraGameGameMode::GetDisplayName(FString name)

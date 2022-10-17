@@ -98,4 +98,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	FString GetTime();
 
+	int32 entranceSoundIndex = -1;
+
 };

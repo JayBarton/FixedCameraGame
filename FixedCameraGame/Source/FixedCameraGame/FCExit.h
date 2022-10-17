@@ -33,4 +33,8 @@ public:
 	//index of this exit. Used for one way locks
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Current Level")
 	int32 currentIndex = 0;
+
+	//The index of the enter/exit sounds
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sound")
+	int32 soundIndex;
 };

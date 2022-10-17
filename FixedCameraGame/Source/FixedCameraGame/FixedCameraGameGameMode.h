@@ -90,9 +90,10 @@ public:
 	void HandleTextToScene(UFCSwitchComponent* Switch);
 	void HandleTextFromCamera();
 
-
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void ClearText();
+
+	void LevelChangeSound(int32 index);
 
 	//if there is a blue print version of FName::NameToDisplayString I can't find it
 	UFUNCTION(BlueprintCallable, Category = "Functions")
@@ -142,11 +143,18 @@ public:
 	TSubclassOf<UFCInfoTextWidget> infoWidget;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Audio")
-		USoundBase* tempMusic;
+	USoundBase* tempMusic;
 
 	UPROPERTY(VisibleAnywhere, Category = "Audio")
 	UAudioComponent* music = nullptr;
 
+	//Sound that plays on entering level
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TArray<USoundBase*> enterSound;
+
+	//Sound that plays on exiting level
+	UPROPERTY(EditDefaultsOnly, Category = "Audio")
+	TArray<USoundBase*> exitSound;
 };
 
 
