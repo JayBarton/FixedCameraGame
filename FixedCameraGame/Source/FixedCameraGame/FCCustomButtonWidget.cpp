@@ -19,7 +19,7 @@ void UFCCustomButtonWidget::FalsePress()
 {
 	MyButton->SetButtonStyle(&PressedStyle);
 	FTimerHandle ResetStyleTimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(ResetStyleTimerHandle, this, &UFCCustomButtonWidget::ResetPress, 0.2f, false);
+	GetWorld()->GetTimerManager().SetTimer(ResetStyleTimerHandle, this, &UFCCustomButtonWidget::ResetPress, 0.15f, false);
 }
 
 void UFCCustomButtonWidget::ResetPress()
