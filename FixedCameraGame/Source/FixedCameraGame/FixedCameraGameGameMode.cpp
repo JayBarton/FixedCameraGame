@@ -127,7 +127,7 @@ void AFixedCameraGameGameMode::Tick(float DeltaTime)
 		if (!fakePause)
 		{
 			gameTime += DeltaTime;
-			UE_LOG(LogTemp, Warning, TEXT("%s"), *GetTime())
+		//	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetTime())
 		}
 	}
 }
