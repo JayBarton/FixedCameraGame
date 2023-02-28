@@ -26,7 +26,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCustomButtonHoverEvent);
 UCLASS()
 class FIXEDCAMERAGAME_API UFCCustomButtonWidget : public UContentWidget
 {
-	GENERATED_BODY()
+	GENERATED_UCLASS_BODY()
 
 public:
 	/** The template style asset, used to seed the mutable instance of the style. */
