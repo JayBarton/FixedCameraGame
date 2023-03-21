@@ -4,15 +4,17 @@
 UFCCustomButtonWidget::UFCCustomButtonWidget(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	WidgetStyle.SetHovered(WidgetStyle.Normal);
-	DefaultStyle = WidgetStyle;
-
 	PressedStyle.SetNormal(WidgetStyle.Pressed);
 	PressedStyle.SetNormalPadding(WidgetStyle.PressedPadding);
 	PressedStyle.SetPressed(WidgetStyle.Pressed);
 	PressedStyle.SetPressedPadding(WidgetStyle.PressedPadding);
 	PressedStyle.SetHovered(WidgetStyle.Pressed);
 	PressedStyle.SetDisabled(WidgetStyle.Pressed);
+
+	WidgetStyle.SetHovered(WidgetStyle.Normal);
+	WidgetStyle.SetPressed(WidgetStyle.Normal);
+	WidgetStyle.SetPressedPadding(0.0f);
+	DefaultStyle = WidgetStyle;
 }
 
 void UFCCustomButtonWidget::FalsePress()
