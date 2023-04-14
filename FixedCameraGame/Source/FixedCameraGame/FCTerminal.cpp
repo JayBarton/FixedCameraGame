@@ -57,7 +57,7 @@ void AFCTerminal::StartPuzzle()
 	auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	playerCamera = Cast<ACameraActor>(pc->GetViewTarget());
 	//	pc->SetInputMode(FInputModeUIOnly());
-		//pc->SetShowMouseCursor(false);
+	//pc->SetShowMouseCursor(false);
 
 	pc->SetViewTargetWithBlend(this, 1.0f, VTBlend_EaseInOut, 3.0f);
 
@@ -67,7 +67,11 @@ void AFCTerminal::StartPuzzle()
 	Cast<AFCPlayer>(playerCharacter)->inControl = false;
 
 	Widget->GetUserWidgetObject()->SetKeyboardFocus();
-	SendToWidget();
+	FTimerHandle CheckScreenTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(CheckScreenTimerHandle, this, &AFCTerminal::SendToWidget, 1.2f, false);
+
+//	SendToWidget();
+	//timer to display keyboard?
 }
 
 void AFCTerminal::SendToWidget_Implementation()

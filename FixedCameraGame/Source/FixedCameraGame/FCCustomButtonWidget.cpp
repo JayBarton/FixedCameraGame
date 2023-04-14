@@ -26,5 +26,8 @@ void UFCCustomButtonWidget::FalsePress()
 
 void UFCCustomButtonWidget::ResetPress()
 {
-	MyButton->SetButtonStyle(&DefaultStyle);
+	if (MyButton)
+	{
+		MyButton->SetButtonStyle(&DefaultStyle);
+	}
 }
