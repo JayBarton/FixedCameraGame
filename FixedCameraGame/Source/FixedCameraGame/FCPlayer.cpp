@@ -295,9 +295,9 @@ void AFCPlayer::Interact()
 				//check lock type
 				if (lock->type == LockType::PUZZLE)
 				{
-					gameMode->DisplayText("Door is locked, but there is no key hole...");
+					gameMode->DisplayText(lock->description);
 				}
-				else if (lock->type == LockType::KEY)
+				else if (lock->type == LockType::KEY || lock->type == LockType::PUZZLE)
 				{
 					gameMode->DisplayText(lock->description, lock);
 				}
