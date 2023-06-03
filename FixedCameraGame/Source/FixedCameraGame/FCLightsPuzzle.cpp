@@ -2,6 +2,7 @@
 
 
 #include "FCLightsPuzzle.h"
+#include "Kismet/GameplayStatics.h" 
 
 AFCLightsPuzzle::AFCLightsPuzzle()
 {
@@ -87,6 +88,14 @@ void AFCLightsPuzzle::ToggleLight()
 	if (aIndex >= 0)
 	{
 		grid[aIndex] = !grid[aIndex];
+	}
+	if (grid[index])
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), onSound);
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), offSound);
 	}
 	Toggle();
 }

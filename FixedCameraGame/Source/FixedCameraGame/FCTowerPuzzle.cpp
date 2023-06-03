@@ -2,6 +2,7 @@
 
 
 #include "FCTowerPuzzle.h"
+#include "Kismet/GameplayStatics.h" 
 
 AFCTowerPuzzle::AFCTowerPuzzle()
 {
@@ -46,6 +47,7 @@ void AFCTowerPuzzle::HandleAnimation(float DeltaTime)
 			currentMoveLocation++;
 			if (currentMoveLocation >= 3)
 			{
+				UGameplayStatics::PlaySound2D(GetWorld(), placeSound);
 				isAnimating = false;
 				EnableInput(Cast<APlayerController>(GetController()));
 			}
@@ -119,6 +121,7 @@ void AFCTowerPuzzle::SetupAnimation(int currentDisk)
 
 	isAnimating = true;
 	currentMoveLocation = 0;
+	UGameplayStatics::PlaySound2D(GetWorld(), moveSound);
 
 	DisableInput(Cast<APlayerController>(GetController()));
 }

@@ -81,6 +81,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 	FVector startLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		class USoundBase* moveSound = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		class USoundBase* placeSound = nullptr;
+
 	AActor* movingDisk;
 
 	FVector diskStartLocation;

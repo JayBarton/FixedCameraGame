@@ -51,4 +51,9 @@ public:
 		FVector startLocation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> boxes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		class USoundBase* onSound = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		class USoundBase* offSound = nullptr;
 };
