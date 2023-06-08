@@ -77,6 +77,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> disks;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+		TArray<UMaterialInstance*> materials;
+
 	//Location of the first rod
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 	FVector startLocation;

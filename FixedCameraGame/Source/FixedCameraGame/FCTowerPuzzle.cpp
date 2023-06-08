@@ -156,6 +156,8 @@ void AFCTowerPuzzle::StartPuzzle()
 		AActor* disk = GetWorld()->SpawnActor<AActor>(diskProp, location, FRotator::ZeroRotator, SpawnParams);
 		float scale = 1.0f - 0.25f * i;
 		disk->SetActorScale3D(FVector(scale, scale, disk->GetActorScale().Z));
+		auto mat = Cast<UStaticMeshComponent>(disk->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+		mat->SetMaterial(0, materials[i]);
 		disks[i] = disk;
 	}
 	SetUp();
@@ -189,7 +191,6 @@ void AFCTowerPuzzle::CheckSolution()
 			{
 				sum++;
 			}
-
 		}
 	}
 	if (sum == numberOfDisks)
