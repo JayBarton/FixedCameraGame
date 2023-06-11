@@ -83,6 +83,9 @@ void AFCTowerPuzzle::SelectDisk()
 		if (towers[currentRod].disk.Num() > 0)
 		{
 			selectedRod = currentRod;
+			int currentDisk = towers[selectedRod].disk.Top();
+			auto mat = Cast<UStaticMeshComponent>(disks[currentDisk]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+			mat->SetRenderCustomDepth(true);
 		}
 	}
 	//Can't place on the already selected rod
@@ -92,6 +95,12 @@ void AFCTowerPuzzle::SelectDisk()
 		if (towers[currentRod].disk.Num() == 0 || towers[selectedRod].disk.Last() > towers[currentRod].disk.Last())
 		{
 			MoveDisk();
+		}
+		else
+		{
+			int currentDisk = towers[selectedRod].disk.Top();
+			auto mat = Cast<UStaticMeshComponent>(disks[currentDisk]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+			mat->SetRenderCustomDepth(false);
 		}
 		selectedRod = -1;
 	}
@@ -109,6 +118,8 @@ void AFCTowerPuzzle::MoveDisk()
 void AFCTowerPuzzle::SetupAnimation(int currentDisk)
 {
 	movingDisk = disks[currentDisk];
+	auto mat = Cast<UStaticMeshComponent>(movingDisk->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+	mat->SetRenderCustomDepth(false);
 
 	diskStartLocation = movingDisk->GetActorLocation();
 
