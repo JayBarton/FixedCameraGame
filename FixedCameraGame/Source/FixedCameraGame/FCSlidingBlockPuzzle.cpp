@@ -3,6 +3,7 @@
 
 #include "FCSlidingBlockPuzzle.h"
 #include "Engine/World.h" 
+#include "Kismet/GameplayStatics.h" 
 
 AFCSlidingBlockPuzzle::AFCSlidingBlockPuzzle()
 {
@@ -101,6 +102,7 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 
 		grid[index] = -1;
 		updateIndex();
+		UGameplayStatics::PlaySound2D(GetWorld(), slideSound);
 	}
 	else
 	{

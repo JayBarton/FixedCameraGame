@@ -64,4 +64,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 	TArray<FDotArray> slots;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+		class USoundBase* selectSound = nullptr;
 };

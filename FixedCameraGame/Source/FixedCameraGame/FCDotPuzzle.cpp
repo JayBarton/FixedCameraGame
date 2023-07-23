@@ -2,6 +2,7 @@
 
 
 #include "FCDotPuzzle.h"
+#include "Kismet/GameplayStatics.h" 
 
 AFCDotPuzzle::AFCDotPuzzle()
 {
@@ -42,22 +43,33 @@ void AFCDotPuzzle::Tick(float DeltaTime)
 
 void AFCDotPuzzle::MoveRight()
 {
+	auto mat = Cast<UStaticMeshComponent>(slots[0].prop[currentSlot]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+	mat->SetRenderCustomDepth(false);
 	currentSlot++;
 	if (currentSlot >= numberOfSlots)
 	{
 		currentSlot = 0;
 	}
+	mat = Cast<UStaticMeshComponent>(slots[0].prop[currentSlot]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
 
+	mat->SetRenderCustomDepth(true);
+	
 	UE_LOG(LogTemp, Warning, TEXT("right %i"), currentSlot);
 }
 
 void AFCDotPuzzle::MoveLeft()
 {
+	auto mat = Cast<UStaticMeshComponent>(slots[0].prop[currentSlot]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+	mat->SetRenderCustomDepth(false);
 	currentSlot--;
 	if (currentSlot < 0)
 	{
 		currentSlot = numberOfSlots - 1;
 	}
+	mat = Cast<UStaticMeshComponent>(slots[0].prop[currentSlot]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+
+	mat->SetRenderCustomDepth(true);
+
 	UE_LOG(LogTemp, Warning, TEXT("left %i"), currentSlot);
 }
 
@@ -95,6 +107,8 @@ void AFCDotPuzzle::SelectSlot()
 			}
 		}
 	}
+	UGameplayStatics::PlaySound2D(GetWorld(), selectSound);
+
 	Toggle();
 }
 

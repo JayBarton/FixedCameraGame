@@ -54,6 +54,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup")
 		TArray<AActor*> boxes;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	class USoundBase* slideSound = nullptr;
+
 	AActor* movingBox;
 
 	FVector boxStartLocation;
