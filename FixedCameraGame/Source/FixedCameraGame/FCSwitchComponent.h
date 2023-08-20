@@ -54,6 +54,9 @@ public:
 	//If we move the camera to show an effect, we don't want to return input until that effect is finished
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
 	bool playScene = false;
+	//If we would like to display some text right before ending the scene
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
+	bool textAfterScene = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Scene")
 	ACameraActor* sceneCamera;
 	//might be able to remove this

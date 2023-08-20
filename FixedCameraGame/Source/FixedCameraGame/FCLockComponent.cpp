@@ -3,6 +3,7 @@
 
 #include "FCLockComponent.h"
 #include "FCInteractable.h"
+#include "FCSwitchComponent.h"
 #include "Kismet/GameplayStatics.h" 
 
 // Sets default values for this component's properties
@@ -36,6 +37,7 @@ void UFCLockComponent::Open(int32 keyID)
 			{
 				UGameplayStatics::PlaySound2D(GetWorld(), owner->unlockSound);
 			}
+
 		}
 		DestroyComponent();
 	}

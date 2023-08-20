@@ -4,6 +4,7 @@
 #include "FCMultiLockComponent.h"
 #include "FCLockComponent.h"
 #include "FCInteractable.h"
+#include "Kismet/GameplayStatics.h" 
 
 // Sets default values for this component's properties
 UFCMultiLockComponent::UFCMultiLockComponent()
@@ -50,8 +51,13 @@ bool UFCMultiLockComponent::CheckLocks()
 	}
 	if (Locks.Num() == 0)
 	{
+		UGameplayStatics::PlaySound2D(GetWorld(), unlockedSound);
 		DestroyComponent();
 		unLocked = true;
+	}
+	else
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), lockedSound);
 	}
 	return unLocked;
 }

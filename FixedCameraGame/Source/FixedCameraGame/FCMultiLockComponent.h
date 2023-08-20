@@ -43,5 +43,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Locks")
 	TArray<FLockStruct> Locks;
 
+	//Sound that plays there are still remaining locks
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	USoundBase* lockedSound = nullptr;
+	//Sound that plays when all locks have been unlocked
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	USoundBase* unlockedSound = nullptr;
+
 		
 };

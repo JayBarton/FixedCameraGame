@@ -19,6 +19,7 @@
 #include "Components/PawnNoiseEmitterComponent.h"
 #include "FCMultiLockComponent.h"
 #include "FCFootStepComponent.h"
+#include "FCSwitchComponent.h"
 
 #include "GameFramework/PlayerInput.h" 
 #include "DrawDebugHelpers.h" 
@@ -310,17 +311,21 @@ void AFCPlayer::Interact()
 					auto exit = Cast<AFCExit>(nearestInteractable);
 					gameMode->SetPendingLock(exit->levelName.ToString(), exit->index);
 					lock->Open(lock->ID);
+
 					gameMode->DisplayText("Unlocked");
+					//play unlock sound
 				}
 			}
 			else if (auto multiLock = Cast<UFCMultiLockComponent>(nearestInteractable->FindComponentByClass(UFCMultiLockComponent::StaticClass())))
 			{
 				if (multiLock->CheckLocks())
 				{
+					//I don't believe this branch will ever fire...
 					IFCInteractableInterface::Execute_Action(nearestInteractable);
 				}
 				else
 				{
+					//play lock sound
 					auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 					gameMode->DisplayText("gotta unlock something...");
 				}
@@ -425,6 +430,7 @@ bool AFCPlayer::UseKey(int32 index, UFCLockComponent* lock)
 	{
 		Inventory->RemoveFromInventory(index);
 		lock->Open(ID);
+
 		return true;
 	}
 	return false;
