@@ -12,8 +12,11 @@ UFCLockComponent::UFCLockComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-	UE_LOG(LogTemp, Warning, TEXT("HO"));
-
+	static ConstructorHelpers::FObjectFinder<USoundWave> SoundAsset(TEXT("/Game/Audio/Doors/handlelock2.handlelock2"));
+	if (SoundAsset.Succeeded())
+	{
+		lockedSound = SoundAsset.Object;
+	}
 	// ...
 }
 

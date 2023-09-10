@@ -300,11 +300,20 @@ void AFCPlayer::Interact()
 				}
 				else if (lock->type == LockType::KEY || lock->type == LockType::PUZZLE)
 				{
+					if (lock->lockedSound)
+					{
+						UGameplayStatics::PlaySound2D(GetWorld(), lock->lockedSound);
+					}
 					gameMode->DisplayText(lock->description, lock);
 				}
 				else if (lock->type == LockType::ONE_WAY_LOCKED)
 				{
 					gameMode->DisplayText("Locked from the other side.");
+					if (lock->lockedSound)
+					{
+						UGameplayStatics::PlaySound2D(GetWorld(), lock->lockedSound);
+					}
+
 				}
 				else if (lock->type == LockType::ONE_WAY_UNLOCK)
 				{
@@ -313,7 +322,6 @@ void AFCPlayer::Interact()
 					lock->Open(lock->ID);
 
 					gameMode->DisplayText("Unlocked");
-					//play unlock sound
 				}
 			}
 			else if (auto multiLock = Cast<UFCMultiLockComponent>(nearestInteractable->FindComponentByClass(UFCMultiLockComponent::StaticClass())))

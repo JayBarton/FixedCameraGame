@@ -48,6 +48,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 		LockType type;
 
+	//Sound that plays when locked.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
+	USoundBase* lockedSound = nullptr;
+
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FLockDestroyedDelegate Unlocked;
 
