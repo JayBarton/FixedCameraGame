@@ -615,7 +615,7 @@ void AFCPlayer::HandleTakeAnyDamage(AActor* DamagedActor, float Damage, const UD
 
 void AFCPlayer::TakeHit(int32 damage)
 {
-	if (!staggered)
+	if (!staggered && !dead)
 	{
 		quickTurn = false;
 		isReloading = false;
@@ -630,12 +630,15 @@ void AFCPlayer::TakeHit(int32 damage)
 			FTimerHandle GameOverTimer;
 			GetWorld()->GetTimerManager().SetTimer(GameOverTimer, this, &AFCPlayer::GameOver, 2.0f, false);
 			UE_LOG(LogTemp, Warning, TEXT("dead!"));
+			UGameplayStatics::PlaySound2D(GetWorld(), deathSound);
 		}
 		else
 		{
 			staggered = true;
 			FTimerHandle StaggerTimerHandle;
 			GetWorld()->GetTimerManager().SetTimer(StaggerTimerHandle, this, &AFCPlayer::RecoverFromStagger, 0.5f, false);
+			UGameplayStatics::PlaySound2D(GetWorld(), hurtSound);
+
 		}
 	}
 }

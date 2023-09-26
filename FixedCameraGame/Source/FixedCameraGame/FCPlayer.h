@@ -174,6 +174,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 	UFCFootStepComponent* FootStepComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* hurtSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* deathSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UFCInventoryComponent* Inventory;
 	//I don't know that it's a great solution to have a reference to the item data here,
