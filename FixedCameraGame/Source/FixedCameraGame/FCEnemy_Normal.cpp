@@ -59,6 +59,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					//SetActorRotation(rotatorDirection);
 					isAttacking = true;
 					turningAttack = true;
+					UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 					/*if (abs(deltaYaw) >= 45.0f)
 					{
 						UE_LOG(LogTemp, Warning, TEXT("turning1"));
@@ -86,7 +87,6 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					FVector direction = FVector(playerPosition, 0.0f) - FVector(currentPosition, 0.0f);
 
 					rotatorDirection = FRotationMatrix::MakeFromX(direction.GetSafeNormal2D()).Rotator();
-					//SetActorRotation(rotatorDirection);
 					SetActorRotation(FMath::RInterpTo(GetActorRotation(), rotatorDirection, DeltaTime, 4.0f));
 				}
 
@@ -175,12 +175,12 @@ void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)
 	}
 	else
 	{
-		Super::Kill();
-
-		/*PawnSensingComp->SetSensingUpdatesEnabled(false);
-		PrimaryActorTick.bCanEverTick = false;
-		SetActorEnableCollision(false);*/
-		UE_LOG(LogTemp, Warning, TEXT("still dead"));
+		//Super::Kill();
+		//Some code repitition here as I want to avoid these enemies from playing their death sound when they start dead
+		dead = true;
+		PawnSensingComp->SetSensingUpdatesEnabled(false);
+		SetActorTickEnabled(false);
+		SetActorEnableCollision(false);
 	}
 }
 

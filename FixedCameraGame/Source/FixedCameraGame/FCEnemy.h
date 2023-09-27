@@ -137,12 +137,29 @@ public:
 	int32 staggerHits = 0;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float turnSpeed = 2.5f;
-	
+	float turnSpeed = 2.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* attackSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* hurtSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* deathSound;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* idleSound;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	float minimumIdleNoiseReset = 3.5f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
+	float maximumIdleNoiseReset = 5.0f;
+
+	void ResetNoise();
+
 	FTimerHandle StaggerTimerHandle;
+	FTimerHandle breathTimer;
 
 	FRotator rotatorDirection; //
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
-		FEnemyKilledDelegate EnemyKilled;
+	FEnemyKilledDelegate EnemyKilled;
 };

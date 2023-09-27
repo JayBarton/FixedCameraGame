@@ -97,13 +97,10 @@ void AFCEnemy::NoticePlayer()
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Are you there"));
 				hasNoticedPlayer = true;
-				/*if (AAIController* AI = Cast<AAIController>(GetController()))
-				{
-					AI->MoveToActor(player);
-				}*/
 				UAIBlueprintHelperLibrary::SimpleMoveToActor(GetController(), player);
+				float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
+				GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
 			}
 		}
 	}
@@ -111,13 +108,14 @@ void AFCEnemy::NoticePlayer()
 
 void AFCEnemy::Attack(int32 damage)
 {
-
+	if (attackSound)
+	{
+		UGameplayStatics::PlaySound2D(GetWorld(), attackSound);
+	}
 }
 
 void AFCEnemy::FinishAttack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("finish attack"));
-
 	isAttacking = false;
 }
 
@@ -156,6 +154,10 @@ void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
 			if (staggerHits >= hitsToStagger)
 			{
 				Stagger();
+				if (hurtSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(GetWorld(), hurtSound, GetActorLocation());
+				}
 			}
 			GetWorld()->GetTimerManager().SetTimer(StaggerTimerHandle, this, &AFCEnemy::ResetStaggerHits, 0.6f, false);
 		}
@@ -180,8 +182,6 @@ void AFCEnemy::Stagger()
 
 void AFCEnemy::ResetStaggerHits()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Reset Stagger"));
-
 	staggerHits = 0;
 }
 
@@ -232,6 +232,10 @@ void AFCEnemy::Kill()
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 	SetActorTickEnabled(false);
 	SetActorEnableCollision(false);
+	if (deathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(GetWorld(), deathSound, GetActorLocation());
+	}
 }
 
 void AFCEnemy::SetUpSpawnIn()
@@ -247,4 +251,11 @@ void AFCEnemy::PlaySpawnIn()
 	spawning = true;
 	PawnSensingComp->SetSensingUpdatesEnabled(true);
 	SetActorEnableCollision(true);
+}
+
+void AFCEnemy::ResetNoise()
+{
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), idleSound, GetActorLocation());
+	float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
+	GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
 }
