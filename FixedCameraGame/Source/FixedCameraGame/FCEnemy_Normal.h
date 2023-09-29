@@ -37,11 +37,11 @@ public:
 	int32 maxReviveCount = 6;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float defaultTurnSpeed = 2.5f;
+	float defaultTurnSpeed = 2.5f;
 
 	//use this to quickly turn around if hit in the back
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float fastTurnSpeed = 7.5f;
+	float fastTurnSpeed = 7.5f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning; 

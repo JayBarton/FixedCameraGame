@@ -235,6 +235,8 @@ void AFCEnemy::Kill()
 	if (deathSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(GetWorld(), deathSound, GetActorLocation());
+		GetWorld()->GetTimerManager().ClearTimer(breathTimer);
+
 	}
 }
 

@@ -47,6 +47,8 @@ public:
 	
 	void ResumeMovement();
 
+	void ResetGrowl();
+
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -59,17 +61,23 @@ public:
 		PatrolState patrolState;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float patrolSpeed = 150.0f;
+	float patrolSpeed = 150.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float followSpeed = 300.0f;
+	float followSpeed = 300.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float followTurnSpeed = 15.0f;
+	float followTurnSpeed = 15.0f;
 	//Use this to turn faster when far from the player
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float fastTurnSpeed = 25.0f;
+	float fastTurnSpeed = 25.0f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
-		float tooFarDistance = 800.0f;
+	float tooFarDistance = 800.0f;
 
 	UPROPERTY(VisibleAnywhere, Category = "Damage")
 	UBoxComponent* hurtBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* patrolSound;
+
+	FTimerHandle patrolSoundTimer;
+
 };

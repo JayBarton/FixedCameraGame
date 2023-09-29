@@ -30,6 +30,8 @@ void AFCEnemy_Patrol::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = patrolSpeed;
 	
 	hurtBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	float time = FMath::RandRange(2.5f, 3.0f);
+	GetWorld()->GetTimerManager().SetTimer(patrolSoundTimer, this, &AFCEnemy_Patrol::ResetGrowl, time, false);
 }
 
 void AFCEnemy_Patrol::Tick(float DeltaTime)
@@ -141,6 +143,7 @@ void AFCEnemy_Patrol::NoticePlayer()
 	turnSpeed = followTurnSpeed;
 	PawnSensingComp->SetSensingUpdatesEnabled(false);
 
+	GetWorld()->GetTimerManager().ClearTimer(patrolSoundTimer);
 }
 
 void AFCEnemy_Patrol::Attack(int32 damage)
@@ -150,6 +153,9 @@ void AFCEnemy_Patrol::Attack(int32 damage)
 	hurtBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	AddMovementInput(GetActorForwardVector(), 1.0f);
+
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
+
 }
 
 void AFCEnemy_Patrol::FinishAttack()
@@ -178,6 +184,13 @@ void AFCEnemy_Patrol::ResumeMovement()
 		patrolState = PatrolState::PATROL;
 		MoveToNextPatrolPoint();
 	}
+}
+
+void AFCEnemy_Patrol::ResetGrowl()
+{
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), patrolSound, GetActorLocation());
+	float time = FMath::RandRange(2.5f, 3.0f);
+	GetWorld()->GetTimerManager().SetTimer(patrolSoundTimer, this, &AFCEnemy_Patrol::ResetGrowl, time, false);
 }
 
 void AFCEnemy_Patrol::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
