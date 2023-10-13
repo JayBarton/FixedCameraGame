@@ -27,6 +27,7 @@ public:
 	//Using a slight delay before reviving the enemy. This is to prevent the enemy from
 	//reviving too quickly if they revive near the entrance the player entered from
 	void DelayRevive();
+	virtual void PlaySpawnIn() override;
 
 	int32 reviveTime;
 	int32 reviveCounter = 0;
@@ -42,6 +43,9 @@ public:
 	//use this to quickly turn around if hit in the back
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement")
 	float fastTurnSpeed = 7.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
+	USoundBase* spawnSound;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
 	bool turning; 

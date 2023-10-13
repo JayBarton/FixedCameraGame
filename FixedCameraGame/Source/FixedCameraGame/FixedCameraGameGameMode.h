@@ -47,7 +47,7 @@ public:
 	void PlayMusic(UFCGameInstance* instance);
 
 	//Called outside of BeginPlay
-	void StartNewMusic();
+	void StartNewMusic(bool playOnce = false);
 
 	UFUNCTION(BlueprintCallable)
 	void StopMusic();

@@ -31,6 +31,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 				canRevive = false;
 				dead = false;
 				SetActorEnableCollision(true);
+				UGameplayStatics::PlaySoundAtLocation(GetWorld(), spawnSound, GetActorLocation());
 
 				FTimerHandle ReviveTimerHandle;
 				GetWorld()->GetTimerManager().SetTimer(ReviveTimerHandle, this, &AFCEnemy_Normal::Revive, 0.60f, false);
@@ -59,6 +60,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					//SetActorRotation(rotatorDirection);
 					isAttacking = true;
 					turningAttack = true;
+					StopNoise();
 					UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 					/*if (abs(deltaYaw) >= 45.0f)
 					{
@@ -176,7 +178,7 @@ void AFCEnemy_Normal::StartDead(int32 currentReviveTime, int32 reviveCount)
 	else
 	{
 		//Super::Kill();
-		//Some code repitition here as I want to avoid these enemies from playing their death sound when they start dead
+		//Some code repitition here as I want to avoid these enemies playing their death sound when they start dead
 		dead = true;
 		PawnSensingComp->SetSensingUpdatesEnabled(false);
 		SetActorTickEnabled(false);
@@ -197,4 +199,10 @@ void AFCEnemy_Normal::DelayRevive()
 	SetActorTickEnabled(true);
 	canRevive = true;
 	UE_LOG(LogTemp, Warning, TEXT("revive"));
+}
+
+void AFCEnemy_Normal::PlaySpawnIn()
+{
+	Super::PlaySpawnIn();
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), spawnSound, GetActorLocation());
 }

@@ -211,12 +211,12 @@ void AFixedCameraGameGameMode::PlayMusic(UFCGameInstance* instance)
 	instance->PlayMusic(objectWatcher->levelMusic, 0.5f);
 }
 
-void AFixedCameraGameGameMode::StartNewMusic()
+void AFixedCameraGameGameMode::StartNewMusic(bool playOnce)
 {
 	auto instance = Cast<UFCGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
 	PlayMusic(instance);
 	UE_LOG(LogTemp, Warning, TEXT("m1"));
-	objectWatcher->playingMusic = true;
+	objectWatcher->playingMusic = !playOnce;
 
 }
 

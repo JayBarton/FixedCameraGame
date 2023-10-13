@@ -11,6 +11,7 @@
 #include "Engine/TargetPoint.h" 
 #include "Components/BoxComponent.h"
 #include "FCPlayer.h"
+#include "Components/AudioComponent.h" 
 
 AFCEnemy_Patrol::AFCEnemy_Patrol()
 {
@@ -137,7 +138,10 @@ void AFCEnemy_Patrol::Patrol()
 void AFCEnemy_Patrol::NoticePlayer()
 {
 	Super::NoticePlayer();
-
+	if (playingSound)
+	{
+		playingSound->Stop();
+	}
 	patrolState = PatrolState::FOLLOWING;
 	GetCharacterMovement()->MaxWalkSpeed = followSpeed;
 	turnSpeed = followTurnSpeed;
@@ -153,7 +157,7 @@ void AFCEnemy_Patrol::Attack(int32 damage)
 	hurtBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	AddMovementInput(GetActorForwardVector(), 1.0f);
-
+	StopNoise();
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 
 }
@@ -188,7 +192,7 @@ void AFCEnemy_Patrol::ResumeMovement()
 
 void AFCEnemy_Patrol::ResetGrowl()
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), patrolSound, GetActorLocation());
+	playingSound = UGameplayStatics::SpawnSoundAtLocation(GetWorld(), patrolSound, GetActorLocation());
 	float time = FMath::RandRange(2.5f, 3.0f);
 	GetWorld()->GetTimerManager().SetTimer(patrolSoundTimer, this, &AFCEnemy_Patrol::ResetGrowl, time, false);
 }

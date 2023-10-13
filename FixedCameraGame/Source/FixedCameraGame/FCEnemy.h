@@ -71,7 +71,7 @@ public:
 
 	void SetUpSpawnIn();
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void PlaySpawnIn();
+	virtual void PlaySpawnIn();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Audio")
 		UFCFootStepComponent* FootStepComponent;
@@ -153,12 +153,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 	float maximumIdleNoiseReset = 5.0f;
 
+	void StopNoise();
 	void ResetNoise();
+
+	class UAudioComponent* playingSound = nullptr;
+
 
 	FTimerHandle StaggerTimerHandle;
 	FTimerHandle breathTimer;
 
-	FRotator rotatorDirection; //
+	FRotator rotatorDirection; 
 
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FEnemyKilledDelegate EnemyKilled;

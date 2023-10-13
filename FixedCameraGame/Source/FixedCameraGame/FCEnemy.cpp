@@ -12,6 +12,7 @@
 #include "Components/BoxComponent.h"
 #include "FCFootStepComponent.h"
 #include "FixedCameraGameGameMode.h"
+#include "Components/AudioComponent.h" 
 
 // Sets default values
 AFCEnemy::AFCEnemy()
@@ -255,9 +256,20 @@ void AFCEnemy::PlaySpawnIn()
 	SetActorEnableCollision(true);
 }
 
+void AFCEnemy::StopNoise()
+{
+	if (playingSound)
+	{
+		playingSound->Stop();
+	}
+	GetWorld()->GetTimerManager().ClearTimer(breathTimer);
+	float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
+	GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
+}
+
 void AFCEnemy::ResetNoise()
 {
-	UGameplayStatics::PlaySoundAtLocation(GetWorld(), idleSound, GetActorLocation());
+	playingSound = UGameplayStatics::SpawnSoundAtLocation(GetWorld(), idleSound, GetActorLocation());
 	float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
 	GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
 }

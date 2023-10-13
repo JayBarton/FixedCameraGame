@@ -32,7 +32,7 @@ void UFCSwitchComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
 }
 
-void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool playMusic)
+void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool playMusic, bool playOnce)
 {
 	switchState = !switchState;
 	Switch.Broadcast(switchState);
@@ -45,11 +45,11 @@ void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool 
 	if (playScene)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pass"));
-		SetUpScene(pauseAnimation, hidePlayer, playMusic);
+		SetUpScene(pauseAnimation, hidePlayer, playMusic, playOnce);
 	}
 }
 
-void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool playMusic)
+void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool playMusic, bool playOnce)
 {
 	auto player = Cast<AFCPlayer>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	player->inControl = false;
@@ -74,7 +74,7 @@ void UFCSwitchComponent::SetUpScene(bool pauseAnimation, bool hidePlayer, bool p
 	//If I abandon the chime idea, I will remove this and call StartNewMusic directly in the SpawnArea blueprint
 	if (playMusic)
 	{
-		gameMode->StartNewMusic();
+		gameMode->StartNewMusic(playOnce);
 	}
 	if (sceneLength > 0)
 	{
