@@ -257,8 +257,8 @@ void AFCEnemy::PlaySpawnIn()
 }
 
 void AFCEnemy::StopNoise()
-{
-	if (playingSound)
+{	
+	if (playingSound->IsValidLowLevel())
 	{
 		playingSound->Stop();
 	}
