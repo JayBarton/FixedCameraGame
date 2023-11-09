@@ -633,7 +633,7 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 		saveGameInstance->currentLevel = currentLevel;
 		saveGameMinimalInstance->currentLevel = currentLevel;
 		int seconds = fmod(gameTime, 60);
-		int minutes = gameTime / 60;
+		int minutes = fmod(gameTime, 3600) / 60;
 		int hours = gameTime / 3600;
 		saveGameMinimalInstance->gameTime = GetTime();
 
@@ -1006,7 +1006,7 @@ FString AFixedCameraGameGameMode::GetDisplayName(FString name)
 FString AFixedCameraGameGameMode::GetTime()
 {
 	int seconds = fmod(gameTime, 60);
-	int minutes = gameTime / 60;
+	int minutes = fmod(gameTime, 3600) / 60;
 	int hours = gameTime / 3600;
 	return FString::Printf(TEXT("%02d:%02d:%02d"), hours, minutes, seconds);
 }
