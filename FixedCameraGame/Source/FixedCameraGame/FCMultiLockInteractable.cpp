@@ -39,7 +39,10 @@ void AFCMultiLockInteractable::CheckDoor()
 	auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if (unlocked)
 	{
-		gameMode->DisplayText("We did it");
+		if (postLockText)
+		{
+			gameMode->DisplayText("We did it");
+		}
 	}
 	else
 	{

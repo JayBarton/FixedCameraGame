@@ -50,5 +50,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sounds")
 	USoundBase* unlockedSound = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	FString description = "ph";
 		
 };

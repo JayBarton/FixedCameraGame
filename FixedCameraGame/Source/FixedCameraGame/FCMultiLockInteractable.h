@@ -32,5 +32,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	class AFCExit* exit;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
+	bool postLockText = true;
+
 	bool unlocked = false;
 };

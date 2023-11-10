@@ -335,7 +335,7 @@ void AFCPlayer::Interact()
 				{
 					//play lock sound
 					auto gameMode = Cast<AFixedCameraGameGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-					gameMode->DisplayText("gotta unlock something...");
+					gameMode->DisplayText(multiLock->description);
 				}
 			}
 			else
