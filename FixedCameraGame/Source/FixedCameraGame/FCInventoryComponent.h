@@ -32,7 +32,7 @@ public:
 	void RemoveFromInventory(int index);
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-		void CombineItem(int firstIndex, UFCInventoryComponent* otherInventory, int secondIndex);
+		void CombineItem(int firstIndex, UFCInventoryComponent* otherInventory, int secondIndex, bool differentInventories = false);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 		TArray<FItemStruct> inventory;

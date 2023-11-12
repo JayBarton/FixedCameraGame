@@ -55,10 +55,10 @@ void UFCInventoryComponent::RemoveFromInventory(int index)
 	inventory[index] = FItemStruct();
 }
 
-void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherInventory, int second)
+void UFCInventoryComponent::CombineItem(int first, UFCInventoryComponent* otherInventory, int second, bool differentInventories)
 {
 	bool added = false;
-	if (first != second)
+	if (first != second || differentInventories)
 	{
 		FItemStruct& firstItem = inventory[first];
 		FItemStruct& secondItem = otherInventory->inventory[second];
