@@ -16,6 +16,7 @@ class AFCPlayerCamera;
 class UFCLockComponent;
 class AFCInteractable;
 class UFCSwitchComponent;
+class AFCPuzzleInteractable;
 
 //Definitely temporary
 class USoundBase;
@@ -24,7 +25,7 @@ class UAudioComponent;
 
 DECLARE_DELEGATE_OneParam(InputLockDelegate, UFCLockComponent*);
 DECLARE_DELEGATE_OneParam(InputInteractDelegate, AFCInteractable*);
-DECLARE_DELEGATE_OneParam(InputSceneDelegate, UFCSwitchComponent*);
+DECLARE_DELEGATE_TwoParams(InputSceneDelegate, UFCSwitchComponent*, AFCInteractable*);
 
 
 UCLASS(minimalapi)
@@ -87,7 +88,7 @@ public:
 	void HandleText();
 	void HandleTextToInteractable(AFCInteractable* interactable);
 	void HandleTextToInventory(UFCLockComponent* lock);
-	void HandleTextToScene(UFCSwitchComponent* Switch);
+	void HandleTextToScene(UFCSwitchComponent* Switch, AFCInteractable* interactable);
 	void HandleTextFromCamera();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")

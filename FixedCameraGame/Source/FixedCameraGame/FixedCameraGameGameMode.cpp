@@ -831,11 +831,19 @@ void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* 
 	}
 	else if (interactable)
 	{
-		inputComponent->BindAction<InputInteractDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInteractable, interactable).bExecuteWhenPaused = true;
+		auto puzzle = Cast<AFCPuzzleInteractable>(interactable);
+		if (Switch)
+		{
+			inputComponent->BindAction<InputSceneDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToScene, Switch, interactable).bExecuteWhenPaused = true;
+		}
+		else
+		{
+			inputComponent->BindAction<InputInteractDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToInteractable, interactable).bExecuteWhenPaused = true;
+		}
 	}
 	else if (Switch)
 	{
-		inputComponent->BindAction<InputSceneDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToScene, Switch).bExecuteWhenPaused = true;
+		inputComponent->BindAction<InputSceneDelegate>("Interact", IE_Pressed, this, &AFixedCameraGameGameMode::HandleTextToScene, Switch, interactable).bExecuteWhenPaused = true;
 	}
 	else if (descriptionCamera)
 	{
@@ -909,7 +917,14 @@ void AFixedCameraGameGameMode::HandleTextToInteractable(AFCInteractable* interac
 
 		UGameplayStatics::SetGamePaused(GetWorld(), false);
 		auto puzzle = Cast<AFCPuzzleInteractable>(interactable);
-		puzzle->StartPuzzle();
+		if (puzzle->active)
+		{
+			puzzle->StartPuzzle();
+		}
+		else
+		{
+			puzzle->ExitPuzzle();
+		}
 	}
 }
 
@@ -926,11 +941,15 @@ void AFixedCameraGameGameMode::HandleTextToInventory(UFCLockComponent* lock)
 	}
 }
 
-void AFixedCameraGameGameMode::HandleTextToScene(UFCSwitchComponent* Switch)
+void AFixedCameraGameGameMode::HandleTextToScene(UFCSwitchComponent* Switch, AFCInteractable* interactable)
 {
 	if (AdvanceText())
 	{
 		ClearText();
+		if (auto puzzle = Cast<AFCPuzzleInteractable>(interactable))
+		{
+			puzzle->ExitPuzzle();
+		}
 		auto pc = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		UGameplayStatics::GetPlayerPawn(GetWorld(), 0)->EnableInput(pc);
 		pc->SetInputMode(FInputModeGameOnly());

@@ -44,6 +44,7 @@ void AFCSlidingBlockPuzzle::HandleAnimation(float& DeltaTime)
 			movingBox->SetActorLocation(newLocation);
 			isAnimating = false;
 			EnableInput(Cast<APlayerController>(GetController()));
+			CheckSolution();
 		}
 	}
 }

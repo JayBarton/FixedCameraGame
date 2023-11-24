@@ -50,6 +50,7 @@ void AFCTowerPuzzle::HandleAnimation(float DeltaTime)
 				UGameplayStatics::PlaySound2D(GetWorld(), placeSound);
 				isAnimating = false;
 				EnableInput(Cast<APlayerController>(GetController()));
+				CheckSolution();
 			}
 		}
 	}

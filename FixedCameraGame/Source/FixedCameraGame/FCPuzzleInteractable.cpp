@@ -56,13 +56,13 @@ void AFCPuzzleInteractable::OpenLock()
 	{ 
 		UE_LOG(LogTemp, Warning, TEXT("playing scene"));
 
-		gameMode->DisplayText(puzzleCompleteText, nullptr, nullptr, Switch);
+		gameMode->DisplayText(puzzleCompleteText, nullptr, this, Switch);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("no scene"));
 
-		gameMode->DisplayText(puzzleCompleteText);
+		gameMode->DisplayText(puzzleCompleteText, nullptr, this);
 		Switch->PressSwitch();
 	}
 }

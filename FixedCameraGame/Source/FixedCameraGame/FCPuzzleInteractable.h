@@ -54,4 +54,5 @@ public:
 		UFCUnlockComponent* Unlocker;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 		UFCSwitchComponent* Switch;
+
 };

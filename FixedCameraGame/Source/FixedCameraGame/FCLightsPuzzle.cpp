@@ -98,6 +98,7 @@ void AFCLightsPuzzle::ToggleLight()
 		UGameplayStatics::PlaySound2D(GetWorld(), offSound);
 	}
 	Toggle();
+	CheckSolution();
 }
 
 void AFCLightsPuzzle::StartPuzzle()
