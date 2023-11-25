@@ -18,6 +18,7 @@ AFCCameraSwitchVolume::AFCCameraSwitchVolume()
 	RootComponent = boxCollison;
 
 	boxCollison->SetBoxExtent(FVector(1.5f, 32.0f, 32.0f));
+	boxCollison->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);
 
 	textRenderNewCamera = CreateDefaultSubobject<UTextRenderComponent>(TEXT("Text New Camera"));
 	textRenderNewCamera->SetupAttachment(RootComponent);
