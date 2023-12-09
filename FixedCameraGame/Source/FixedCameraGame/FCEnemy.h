@@ -153,11 +153,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Audio")
 	float maximumIdleNoiseReset = 5.0f;
 
-	void StopNoise();
+	void StopAndRestartNoise();
+	void ResetNoiseTimer();
 	void ResetNoise();
+	void PauseSounds();
 
 	class UAudioComponent* playingSound = nullptr;
-
 
 	FTimerHandle StaggerTimerHandle;
 	FTimerHandle breathTimer;

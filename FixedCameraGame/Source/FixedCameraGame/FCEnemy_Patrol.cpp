@@ -157,7 +157,7 @@ void AFCEnemy_Patrol::Attack(int32 damage)
 	hurtBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 
 	AddMovementInput(GetActorForwardVector(), 1.0f);
-	StopNoise();
+	StopAndRestartNoise();
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 
 }

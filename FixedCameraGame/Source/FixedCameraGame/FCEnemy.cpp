@@ -256,12 +256,14 @@ void AFCEnemy::PlaySpawnIn()
 	SetActorEnableCollision(true);
 }
 
-void AFCEnemy::StopNoise()
+void AFCEnemy::StopAndRestartNoise()
 {	
-	if (playingSound->IsValidLowLevel())
-	{
-		playingSound->Stop();
-	}
+	PauseSounds();
+	ResetNoiseTimer();
+}
+
+void AFCEnemy::ResetNoiseTimer()
+{
 	GetWorld()->GetTimerManager().ClearTimer(breathTimer);
 	float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
 	GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
@@ -272,4 +274,13 @@ void AFCEnemy::ResetNoise()
 	playingSound = UGameplayStatics::SpawnSoundAtLocation(GetWorld(), idleSound, GetActorLocation());
 	float time = FMath::RandRange(minimumIdleNoiseReset, maximumIdleNoiseReset);
 	GetWorld()->GetTimerManager().SetTimer(breathTimer, this, &AFCEnemy::ResetNoise, time, false);
+}
+
+void AFCEnemy::PauseSounds()
+{
+	if (playingSound->IsValidLowLevel())
+	{
+		playingSound->Stop();
+	}
+	GetWorld()->GetTimerManager().ClearTimer(breathTimer);
 }

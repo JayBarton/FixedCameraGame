@@ -600,6 +600,7 @@ void AFixedCameraGameGameMode::StopEnemies(bool pauseAnimation, bool hideEnemy)
 				AI->StopMovement();
 			}
 			enemy->PawnSensingComp->SetSensingUpdatesEnabled(false);
+			enemy->PauseSounds();
 			enemy->SetActorTickEnabled(false);
 			enemy->GetMesh()->bPauseAnims = pauseAnimation;
 			enemy->GetMesh()->SetHiddenInGame(hideEnemy, true);
@@ -620,6 +621,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 			enemy->SetActorTickEnabled(true);
 			enemy->GetMesh()->bPauseAnims = false;
 			enemy->GetMesh()->SetHiddenInGame(false, true);
+			enemy->ResetNoiseTimer();
 		}
 	}
 }

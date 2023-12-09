@@ -60,7 +60,7 @@ void AFCEnemy_Normal::Tick(float DeltaTime)
 					//SetActorRotation(rotatorDirection);
 					isAttacking = true;
 					turningAttack = true;
-					StopNoise();
+					StopAndRestartNoise();
 					UGameplayStatics::PlaySoundAtLocation(GetWorld(), attackSound, GetActorLocation());
 					/*if (abs(deltaYaw) >= 45.0f)
 					{
