@@ -27,6 +27,12 @@ public:
 	void MoveUp();
 	void MoveDown();
 	void MoveBlock();
+	void AxisX(float value);
+	void AxisY(float value);
+
+	bool moveXAxis = false;
+	bool moveYAxis = false;
+
 	void SetUpAnimation(int nextIndex);
 	int32 FindAdjacent();
 	virtual void CheckSolution() override;

@@ -23,7 +23,8 @@ void AFCSlidingBlockPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCSlidingBlockPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCSlidingBlockPuzzle::MoveBlock);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCSlidingBlockPuzzle::CheckSolution);
-
+	PlayerInputComponent->BindAxis("UpAndDown", this, &AFCSlidingBlockPuzzle::AxisY);
+	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCSlidingBlockPuzzle::AxisX);
 }
 
 void AFCSlidingBlockPuzzle::Tick(float DeltaTime)
@@ -105,9 +106,47 @@ void AFCSlidingBlockPuzzle::MoveBlock()
 		updateIndex();
 		UGameplayStatics::PlaySound2D(GetWorld(), slideSound);
 	}
-	else
+}
+
+void AFCSlidingBlockPuzzle::AxisX(float value)
+{
+	if (!moveXAxis)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NOPE"));
+		if (value == 1)
+		{
+			moveXAxis = true;
+			MoveRight();
+		}
+		else if (value == -1)
+		{
+			moveXAxis = true;
+			MoveLeft();
+		}
+	}
+	if (value == 0)
+	{
+		moveXAxis = false;
+	}
+}
+
+void AFCSlidingBlockPuzzle::AxisY(float value)
+{
+	if (!moveYAxis)
+	{
+		if (value == 1)
+		{
+			moveYAxis = true;
+			MoveUp();
+		}
+		else if (value == -1)
+		{
+			moveYAxis = true;
+			MoveDown();
+		}
+	}
+	if (value == 0)
+	{
+		moveYAxis = false;
 	}
 }
 

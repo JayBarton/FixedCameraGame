@@ -37,6 +37,9 @@ public:
 	void MoveRight();
 	void MoveLeft();
 	void SelectDisk();
+	void AxisX(float value);
+
+	bool moveAxis = false;
 
 	void MoveDisk();
 

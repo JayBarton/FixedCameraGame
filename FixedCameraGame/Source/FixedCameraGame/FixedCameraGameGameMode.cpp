@@ -173,11 +173,10 @@ void AFixedCameraGameGameMode::CheckInstance(UFCGameInstance* instance)
 				}
 			}
 
-			objectWatcher->instanceMusic = objectWatcher->playingMusic;
-
-
 			UE_LOG(LogTemp, Warning, TEXT("first time in %s"), *currentLevel);
 		}
+		objectWatcher->instanceMusic = objectWatcher->playingMusic;
+
 		HandlePendingLocks(instance);
 
 		HandleMusic(instance);
@@ -199,6 +198,10 @@ void AFixedCameraGameGameMode::HandleMusic(UFCGameInstance* instance)
 	}
 	if (!instance->isPlayingMusic)
 	{
+		if (objectWatcher->playingMusic == false)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FFF"));
+		}
 		if (objectWatcher->levelMusic && objectWatcher->playingMusic)
 		{
 			PlayMusic(instance);

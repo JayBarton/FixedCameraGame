@@ -23,6 +23,11 @@ public:
 	void MoveUp();
 	void MoveDown();
 	void ToggleLight();
+	void AxisX(float value);
+	void AxisY(float value);
+
+	bool moveXAxis = false;
+	bool moveYAxis = false;
 
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;

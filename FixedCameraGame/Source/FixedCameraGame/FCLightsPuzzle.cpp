@@ -22,6 +22,8 @@ void AFCLightsPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCLightsPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCLightsPuzzle::ToggleLight);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCLightsPuzzle::CheckSolution);
+	PlayerInputComponent->BindAxis("UpAndDown", this, &AFCLightsPuzzle::AxisY);
+	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCLightsPuzzle::AxisX);
 }
 
 void AFCLightsPuzzle::MoveRight()
@@ -99,6 +101,48 @@ void AFCLightsPuzzle::ToggleLight()
 	}
 	Toggle();
 	CheckSolution();
+}
+
+void AFCLightsPuzzle::AxisX(float value)
+{
+	if (!moveXAxis)
+	{
+		if (value == 1)
+		{
+			moveXAxis = true;
+			MoveRight();
+		}
+		else if (value == -1)
+		{
+			moveXAxis = true;
+			MoveLeft();
+		}
+	}
+	if (value == 0)
+	{
+		moveXAxis = false;
+	}
+}
+
+void AFCLightsPuzzle::AxisY(float value)
+{
+	if (!moveYAxis)
+	{
+		if (value == 1)
+		{
+			moveYAxis = true;
+			MoveUp();
+		}
+		else if (value == -1)
+		{
+			moveYAxis = true;
+			MoveDown();
+		}
+	}
+	if (value == 0)
+	{
+		moveYAxis = false;
+	}
 }
 
 void AFCLightsPuzzle::StartPuzzle()

@@ -17,6 +17,7 @@ void AFCTowerPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCTowerPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCTowerPuzzle::SelectDisk);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCTowerPuzzle::CheckSolution);
+	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCTowerPuzzle::AxisX);
 }
 void AFCTowerPuzzle::Tick(float DeltaTime)
 {
@@ -105,6 +106,28 @@ void AFCTowerPuzzle::SelectDisk()
 		}
 		selectedRod = -1;
 	}
+}
+
+void AFCTowerPuzzle::AxisX(float value)
+{
+	if (!moveAxis)
+	{
+		if (value == 1)
+		{
+			moveAxis = true;
+			MoveRight();
+		}
+		else if (value == -1)
+		{
+			MoveLeft();
+			moveAxis = true;
+		}
+	}
+	if (value == 0)
+	{
+		moveAxis = false;
+	}
+	
 }
 
 void AFCTowerPuzzle::MoveDisk()
@@ -208,10 +231,6 @@ void AFCTowerPuzzle::CheckSolution()
 	if (sum == numberOfDisks)
 	{
 		SolvePuzzle();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Not Done"));
 	}
 }
 

@@ -32,7 +32,6 @@ class FIXEDCAMERAGAME_API AFCDotPuzzle : public AFCPuzzlePawnBase
 {
 	GENERATED_BODY()
 public:
-	void aaa();
 	AFCDotPuzzle();
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -43,6 +42,9 @@ public:
 	void MoveRight();
 	void MoveLeft();
 	void SelectSlot();
+	void AxisX(float value);
+
+	bool moveAxis = false;
 
 	virtual void StartPuzzle() override;
 	virtual void ExitPuzzle() override;

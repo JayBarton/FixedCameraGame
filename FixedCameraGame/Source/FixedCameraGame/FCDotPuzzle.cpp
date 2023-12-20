@@ -35,6 +35,9 @@ void AFCDotPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCDotPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCDotPuzzle::SelectSlot);
 	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCDotPuzzle::CheckSolution);
+
+	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCDotPuzzle::AxisX);
+
 }
 
 void AFCDotPuzzle::Tick(float DeltaTime)
@@ -110,6 +113,27 @@ void AFCDotPuzzle::SelectSlot()
 	UGameplayStatics::PlaySound2D(GetWorld(), selectSound);
 
 	Toggle();
+}
+
+void AFCDotPuzzle::AxisX(float value)
+{
+	if (!moveAxis)
+	{
+		if (value == 1)
+		{
+			moveAxis = true;
+			MoveRight();
+		}
+		else if (value == -1)
+		{
+			MoveLeft();
+			moveAxis = true;
+		}
+	}
+	if (value == 0)
+	{
+		moveAxis = false;
+	}
 }
 
 void AFCDotPuzzle::StartPuzzle()
