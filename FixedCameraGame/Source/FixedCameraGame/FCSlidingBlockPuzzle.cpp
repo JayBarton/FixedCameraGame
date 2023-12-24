@@ -22,7 +22,6 @@ void AFCSlidingBlockPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInp
 	PlayerInputComponent->BindAction("Left", IE_Pressed, this, &AFCSlidingBlockPuzzle::MoveLeft);
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCSlidingBlockPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCSlidingBlockPuzzle::MoveBlock);
-	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCSlidingBlockPuzzle::CheckSolution);
 	PlayerInputComponent->BindAxis("UpAndDown", this, &AFCSlidingBlockPuzzle::AxisY);
 	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCSlidingBlockPuzzle::AxisX);
 }

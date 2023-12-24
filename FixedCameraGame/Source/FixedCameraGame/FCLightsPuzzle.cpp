@@ -21,7 +21,6 @@ void AFCLightsPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("Left", IE_Pressed, this, &AFCLightsPuzzle::MoveLeft);
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCLightsPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCLightsPuzzle::ToggleLight);
-	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCLightsPuzzle::CheckSolution);
 	PlayerInputComponent->BindAxis("UpAndDown", this, &AFCLightsPuzzle::AxisY);
 	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCLightsPuzzle::AxisX);
 }

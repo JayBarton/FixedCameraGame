@@ -16,7 +16,6 @@ void AFCTowerPuzzle::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Left", IE_Pressed, this, &AFCTowerPuzzle::MoveLeft);
 	PlayerInputComponent->BindAction("Right", IE_Pressed, this, &AFCTowerPuzzle::MoveRight);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AFCTowerPuzzle::SelectDisk);
-	PlayerInputComponent->BindAction("Submit", IE_Pressed, this, &AFCTowerPuzzle::CheckSolution);
 	PlayerInputComponent->BindAxis("LeftAndRight", this, &AFCTowerPuzzle::AxisX);
 }
 void AFCTowerPuzzle::Tick(float DeltaTime)
