@@ -788,10 +788,17 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 	return Super::ChoosePlayerStart_Implementation(Player);
 }
 
-void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear, AFCPlayerCamera* descriptionCamera)
+void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear, AFCPlayerCamera* descriptionCamera, UFCInfoTextWidget* displayWidget)
 {
-	display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
-	display->AddToViewport();
+	if (displayWidget)
+	{
+		display = displayWidget;
+	}
+	else
+	{
+		display = CreateWidget<UFCInfoTextWidget>(GetWorld(), infoWidget);
+		display->AddToViewport();
+	}
 	display->text = toDisplay;
 	display->advanceClear = advanceClear;
 	display->SetUpSegments();

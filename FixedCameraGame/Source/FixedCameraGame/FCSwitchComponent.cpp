@@ -44,7 +44,6 @@ void UFCSwitchComponent::PressSwitch(bool pauseAnimation, bool hidePlayer, bool 
 
 	if (playScene)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Pass"));
 		SetUpScene(pauseAnimation, hidePlayer, playMusic, playOnce);
 	}
 }

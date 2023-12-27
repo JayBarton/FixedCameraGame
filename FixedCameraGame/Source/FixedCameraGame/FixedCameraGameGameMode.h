@@ -82,7 +82,7 @@ public:
 
 	//I'm hoping I can find a better way to handle the locks, but this should work for now
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr, AFCInteractable* interactable = nullptr, UFCSwitchComponent* Switch = nullptr, bool advanceClear = true, AFCPlayerCamera* playerCamera = nullptr);
+	void DisplayText(FString toDisplay, UFCLockComponent* lock = nullptr, AFCInteractable* interactable = nullptr, UFCSwitchComponent* Switch = nullptr, bool advanceClear = true, AFCPlayerCamera* playerCamera = nullptr, UFCInfoTextWidget* displayWidget = nullptr);
 
 	bool AdvanceText();
 	void HandleText();
