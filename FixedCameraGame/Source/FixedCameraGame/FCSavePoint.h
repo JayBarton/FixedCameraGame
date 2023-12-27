@@ -22,4 +22,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Save")
 	int32 saveID;
 
+	UPROPERTY(EditAnywhere, Category = "Save")
+		int playerStartIndex = 0;
 };

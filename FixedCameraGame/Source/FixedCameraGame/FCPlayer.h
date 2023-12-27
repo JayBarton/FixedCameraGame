@@ -85,7 +85,7 @@ public:
 	void ClearInventoryWidget();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
-	void CreateSaveWidget(int token);
+	void CreateSaveWidget(int token, int playerStart);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Functions")
 	void Toggle(int32 mode, UFCLockComponent* lock, UFCInventoryComponent* containerInventory);

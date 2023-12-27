@@ -30,7 +30,7 @@ void AFCSavePoint::Action_Implementation()
 	}
 	if (haveToken)
 	{
-		pc->CreateSaveWidget(token);
+		pc->CreateSaveWidget(token, playerStartIndex);
 	}
 	else
 	{

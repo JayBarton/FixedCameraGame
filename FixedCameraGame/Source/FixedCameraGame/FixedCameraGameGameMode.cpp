@@ -629,7 +629,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 	}
 }
 
-void AFixedCameraGameGameMode::SaveGame(int slot, int token)
+void AFixedCameraGameGameMode::SaveGame(int slot, int token, int playerStart)
 {
 	UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass()));
 	UFCSaveGameMinimal* saveGameMinimalInstance = Cast<UFCSaveGameMinimal>(UGameplayStatics::CreateSaveGameObject(UFCSaveGameMinimal::StaticClass()));
@@ -659,9 +659,9 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token)
 					{
 						slot = FItemStruct();
 					}
-
-					saveGameInstance->startIndex = instance->startIndex;
-					saveGameInstance->cameraIndex = instance->cameraIndex;
+					auto currentCamera = Cast<AFCPlayerCamera>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetViewTarget());
+					saveGameInstance->startIndex = playerStart;
+					saveGameInstance->cameraIndex = currentCamera->startIndex;
 					saveGameInstance->playerInventory = pc->Inventory->inventory;
 					saveGameInstance->equippedIndex = pc->equipped;
 					saveGameInstance->playerHealth = pc->currentHealth;

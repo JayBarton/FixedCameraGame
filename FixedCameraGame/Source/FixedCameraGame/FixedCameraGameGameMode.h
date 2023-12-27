@@ -74,7 +74,7 @@ public:
 	void ResumeEnemies();
 
 	UFUNCTION(BlueprintCallable, Category = "Functions")
-	void SaveGame(int slot, int token);
+	void SaveGame(int slot, int token, int playerStart);
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void LoadGame(int slot);
 

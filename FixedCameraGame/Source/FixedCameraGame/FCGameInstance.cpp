@@ -51,6 +51,10 @@ void UFCGameInstance::LoadGame(int slot)
 
 		startIndex = loadedGame->startIndex;
 		cameraIndex = loadedGame->cameraIndex;
+		if (cameraIndex == -1)
+		{
+			cameraIndex = 0;
+		}
 		playerInventory = loadedGame->playerInventory;
 		equippedIndex = loadedGame->equippedIndex;
 		playerHealth = loadedGame->playerHealth;

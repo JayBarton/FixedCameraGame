@@ -680,6 +680,6 @@ void AFCPlayer::Toggle_Implementation(int32 mode, UFCLockComponent* lock, UFCInv
 {
 }
 
-void AFCPlayer::CreateSaveWidget_Implementation(int token)
+void AFCPlayer::CreateSaveWidget_Implementation(int token, int playerStartIndex)
 {
 }
