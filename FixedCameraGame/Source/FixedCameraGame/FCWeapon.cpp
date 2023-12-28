@@ -73,8 +73,6 @@ void AFCWeapon::Fire()
 			}
 			TracerEndpoint = Hit.ImpactPoint;
 		}
-
-		DrawDebugLine(GetWorld(), shotStart, TraceEnd, FColor::White, false, 1.0f, 0, 1.0f);
 	}
 	MeshComp->PlayAnimation(fireAnimation, false);
 	canFire = false;

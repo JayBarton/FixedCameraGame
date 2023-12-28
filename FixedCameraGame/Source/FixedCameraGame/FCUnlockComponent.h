@@ -26,9 +26,13 @@ protected:
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 		void OpenLock();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+/*	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
 		AFCInteractable* linkedInteractable;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
-		UFCLockComponent* linkedLock;
+		UFCLockComponent* linkedLock;*/
 		
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		TArray<AFCInteractable*> linkedInteractables;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level")
+		TArray<UFCLockComponent*> linkedLocks;
 };

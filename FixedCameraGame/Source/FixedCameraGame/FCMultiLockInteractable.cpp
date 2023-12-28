@@ -41,12 +41,12 @@ void AFCMultiLockInteractable::CheckDoor()
 	{
 		if (postLockText)
 		{
-			gameMode->DisplayText("We did it");
+			gameMode->DisplayText("You hear something unlocking.");
 		}
 	}
 	else
 	{
-		gameMode->DisplayText("Something still missing");
+		gameMode->DisplayText("Something still missing.");
 	}
 }
 

@@ -298,22 +298,13 @@ void AFCPlayer::Interact()
 				{
 					gameMode->DisplayText(lock->description);
 				}
-				else if (lock->type == LockType::KEY || lock->type == LockType::PUZZLE)
+				else if (lock->type == LockType::KEY)
 				{
-					if (lock->lockedSound)
-					{
-						UGameplayStatics::PlaySound2D(GetWorld(), lock->lockedSound);
-					}
 					gameMode->DisplayText(lock->description, lock);
 				}
 				else if (lock->type == LockType::ONE_WAY_LOCKED)
 				{
 					gameMode->DisplayText("Locked from the other side.");
-					if (lock->lockedSound)
-					{
-						UGameplayStatics::PlaySound2D(GetWorld(), lock->lockedSound);
-					}
-
 				}
 				else if (lock->type == LockType::ONE_WAY_UNLOCK)
 				{
@@ -322,6 +313,13 @@ void AFCPlayer::Interact()
 					lock->Open(lock->ID);
 
 					gameMode->DisplayText("Unlocked");
+				}
+				if (lock->type != LockType::ONE_WAY_UNLOCK)
+				{
+					if (lock->lockedSound)
+					{
+						UGameplayStatics::PlaySound2D(GetWorld(), lock->lockedSound);
+					}
 				}
 			}
 			else if (auto multiLock = Cast<UFCMultiLockComponent>(nearestInteractable->FindComponentByClass(UFCMultiLockComponent::StaticClass())))
@@ -386,8 +384,6 @@ void AFCPlayer::LookForInteractable()
 	FVector ForwardVector = GetActorForwardVector();
 	FVector End = ((ForwardVector * 100.0f) + Start);
 	FCollisionQueryParams CollisionParams;
-
-	DrawDebugLine(GetWorld(), Start, End, FColor::Green, false, 0.1f, ECC_WorldStatic, 1.f);
 
 	bool interactable = false;
 

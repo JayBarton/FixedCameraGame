@@ -30,7 +30,7 @@ void UFCLockComponent::BeginPlay()
 }
 
 void UFCLockComponent::Open(int32 keyID)
-{
+{	
 	if (keyID == ID)
 	{
 		Unlocked.Broadcast();
