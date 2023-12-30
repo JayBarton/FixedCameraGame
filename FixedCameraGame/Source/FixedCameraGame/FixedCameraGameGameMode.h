@@ -132,7 +132,8 @@ public:
 
 	bool newLevel = true;
 
-	//Maybe temporary, using this to test out displaying text from the inventory
+	UPROPERTY(BlueprintReadOnly, Category = "Text")
+	bool displayingText = false;
 	bool inMenu = false;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Timer")

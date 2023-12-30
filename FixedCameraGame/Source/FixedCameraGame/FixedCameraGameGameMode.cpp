@@ -790,6 +790,7 @@ AActor* AFixedCameraGameGameMode::ChoosePlayerStart_Implementation(AController* 
 
 void AFixedCameraGameGameMode::DisplayText(FString toDisplay, UFCLockComponent* lock, AFCInteractable* interactable, UFCSwitchComponent* Switch, bool advanceClear, AFCPlayerCamera* descriptionCamera, UFCInfoTextWidget* displayWidget)
 {
+	displayingText = true;
 	if (displayWidget)
 	{
 		display = displayWidget;
@@ -884,7 +885,6 @@ bool AFixedCameraGameGameMode::AdvanceText()
 		if (display->IsSegmentFinished())
 		{
 			display->GetNextSegment();
-			UE_LOG(LogTemp, Warning, TEXT("where am i"));
 		}
 		else
 		{
@@ -1017,6 +1017,7 @@ void AFixedCameraGameGameMode::ClearText()
 	display->RemoveFromParent();
 	display = nullptr;
 	inputComponent->RemoveActionBinding(interactKey);
+	displayingText = false;
 }
 
 void AFixedCameraGameGameMode::LevelChangeSound(int32 index)
