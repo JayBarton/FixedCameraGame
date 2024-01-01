@@ -26,6 +26,10 @@ public:
 
 	void ResetPress();
 
+	UPROPERTY(BlueprintReadWrite, Category = "Style")
 	FButtonStyle DefaultStyle;
+	UPROPERTY(BlueprintReadWrite, Category = "Style")
 	FButtonStyle PressedStyle;
+	UPROPERTY(BlueprintReadWrite, Category = "Style")
+	FButtonStyle FocusedStyle;
 };
