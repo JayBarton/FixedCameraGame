@@ -119,8 +119,6 @@ void AFCEnemy_Normal::Attack(int32 damage)
 	CollisionParams.AddIgnoredActor(this);
 
 	auto shape = FCollisionShape::MakeBox(FVector(100, 100, 100));
-	DrawDebugBox(GetWorld(), Start, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
-	DrawDebugBox(GetWorld(), End, FVector(100, 100, 100), FColor::Red, false, 1.0f, 0.0f, 1.0f);
 	if (GetWorld()->SweepSingleByChannel(OutHit, Start, End, FQuat::Identity, COLLISION_PLAYER, shape, CollisionParams))
 	{
 		UGameplayStatics::ApplyDamage(player, damage, GetInstigatorController(), this, UDamageType::StaticClass());

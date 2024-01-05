@@ -166,6 +166,9 @@ void AFCDotPuzzle::StartPuzzle()
 			slots[i].prop[c] = slot;
 		}
 	}
+	auto mat = Cast<UStaticMeshComponent>(slots[0].prop[0]->GetComponentByClass(UStaticMeshComponent::StaticClass()));
+
+	mat->SetRenderCustomDepth(true);
 	Toggle();
 }
 

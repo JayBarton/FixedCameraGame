@@ -26,6 +26,8 @@ public:
 
 	void ResetPress();
 
+	virtual TSharedRef<SWidget> RebuildWidget() override;
+
 	UPROPERTY(BlueprintReadWrite, Category = "Style")
 	FButtonStyle DefaultStyle;
 	UPROPERTY(BlueprintReadWrite, Category = "Style")
