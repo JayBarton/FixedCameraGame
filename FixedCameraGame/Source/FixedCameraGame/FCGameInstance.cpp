@@ -122,3 +122,41 @@ FString UFCGameInstance::GetTime()
 	int hours = gameTime / 3600;
 	return FString::Printf(TEXT("%02d:%02d:%02d"), hours, minutes, seconds);
 }
+
+void UFCGameInstance::Reset()
+{
+	currentLevel = "";
+
+	numberOfSaves = 0;
+	enemyKills = 0;
+
+	startIndex = 0;
+	cameraIndex = -1;
+	equippedIndex = -1;
+	playerInventory.Empty();
+	playerHealth = 100;
+
+	containerInventory.Empty();
+
+	gameTime = 0.0f;
+
+	savedObjects.Empty();
+
+	savedEnemies.Empty();
+
+	pendingLocks.Empty();
+
+	levelMusicPlaying.Empty();
+
+	for (auto& flag : flags)
+	{
+		flag.Value = false;
+	}
+
+	isPlayingMusic = false;
+
+	music = nullptr;
+	musicCue = nullptr;
+
+	entranceSoundIndex = -1;
+}

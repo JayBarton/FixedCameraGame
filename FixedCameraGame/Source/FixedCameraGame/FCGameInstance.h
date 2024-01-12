@@ -98,6 +98,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	FString GetTime();
 
+	UFUNCTION(BlueprintCallable)
+	void Reset();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Start")
+		bool saveOrLoaded = false;
+
 	int32 entranceSoundIndex = -1;
 
 };
