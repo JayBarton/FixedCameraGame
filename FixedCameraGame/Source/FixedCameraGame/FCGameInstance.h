@@ -101,7 +101,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void Reset();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Start")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Start")
 		bool saveOrLoaded = false;
 
 	int32 entranceSoundIndex = -1;
