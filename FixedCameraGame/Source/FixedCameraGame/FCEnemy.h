@@ -59,7 +59,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Functions")
 	void RecoverFromStagger();
 
-	virtual void TakeDamage(int32 damageAmount, FHitResult Hit);
+	virtual void TakeHit(int32 damageAmount, FHitResult Hit);
 
 	void Stagger();
 

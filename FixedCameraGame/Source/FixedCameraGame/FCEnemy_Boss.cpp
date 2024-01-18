@@ -74,9 +74,9 @@ void AFCEnemy_Boss::FinishAttack()
 
 }
 
-void AFCEnemy_Boss::TakeDamage(int32 damageAmount, FHitResult Hit)
+void AFCEnemy_Boss::TakeHit(int32 damageAmount, FHitResult Hit)
 {
-	Super::TakeDamage(damageAmount, Hit);
+	Super::TakeHit(damageAmount, Hit);
 	beenHit = true;
 }
 

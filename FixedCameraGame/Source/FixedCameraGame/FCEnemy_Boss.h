@@ -23,7 +23,7 @@ public:
 	virtual void Attack(int32 damage) override;
 	virtual void FinishAttack() override;
 
-	virtual void TakeDamage(int32 damageAmount, FHitResult Hit) override;
+	virtual void TakeHit(int32 damageAmount, FHitResult Hit) override;
 
 	void ResumeAttack();
 

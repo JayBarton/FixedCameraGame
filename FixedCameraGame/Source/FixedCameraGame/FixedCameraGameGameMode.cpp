@@ -629,7 +629,7 @@ void AFixedCameraGameGameMode::ResumeEnemies()
 	}
 }
 
-void AFixedCameraGameGameMode::SaveGame(int slot, int token, int playerStart)
+void AFixedCameraGameGameMode::SaveGame(int slotNum, int token, int playerStart)
 {
 	UFCSaveGame* saveGameInstance = Cast<UFCSaveGame>(UGameplayStatics::CreateSaveGameObject(UFCSaveGame::StaticClass()));
 	UFCSaveGameMinimal* saveGameMinimalInstance = Cast<UFCSaveGameMinimal>(UGameplayStatics::CreateSaveGameObject(UFCSaveGameMinimal::StaticClass()));
@@ -711,8 +711,8 @@ void AFixedCameraGameGameMode::SaveGame(int slot, int token, int playerStart)
 				instance->numberOfSaves++;
 				saveGameInstance->numberOfSaves = instance->numberOfSaves;
 
-				FString slotName = "slot" + FString::FromInt(slot);
-				FString slotMinimalName = "slotM" + FString::FromInt(slot);
+				FString slotName = "slot" + FString::FromInt(slotNum);
+				FString slotMinimalName = "slotM" + FString::FromInt(slotNum);
 				if (UGameplayStatics::SaveGameToSlot(saveGameInstance, slotName, 1))
 				{
 					if (UGameplayStatics::SaveGameToSlot(saveGameMinimalInstance, slotMinimalName, 1))

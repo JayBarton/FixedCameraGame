@@ -69,7 +69,7 @@ void AFCWeapon::Fire()
 
 			if (auto enemy = Cast<AFCEnemy>(HitActor))
 			{
-				enemy->TakeDamage(damage, Hit);
+				enemy->TakeHit(damage, Hit);
 			}
 			TracerEndpoint = Hit.ImpactPoint;
 		}

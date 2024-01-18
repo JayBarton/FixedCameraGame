@@ -137,9 +137,9 @@ void AFCEnemy_Normal::Kill()
 	reviveTime = FMath::RandRange(minReviveCount, maxReviveCount); 
 }
 
-void AFCEnemy_Normal::TakeDamage(int32 damageAmount, FHitResult Hit)
+void AFCEnemy_Normal::TakeHit(int32 damageAmount, FHitResult Hit)
 {
-	Super::TakeDamage(damageAmount, Hit);
+	Super::TakeHit(damageAmount, Hit);
 	if (hitDirection == HitDirection::BACK)
 	{
 		//Random chance of the enemy turning around right away when hit in the back

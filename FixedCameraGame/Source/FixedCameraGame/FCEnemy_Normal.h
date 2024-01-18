@@ -20,7 +20,7 @@ public:
 	virtual void FinishAttack() override;
 	virtual void Kill() override;
 
-	virtual void TakeDamage(int32 damageAmount, FHitResult Hit) override;
+	virtual void TakeHit(int32 damageAmount, FHitResult Hit) override;
 
 	void StartDead(int32 currentReviveTime, int32 reviveCount);
 	void Revive();

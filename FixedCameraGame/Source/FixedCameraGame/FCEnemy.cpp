@@ -131,7 +131,7 @@ void AFCEnemy::RecoverFromStagger()
 }
 
 
-void AFCEnemy::TakeDamage(int32 damageAmount, FHitResult Hit)
+void AFCEnemy::TakeHit(int32 damageAmount, FHitResult Hit)
 {
 	DetermineImpactDirection(Hit);
 	hp -= damageAmount;
